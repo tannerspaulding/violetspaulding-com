@@ -1011,7 +1011,7 @@ $('wandHint').innerHTML=`<svg viewBox="0 0 100 100" aria-hidden="true"><line x1=
 function show(){
   const r=location.hash.slice(1);const id=ROUTES[r];
   document.querySelectorAll('.view').forEach(v=>v.hidden=true);
-  Wand.stop();Castle.stop();const at=$('appTitle');
+  Wand.stop();Castle.stop();$('sheet').hidden=true;const at=$('appTitle');
   document.body.classList.toggle('in-game',!!(id&&READY[r]));
   if(id&&READY[r]){$(id).hidden=false;$('homeBtn').hidden=false;at.innerHTML=`<svg aria-hidden="true"><use href="#${TITLE[id][1]}"/></svg><span>${TITLE[id][0]}</span>`;at.hidden=false;
     if(id==='dressup'){drawStage();drawTabs();drawPanel();}
