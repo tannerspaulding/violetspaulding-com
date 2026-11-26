@@ -249,6 +249,24 @@ img{display:block}
 @keyframes tw{0%,100%{transform:scale(.55);opacity:.55}50%{transform:scale(1);opacity:1}}
 .flyheart{position:fixed;z-index:40;width:60px;height:60px;pointer-events:none;transition:transform .7s cubic-bezier(.5,-0.3,.6,1), opacity .7s}
 
+/* hand-drawn frames: every button and panel gets a wobbly double crayon line drawn by JS (sketch) */
+.chip,.frame,.sheet-card,.dot{border-color:transparent!important;isolation:isolate}
+.chip{background:transparent!important;box-shadow:none!important;position:relative}
+.dot{position:relative;box-shadow:none}
+.sk{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.sk.f{z-index:-1;filter:drop-shadow(0 4px 0 rgba(74,44,79,.16))}
+.sk.f path{fill:var(--bg,#fff)}
+.sk.o{z-index:5}
+.sk.o path{fill:none;stroke:var(--ln,#4A2C4F);stroke-width:var(--sw,3px);stroke-linecap:round;stroke-linejoin:round}
+.sk.o path + path{stroke-width:calc(var(--sw,3px) * .55);opacity:.55}
+.act,.tab[aria-selected="true"],.wandbar button.on{--bg:var(--butter)}
+.item,.gal button,.frame,.sheet-card{--bg:var(--paper)}
+.item.on{--ln:var(--pink-deep);--sw:5px}
+.dot.on{--sw:4.5px;box-shadow:none}
+.wand-tooth{position:absolute;inset:0;pointer-events:none;z-index:1;opacity:.9;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 .99 0 0 0 0 .96 0 0 0 2.1 -1.05'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.wandbar{z-index:2}
+
 @media (prefers-reduced-motion: reduce){
   *{animation:none!important;transition:none!important}
 }
@@ -294,6 +312,12 @@ img{display:block}
       <feTurbulence type="fractalNoise" baseFrequency=".12" numOctaves="2" seed="6" result="t"/>
       <feDisplacementMap in="o" in2="t" scale="2.4" xChannelSelector="R" yChannelSelector="G" result="w"/>
       <feMerge><feMergeNode in="w"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="tooth" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 1  0 0 0 0 .99  0 0 0 0 .96  0 0 0 1.9 -1" result="sp"/>
+      <feComposite in="sp" in2="SourceAlpha" operator="in" result="sp2"/>
+      <feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="sp2"/></feMerge>
     </filter>
     <symbol id="spk" viewBox="-10 -10 20 20"><path d="M0-10C1.2-2.2 2.2-1.2 10 0C2.2 1.2 1.2 2.2 0 10C-1.2 2.2-2.2 1.2-10 0C-2.2-1.2-1.2-2.2 0-10Z"/></symbol>
   </defs>
@@ -376,7 +400,7 @@ img{display:block}
 
 <!-- SPARKLE WAND -->
 <section class="view" id="wand" hidden>
-  <canvas id="wandCanvas" aria-label="Draw with your finger"></canvas>
+  <canvas id="wandCanvas" aria-label="Draw with your finger"></canvas><div class="wand-tooth" aria-hidden="true"></div>
   <div class="hint" id="wandHint" aria-hidden="true"><img src="art/wand-tile.png" alt="" width="288" height="288"></div>
   <div class="wandbar" id="wandbar">
     <button class="chip on" data-b="rainbow" aria-label="Rainbow wand"><svg viewBox="0 0 40 40"><g fill="none" stroke-width="4" stroke-linecap="round"><path d="M5 30A15 15 0 0 1 35 30" stroke="#ff8f8f"/><path d="M10 30A10 10 0 0 1 30 30" stroke="#ffe070"/><path d="M15 30A5 5 0 0 1 25 30" stroke="#7fc8ff"/></g></svg></button>
@@ -467,7 +491,7 @@ function star5(x,y,r){let d='';for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.P
 function heart(x,y,s){return `M${x} ${y+s*.9}C${x-s*1.4} ${y+s*.1} ${x-s*.9} ${y-s*1.1} ${x} ${y-s*.35}C${x+s*.9} ${y-s*1.1} ${x+s*1.4} ${y+s*.1} ${x} ${y+s*.9}Z`;}
 function cloud(x,y,s){return `<g fill="#fff"><circle cx="${x-18*s}" cy="${y}" r="${12*s}"/><circle cx="${x}" cy="${y-8*s}" r="${16*s}"/><circle cx="${x+18*s}" cy="${y}" r="${12*s}"/><ellipse cx="${x}" cy="${y+4*s}" rx="${30*s}" ry="${10*s}"/></g>`;}
 const L=(x,f)=>x?`<g filter="url(#${f||'ink'})">${x}</g>`:'';
-function ink(svg,f){const k=svg.indexOf('>')+1,e=svg.lastIndexOf('</svg>');return svg.slice(0,k)+`<g filter="url(#${f||'inkT'})">`+svg.slice(k,e)+'</g>'+svg.slice(e);}
+function ink(svg,f){const k=svg.indexOf('>')+1,e=svg.lastIndexOf('</svg>');return svg.slice(0,k)+`<g filter="url(#tooth)"><g filter="url(#${f||'inkT'})">`+svg.slice(k,e)+'</g></g>'+svg.slice(e);}
 function rng(seed){let s=seed;return()=>{s=(s*16807)%2147483647;return(s-1)/2147483646;};}
 const RB=['#ffa9a9','#ffcc96','#ffe68a','#b2e8a8','#a6d6ff','#cdb6fb'];
 const RBSTOPS=RB.map((c,i)=>`<stop offset="${(i/(RB.length-1)).toFixed(2)}" stop-color="${c}"/>`).join('');
@@ -629,6 +653,7 @@ function render(s,p,vb,opt){
     `<linearGradient id="${p}rbv" x1="0" y1="0" x2="0" y2="1">${RBSTOPS}</linearGradient>`+
     `<linearGradient id="${p}rbh" x1="0" y1="0" x2="1" y2="1">${RBSTOPS}</linearGradient></defs>`;
   if(s.place!=='none')o+=`<rect width="300" height="400" fill="#FFF9F2"/><g filter="url(#wash)">${BG[s.place](p)}</g>`;
+  o+='<g filter="url(#tooth)">';
   o+=L(HAIRBACK[s.hair](h,hd));
   o+=L(DRESS[s.dress](f,l,d));
   // neck + torso
@@ -661,6 +686,7 @@ function render(s,p,vb,opt){
   o+=L(MAGIC[s.magic]());
   o+=L(`<circle cx="108" cy="236" r="7.5" fill="${sk}"/><circle cx="205" cy="215" r="7.5" fill="${sk}"/>`);
   o+=L(FRIEND[s.friend]());
+  o+='</g>';
   if(!(opt&&opt.noSpk))o+=SPARKLE[s.sparkle]();
   return o+'</svg>';
 }
@@ -940,7 +966,7 @@ const Castle=(function(){
   let placed=store.get('castle',[]);if(!Array.isArray(placed))placed=[];
   placed=placed.filter(p=>p&&STK[p.k]&&isFinite(p.x)&&isFinite(p.y));
   let zTop=placed.reduce((m,p)=>Math.max(m,p.z||0),0);
-  $('sceneBg').innerHTML=SCENE;
+  $('sceneBg').innerHTML=SCENE.replace(/(<\/defs>)([\s\S]*)(<\/svg>)$/,'$1<g filter="url(#tooth)">$2</g>$3');
   tray.innerHTML=STK_ORDER.map((k,i)=>`<button data-k="${k}" data-i="${i}" class="chip${STK[k].tall?' t-tall':''}" aria-label="${k} sticker">${STK_SVG[k]}</button>`).join('');
   const save=()=>store.set('castle',placed);
   function place(el,p){el.style.left=(p.x/300*100)+'%';el.style.top=(p.y/400*100)+'%';el.style.width=(STK[p.k].w/300*100)+'%';el.style.zIndex=p.z||1;}
@@ -1039,6 +1065,51 @@ window.addEventListener('hashchange',show);
 document.addEventListener('pointerdown',()=>Snd.ensure(),{once:true});
 
 document.querySelectorAll('.act svg, #wandbar [data-b] svg, #wandClear svg, .close svg, .sheet-top .title svg').forEach(v=>{v.outerHTML=ink(v.outerHTML);});
+/* ---------- hand-drawn frames ---------- */
+const SK_SEL='.chip,.dot,.frame,.sheet-card';
+let skN=0;
+function skRand(seed){let x=seed>>>0||1;return()=>{x=(x*1664525+1013904223)>>>0;return x/4294967296;};}
+function skPath(w,h,r,m,seed,round){
+  const R=skRand(seed),pts=[];
+  if(round){
+    const cx=w/2,cy=h/2,rx=w/2-m,ry=h/2-m,n=16,st=R()*6.283;
+    for(let i=0;i<=n+2;i++){const a=st+i/n*6.283,j=1+(R()-.5)*.07;pts.push([cx+rx*j*Math.cos(a),cy+ry*j*Math.sin(a)]);}
+  }else{
+    const x0=m,y0=m,x1=w-m,y1=h-m;r=Math.max(4,Math.min(r,(x1-x0)/2,(y1-y0)/2));
+    const P=[],seg=(ax,ay,bx,by)=>{const n=Math.max(1,Math.round(Math.hypot(bx-ax,by-ay)/18));for(let i=0;i<n;i++)P.push([ax+(bx-ax)*i/n,ay+(by-ay)*i/n]);},
+      arc=(cx,cy,a0)=>{for(let i=0;i<4;i++){const a=a0+i/4*Math.PI/2;P.push([cx+r*Math.cos(a),cy+r*Math.sin(a)]);}};
+    seg(x0+r,y0,x1-r,y0);arc(x1-r,y0+r,-Math.PI/2);seg(x1,y0+r,x1,y1-r);arc(x1-r,y1-r,0);
+    seg(x1-r,y1,x0+r,y1);arc(x0+r,y1-r,Math.PI/2);seg(x0,y1-r,x0,y0+r);arc(x0+r,y0+r,Math.PI);
+    const k=Math.floor(R()*P.length),amp=Math.min(1.7,Math.min(w,h)*.025+.7);
+    for(let i=0;i<P.length+2;i++){const p=P[(k+i)%P.length];pts.push([p[0]+(R()-.5)*2*amp,p[1]+(R()-.5)*2*amp]);}
+  }
+  const f=p=>p[0].toFixed(1)+' '+p[1].toFixed(1);
+  let d='M'+f(pts[0]);
+  for(let i=1;i<pts.length-1;i++){const p=pts[i],q=pts[i+1];d+='Q'+f(p)+' '+f([(p[0]+q[0])/2,(p[1]+q[1])/2]);}
+  return d+'L'+f(pts[pts.length-1]);
+}
+function sketch(el){
+  const w=el.offsetWidth,h=el.offsetHeight;if(!w||!h)return;
+  const has=el.querySelector(':scope > .sk.o');
+  if(has&&el._skw===w&&el._skh===h)return;
+  el._skw=w;el._skh=h;if(!el._sks)el._sks=(++skN)*7919+13;
+  const round=el.classList.contains('dot');
+  const r=el.classList.contains('frame')?30:el.classList.contains('sheet-card')?32:Math.min(21,Math.min(w,h)*.28);
+  const d1=skPath(w,h,r,2.6,el._sks,round),d2=skPath(w,h,r,3.4,el._sks+31,round);
+  el.querySelectorAll(':scope > .sk').forEach(n=>n.remove());
+  const mk=(c,inner)=>{const v=document.createElementNS('http://www.w3.org/2000/svg','svg');v.setAttribute('class','sk '+c);v.setAttribute('viewBox',`0 0 ${w} ${h}`);v.setAttribute('aria-hidden','true');v.innerHTML=inner;return v;};
+  if(!round)el.insertBefore(mk('f',`<path d="${d1}Z"/>`),el.firstChild);
+  el.appendChild(mk('o',`<path d="${d1}"/><path d="${d2}"/>`));
+}
+const skSeen=new WeakSet();
+const skRO=typeof ResizeObserver!=='undefined'?new ResizeObserver(es=>es.forEach(e=>sketch(e.target))):null;
+function skWatch(el){if(!skSeen.has(el)){skSeen.add(el);skRO&&skRO.observe(el);}sketch(el);}
+function skScan(root){if(root.matches&&root.matches(SK_SEL))skWatch(root);root.querySelectorAll&&root.querySelectorAll(SK_SEL).forEach(skWatch);}
+if(typeof MutationObserver!=='undefined')new MutationObserver(ms=>ms.forEach(m=>{
+  if(m.target.matches&&m.target.matches(SK_SEL))sketch(m.target);
+  m.addedNodes.forEach(n=>{if(n.nodeType===1&&!(n.classList&&n.classList.contains('sk')))skScan(n);});
+})).observe(document.body,{childList:true,subtree:true});
+skScan(document.body);
 drawMute();show();
 })();
 </script>
