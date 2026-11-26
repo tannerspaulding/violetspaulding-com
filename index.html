@@ -131,9 +131,10 @@ body.in-game .tabbar{display:none}
   .gcard.wide{grid-column:auto}
   .gcard.wide .pic{aspect-ratio:1/1}
 }
-@media (orientation:landscape) and (max-height:560px){
+@media (orientation:landscape) and (max-height:700px){
   .scene{height:36vh}
-  .ground{min-height:calc(64vh + 30px);padding-top:16px}
+  .tabbar{display:none}
+  .ground{min-height:calc(64vh + 30px);padding-top:16px;padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))}
   .ground-inner{width:min(100%, 640px)}
   .sayrow{min-height:44px;margin-bottom:10px}
   .say{font-size:1.05rem;padding:7px 18px 8px}
