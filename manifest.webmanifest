@@ -1,6 +1,6 @@
 {
   "name": "Violet's Sparkle Palace",
-  "short_name": "Sparkle Palace",
+  "short_name": "Violet's",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -8,8 +8,23 @@
   "background_color": "#E6F8F2",
   "theme_color": "#E6F8F2",
   "icons": [
-    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
-    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
-    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+    {
+      "src": "icon-violet-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-violet-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-violet-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
