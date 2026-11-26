@@ -191,6 +191,7 @@ body.in-game .tabbar{display:none}
 .items::-webkit-scrollbar{display:none}
 .item{flex:0 0 auto;width:78px;height:78px;overflow:hidden;padding:0;border-radius:18px;position:relative;background:#F3FBF8}
 .item svg{width:100%;height:100%}
+.item .itemimg{width:100%;height:100%;object-fit:contain;padding:9px}
 .item.on{box-shadow:0 0 0 4px var(--pink),0 5px 0 4px #E35E98}
 .item.on::after{
   content:'';position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;border:2px solid #fff;
@@ -614,6 +615,7 @@ const SPARKLE={
 };
 
 /* ---------------- render a look ---------------- */
+const DOLL_CROWN={crown:'crown',tiara:'tiara',flowers:'flowers',horn:'horn',star:'stars'},DOLL_MAGIC={wand:'wand',mirror:'mirror',flowers:'bouquet'};
 function render(s,p,vb,opt){
   const dc=s.dressColor,hc=s.hairColor,sk=SKIN[s.skin];
   const rbD=dc==='rainbow',rbH=hc==='rainbow';
@@ -627,6 +629,15 @@ function render(s,p,vb,opt){
   if(opt&&opt.cut)o=o.replace('</defs>',`<filter id="${p}cut" x="-5%" y="-5%" width="110%" height="110%"><feMorphology in="SourceAlpha" operator="dilate" radius="3.5" result="d"/><feFlood flood-color="#fff"/><feComposite in2="d" operator="in"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>`);
   if(s.place!=='none'&&BG[s.place]&&!(opt&&opt.noBg))o+=`<rect width="300" height="400" fill="#E6F8F2"/>`+BG[s.place](p);
   o+=(opt&&opt.cut)?`<g filter="url(#${p}cut)">`:'<g>';
+  if(!(opt&&opt.vec)){ // the painted, layered princess (same 300x400 frame)
+    const im=n=>`<image href="art/doll/${n}.webp" width="300" height="400"/>`;
+    o+=im('body-skin'+s.skin)+im(`dress-${s.dress}-${dc}`)+im(`hair-${s.hair}-${hc}-skin${s.skin}`);
+    if(DOLL_CROWN[s.crown])o+=im('crown-'+DOLL_CROWN[s.crown]);
+    if(DOLL_MAGIC[s.magic])o+=im('magic-'+DOLL_MAGIC[s.magic]);
+    o+=L(FRIEND[s.friend]())+'</g>';
+    if(!(opt&&opt.noSpk))o+=SPARKLE[s.sparkle]();
+    return o+'</svg>';
+  }
   o+=L(HAIRBACK[s.hair](h,hd));
   o+=L(DRESS[s.dress](f,l,d));
   // neck + torso
@@ -676,14 +687,14 @@ const ICON={
   skin:`<svg viewBox="0 0 40 40"><circle cx="11" cy="12" r="7" fill="${SKIN[0]}"/><circle cx="29" cy="12" r="7" fill="${SKIN[1]}"/><circle cx="11" cy="29" r="7" fill="${SKIN[2]}"/><circle cx="29" cy="29" r="7" fill="${SKIN[3]}"/></svg>`
 };
 const TABS=[
-  {id:'dress',items:['ball','tiers','mermaid','starry'],colors:['dressColor',DRESSC],crop:'24 150 252 250'},
-  {id:'hair',items:['long','curly','pigtails','bun'],colors:['hairColor',HAIRC],crop:'70 30 160 230'},
-  {id:'crown',items:['crown','tiara','flowers','horn','star','none'],crop:'96 20 108 100'},
-  {id:'magic',items:['wand','mirror','flowers','none'],crop:'170 128 92 106'},
+  {id:'dress',items:['ball','tiers','mermaid','starry'],colors:['dressColor',DRESSC],crop:'40 155 220 245'},
+  {id:'hair',items:['long','curly','pigtails','bun'],colors:['hairColor',HAIRC],crop:'70 45 160 175'},
+  {id:'crown',items:['crown','tiara','flowers','horn','star','none'],crop:'95 30 110 110'},
+  {id:'magic',items:['wand','mirror','flowers','none'],crop:'165 195 90 100'},
   {id:'friend',items:['unicorn','kitty','dragon','none'],crop:'0 284 116 116'},
   {id:'place',items:['room','garden','sea','night']},
   {id:'sparkle',items:['stars','hearts','bubbles','none']},
-  {id:'skin',items:[0,1,2,3],crop:'100 62 100 104'}
+  {id:'skin',items:[0,1,2,3],crop:'105 80 90 90'}
 ];
 const DEF={dress:'ball',dressColor:'pink',hair:'long',hairColor:'gold',crown:'crown',magic:'wand',friend:'unicorn',place:'room',sparkle:'stars',skin:0};
 let look=Object.assign({},DEF,store.get('look',{}));
@@ -710,7 +721,7 @@ function drawPanel(){
   const t=TABS.find(t=>t.id===curTab);
   itemsEl.innerHTML=t.items.map((v,i)=>{const s=Object.assign({},look,{[t.id]:v});
     if(t.id!=='place')s.place='none';if(t.id!=='sparkle')s.sparkle='none';if(t.id!=='friend')s.friend='none';
-    return `<button class="item chip${look[t.id]===v?' on':''}" data-i="${i}" aria-label="${t.id} ${v}" aria-pressed="${look[t.id]===v}">${render(s,'th'+t.id+i,t.crop,{lite:true})}</button>`;}).join('');
+    return `<button class="item chip${look[t.id]===v?' on':''}" data-i="${i}" aria-label="${t.id} ${v}" aria-pressed="${look[t.id]===v}">${(t.id==='crown'&&DOLL_CROWN[v])?`<img class="itemimg" src="art/doll/item-${DOLL_CROWN[v]}.webp" alt="">`:(t.id==='magic'&&DOLL_MAGIC[v])?`<img class="itemimg" src="art/doll/item-${DOLL_MAGIC[v]}.webp" alt="">`:render(s,'th'+t.id+i,t.crop,{lite:true})}</button>`;}).join('');
   if(t.colors){
     const [key,pal]=t.colors;
     colorsEl.innerHTML=Object.keys(pal).map((c,i)=>`<button class="dot${look[key]===c?' on':''}" data-c="${c}" data-i="${i}" aria-label="${c}" style="background:${SWATCH[c]||pal[c]}"></button>`).join('');
@@ -893,9 +904,9 @@ const Wand=(function(){
 BG.none=()=>'';
 function stk(vb,inner,cls){return {vb,inner,cls:cls||''};}
 const STK={
-  mer1:{w:62,tall:true,svg:()=>render(Object.assign({},DEF,{dress:'mermaid',dressColor:'aqua',hair:'long',hairColor:'gold',crown:'tiara',magic:'none',friend:'none',sparkle:'none',place:'none',skin:0}),'sm1','88 40 140 356',{lite:true})},
-  mer2:{w:62,tall:true,svg:()=>render(Object.assign({},DEF,{dress:'mermaid',dressColor:'pink',hair:'curly',hairColor:'brown',crown:'crown',magic:'wand',friend:'none',sparkle:'none',place:'none',skin:2}),'sm2','88 40 160 356',{lite:true})},
-  mer3:{w:62,tall:true,svg:()=>render(Object.assign({},DEF,{dress:'mermaid',dressColor:'lav',hair:'pigtails',hairColor:'rainbow',crown:'flowers',magic:'none',friend:'none',sparkle:'none',place:'none',skin:3}),'sm3','80 40 140 356',{lite:true})},
+  mer1:{w:62,tall:true,svg:()=>render(Object.assign({},DEF,{dress:'mermaid',dressColor:'aqua',hair:'long',hairColor:'gold',crown:'tiara',magic:'none',friend:'none',sparkle:'none',place:'none',skin:0}),'sm1','72 32 166 360',{lite:true})},
+  mer2:{w:62,tall:true,svg:()=>render(Object.assign({},DEF,{dress:'mermaid',dressColor:'pink',hair:'curly',hairColor:'brown',crown:'crown',magic:'wand',friend:'none',sparkle:'none',place:'none',skin:2}),'sm2','72 32 166 360',{lite:true})},
+  mer3:{w:62,tall:true,svg:()=>render(Object.assign({},DEF,{dress:'mermaid',dressColor:'lav',hair:'pigtails',hairColor:'rainbow',crown:'flowers',magic:'none',friend:'none',sparkle:'none',place:'none',skin:3}),'sm3','72 32 166 360',{lite:true})},
   unicorn:{w:64,svg:()=>`<svg viewBox="0 0 228 344" xmlns="http://www.w3.org/2000/svg"><image href="art/friend-unicorn.webp" width="228" height="344"/></svg>`,tall:true,ar:344/228},
   kitty:{w:64,svg:()=>`<svg viewBox="0 0 234 316" xmlns="http://www.w3.org/2000/svg"><image href="art/friend-kitty.webp" width="234" height="316"/></svg>`,tall:true,ar:316/234},
   dragon:{w:66,svg:()=>`<svg viewBox="0 0 272 318" xmlns="http://www.w3.org/2000/svg"><image href="art/friend-dragon.webp" width="272" height="318"/></svg>`,tall:true,ar:318/272},
