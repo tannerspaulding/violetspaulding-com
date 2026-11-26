@@ -634,9 +634,11 @@ function render(s,p,vb,opt){
   // neck + torso
   let t=`<rect x="143" y="140" width="14" height="26" rx="4" fill="${sk}"/>`;
   if(mer){
-    t+=`<path d="M121 166Q150 156 179 166L171 220Q150 226 129 220Z" fill="${sk}"/>`;
-    t+=`<path d="M128 186A11 11 0 0 1 150 186Z" fill="${f}"/><path d="M150 186A11 11 0 0 1 172 186Z" fill="${f}"/><path d="M139 186V177M133 186L135 179M145 186L143 179M161 186V177M155 186L157 179M167 186L165 179" stroke="${l}" stroke-width="1.6" stroke-linecap="round"/>`;
-    t+=`<g fill="#fff">`+[0,1,2,3,4,5,6].map(i=>{const a=Math.PI*(.15+i*.7/6);return `<circle cx="${(150-17*Math.cos(a)).toFixed(1)}" cy="${(158+9*Math.sin(a)).toFixed(1)}" r="2.6"/>`;}).join('')+`</g>`;
+    // modest mermaid bodice: covers the whole torso, with soft scales, pearls and shell cap sleeves
+    t+=`<path d="M121 166Q150 156 179 166L171 220Q150 226 129 220Z" fill="${f}"/>`;
+    t+=`<path d="M132 163Q150 158 168 163Q160 176 150 172Q140 176 132 163Z" fill="${sk}"/>`;
+    for(let row=0,y=186;y<=210;y+=10,row++){const off=row%2?5:0;for(let x=134+off;x<=166;x+=10)t+=`<path d="M${x-5} ${y}A5 5 0 0 0 ${x+5} ${y}" stroke="${l}" stroke-width="1.8" fill="none" opacity=".9"/>`;}
+    t+=`<g fill="#fff">`+[0,1,2,3,4,5,6].map(i=>{const a=Math.PI*(.15+i*.7/6);return `<circle cx="${(150-17*Math.cos(a)).toFixed(1)}" cy="${(162+10*Math.sin(a)).toFixed(1)}" r="2.6"/>`;}).join('')+`</g>`;
   }else{
     t+=`<path d="M121 166Q150 156 179 166L171 220Q150 226 129 220Z" fill="${f}"/>`;
     t+=`<path d="M132 163Q150 158 168 163Q160 176 150 172Q140 176 132 163Z" fill="${sk}"/>`;
@@ -644,6 +646,7 @@ function render(s,p,vb,opt){
   }
   // arms
   t+=`<path d="M120 172Q102 202 108 234M180 172Q198 194 204 214" stroke="${sk}" stroke-width="12" fill="none" stroke-linecap="round"/>`;
+  if(mer)[[121,-24],[179,24]].forEach(([x,r])=>{t+=`<g transform="rotate(${r} ${x} 172)"><path d="M${x-14} 178A14 14 0 0 1 ${x+14} 178Z" fill="${l}"/><path d="M${x} 178L${x} 165M${x} 178L${x-8} 168M${x} 178L${x+8} 168M${x} 178L${x-12} 174M${x} 178L${x+12} 174" stroke="${f}" stroke-width="1.6" stroke-linecap="round"/></g>`;});
   if(!mer)t+=`<circle cx="121" cy="170" r="13" fill="${f}"/><circle cx="179" cy="170" r="13" fill="${f}"/><circle cx="117" cy="166" r="4.5" fill="${l}" opacity=".7"/><circle cx="175" cy="166" r="4.5" fill="${l}" opacity=".7"/>`;
   o+=L(t);
   // head + face
