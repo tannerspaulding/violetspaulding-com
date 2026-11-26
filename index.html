@@ -253,9 +253,10 @@ img{display:block}
 .chip,.frame,.sheet-card,.dot{border-color:transparent!important;isolation:isolate}
 .chip{background:transparent!important;box-shadow:none!important;position:relative}
 .dot{position:relative;box-shadow:none}
-.sk{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
-.sk.f{z-index:-1;filter:drop-shadow(0 4px 0 rgba(74,44,79,.16))}
+.chip > svg.sk,.dot > svg.sk,.frame > svg.sk,.sheet-card > svg.sk{position:absolute;inset:0;width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;margin:0;pointer-events:none;overflow:visible}
+.sk.f{z-index:-1}
 .sk.f path{fill:var(--bg,#fff)}
+.sk.f path.sh{fill:rgba(74,44,79,.16)}
 .sk.o{z-index:5}
 .sk.o path{fill:none;stroke:var(--ln,#4A2C4F);stroke-width:var(--sw,3px);stroke-linecap:round;stroke-linejoin:round}
 .sk.o path + path{stroke-width:calc(var(--sw,3px) * .55);opacity:.55}
@@ -263,8 +264,8 @@ img{display:block}
 .item,.gal button,.frame,.sheet-card{--bg:var(--paper)}
 .item.on{--ln:var(--pink-deep);--sw:5px}
 .dot.on{--sw:4.5px;box-shadow:none}
-.wand-tooth{position:absolute;inset:0;pointer-events:none;z-index:1;opacity:.9;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 .99 0 0 0 0 .96 0 0 0 2.1 -1.05'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.wand-tooth,.frame::after{position:absolute;inset:0;pointer-events:none;z-index:1;background:url(art/grain.png) 0 0/144px 144px repeat}
+.frame::after{content:'';z-index:4}
 .wandbar{z-index:2}
 
 @media (prefers-reduced-motion: reduce){
@@ -301,23 +302,23 @@ img{display:block}
       <feMorphology in="SourceAlpha" operator="dilate" radius="4" result="d"/>
       <feFlood flood-color="#4A2C4F"/>
       <feComposite in2="d" operator="in" result="o"/>
-      <feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="2" seed="9" result="t"/>
-      <feDisplacementMap in="o" in2="t" scale="6" xChannelSelector="R" yChannelSelector="G" result="w"/>
-      <feMerge><feMergeNode in="w"/><feMergeNode in="SourceGraphic"/></feMerge>
+      <feMerge><feMergeNode in="o"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
-    <filter id="inkT" x="-16%" y="-16%" width="132%" height="132%" color-interpolation-filters="sRGB">
+    <filter id="inkT" x="-14%" y="-14%" width="128%" height="128%" color-interpolation-filters="sRGB">
       <feMorphology in="SourceAlpha" operator="dilate" radius="1.7" result="d"/>
       <feFlood flood-color="#4A2C4F"/>
       <feComposite in2="d" operator="in" result="o"/>
-      <feTurbulence type="fractalNoise" baseFrequency=".12" numOctaves="2" seed="6" result="t"/>
-      <feDisplacementMap in="o" in2="t" scale="2.4" xChannelSelector="R" yChannelSelector="G" result="w"/>
-      <feMerge><feMergeNode in="w"/><feMergeNode in="SourceGraphic"/></feMerge>
+      <feMerge><feMergeNode in="o"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
-    <filter id="tooth" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
-      <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7" result="n"/>
-      <feColorMatrix in="n" type="matrix" values="0 0 0 0 1  0 0 0 0 .99  0 0 0 0 .96  0 0 0 1.9 -1" result="sp"/>
-      <feComposite in="sp" in2="SourceAlpha" operator="in" result="sp2"/>
-      <feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="sp2"/></feMerge>
+    <filter id="inkL" x="-14%" y="-14%" width="128%" height="128%" color-interpolation-filters="sRGB">
+      <feMorphology in="SourceAlpha" operator="dilate" radius="2.4" result="d"/>
+      <feFlood flood-color="#4A2C4F"/>
+      <feComposite in2="d" operator="in" result="o"/>
+      <feMerge><feMergeNode in="o"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="wobD" x="-6%" y="-6%" width="112%" height="112%">
+      <feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="2" seed="4" result="t"/>
+      <feDisplacementMap in="SourceGraphic" in2="t" scale="3.6" xChannelSelector="R" yChannelSelector="G"/>
     </filter>
     <symbol id="spk" viewBox="-10 -10 20 20"><path d="M0-10C1.2-2.2 2.2-1.2 10 0C2.2 1.2 1.2 2.2 0 10C-1.2 2.2-2.2 1.2-10 0C-2.2-1.2-1.2-2.2 0-10Z"/></symbol>
   </defs>
@@ -350,21 +351,21 @@ img{display:block}
 <!-- HOME -->
 <section class="view" id="home">
   <div class="home-inner">
-    <h1 class="logo"><img src="art/logo-painted.png" alt="Violet's Sparkle Palace" width="512" height="288"></h1>
+    <h1 class="logo"><img src="art/logo-painted.webp" alt="Violet's Sparkle Palace" width="512" height="288"></h1>
     <div class="tiles">
       <button class="tile t1" data-go="dress-up" aria-label="Royal Dress-Up">
         <svg class="bg" viewBox="0 0 300 110" preserveAspectRatio="none" aria-hidden="true"><path filter="url(#wob)" vector-effect="non-scaling-stroke" d="M14 8 Q150 2 288 10 Q296 55 290 100 Q150 108 12 102 Q4 55 14 8Z" fill="#FFFFFF" stroke="#4A2C4F" stroke-width="3"/></svg>
-        <span class="art"><img src="art/dressup-tile.png" alt="" width="288" height="288"></span>
+        <span class="art"><img src="art/dressup-tile.webp" alt="" width="288" height="288"></span>
         <span class="name"><small>Royal</small>Dress-Up</span>
       </button>
       <button class="tile t2" data-go="wand" aria-label="Sparkle Wand">
         <svg class="bg" viewBox="0 0 300 110" preserveAspectRatio="none" aria-hidden="true"><path filter="url(#wob)" vector-effect="non-scaling-stroke" d="M10 10 Q150 4 290 8 Q298 55 292 102 Q150 106 14 100 Q6 55 10 10Z" fill="#FFFFFF" stroke="#4A2C4F" stroke-width="3"/></svg>
-        <span class="art"><img src="art/wand-tile.png" alt="" width="288" height="288"></span>
+        <span class="art"><img src="art/wand-tile.webp" alt="" width="288" height="288"></span>
         <span class="name"><small>Sparkle</small>Wand</span>
       </button>
       <button class="tile t3" data-go="castle" aria-label="Mermaid Castle">
         <svg class="bg" viewBox="0 0 300 110" preserveAspectRatio="none" aria-hidden="true"><path filter="url(#wob)" vector-effect="non-scaling-stroke" d="M12 6 Q150 10 288 6 Q294 55 290 104 Q150 100 10 104 Q4 55 12 6Z" fill="#FFFFFF" stroke="#4A2C4F" stroke-width="3"/></svg>
-        <span class="art"><img src="art/mermaid-tile.png" alt="" width="288" height="288"></span>
+        <span class="art"><img src="art/mermaid-tile.webp" alt="" width="288" height="288"></span>
         <span class="name"><small>Mermaid</small>Castle</span>
       </button>
     </div>
@@ -401,7 +402,7 @@ img{display:block}
 <!-- SPARKLE WAND -->
 <section class="view" id="wand" hidden>
   <canvas id="wandCanvas" aria-label="Draw with your finger"></canvas><div class="wand-tooth" aria-hidden="true"></div>
-  <div class="hint" id="wandHint" aria-hidden="true"><img src="art/wand-tile.png" alt="" width="288" height="288"></div>
+  <div class="hint" id="wandHint" aria-hidden="true"><img src="art/wand-tile.webp" alt="" width="288" height="288"></div>
   <div class="wandbar" id="wandbar">
     <button class="chip on" data-b="rainbow" aria-label="Rainbow wand"><svg viewBox="0 0 40 40"><g fill="none" stroke-width="4" stroke-linecap="round"><path d="M5 30A15 15 0 0 1 35 30" stroke="#ff8f8f"/><path d="M10 30A10 10 0 0 1 30 30" stroke="#ffe070"/><path d="M15 30A5 5 0 0 1 25 30" stroke="#7fc8ff"/></g></svg></button>
     <button class="chip" data-b="gold" aria-label="Star wand"><svg viewBox="0 0 40 40"><path d="M20 4 L24 15 L36 15 L26 22 L30 34 L20 27 L10 34 L14 22 L4 15 L16 15Z" fill="#F2C14E" stroke="#D9A23A" stroke-width="2" stroke-linejoin="round"/></svg></button>
@@ -490,8 +491,8 @@ function spk(x,y,r){return `M${x} ${y-r}Q${x} ${y} ${x+r} ${y}Q${x} ${y} ${x} ${
 function star5(x,y,r){let d='';for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2?r*.45:r;d+=(i?'L':'M')+(x+rr*Math.cos(a)).toFixed(1)+' '+(y+rr*Math.sin(a)).toFixed(1);}return d+'Z';}
 function heart(x,y,s){return `M${x} ${y+s*.9}C${x-s*1.4} ${y+s*.1} ${x-s*.9} ${y-s*1.1} ${x} ${y-s*.35}C${x+s*.9} ${y-s*1.1} ${x+s*1.4} ${y+s*.1} ${x} ${y+s*.9}Z`;}
 function cloud(x,y,s){return `<g fill="#fff"><circle cx="${x-18*s}" cy="${y}" r="${12*s}"/><circle cx="${x}" cy="${y-8*s}" r="${16*s}"/><circle cx="${x+18*s}" cy="${y}" r="${12*s}"/><ellipse cx="${x}" cy="${y+4*s}" rx="${30*s}" ry="${10*s}"/></g>`;}
-const L=(x,f)=>x?`<g filter="url(#${f||'ink'})">${x}</g>`:'';
-function ink(svg,f){const k=svg.indexOf('>')+1,e=svg.lastIndexOf('</svg>');return svg.slice(0,k)+`<g filter="url(#tooth)"><g filter="url(#${f||'inkT'})">`+svg.slice(k,e)+'</g></g>'+svg.slice(e);}
+const L=(x,f)=>x?`<g filter="url(#${f||'inkL'})">${x}</g>`:'';
+function ink(svg,f){const k=svg.indexOf('>')+1,e=svg.lastIndexOf('</svg>');return svg.slice(0,k)+`<g filter="url(#${f||'inkT'})">`+svg.slice(k,e)+'</g>'+svg.slice(e);}
 function rng(seed){let s=seed;return()=>{s=(s*16807)%2147483647;return(s-1)/2147483646;};}
 const RB=['#ffa9a9','#ffcc96','#ffe68a','#b2e8a8','#a6d6ff','#cdb6fb'];
 const RBSTOPS=RB.map((c,i)=>`<stop offset="${(i/(RB.length-1)).toFixed(2)}" stop-color="${c}"/>`).join('');
@@ -652,8 +653,9 @@ function render(s,p,vb,opt){
   let o=`<svg viewBox="${vb||'0 0 300 400'}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice"><defs>`+
     `<linearGradient id="${p}rbv" x1="0" y1="0" x2="0" y2="1">${RBSTOPS}</linearGradient>`+
     `<linearGradient id="${p}rbh" x1="0" y1="0" x2="1" y2="1">${RBSTOPS}</linearGradient></defs>`;
-  if(s.place!=='none')o+=`<rect width="300" height="400" fill="#FFF9F2"/><g filter="url(#wash)">${BG[s.place](p)}</g>`;
-  o+='<g filter="url(#tooth)">';
+  const lite=opt&&opt.lite;
+  if(s.place!=='none')o+=`<rect width="300" height="400" fill="#FFF9F2"/>`+(lite?`<g opacity=".85">${BG[s.place](p)}</g>`:`<g filter="url(#wash)">${BG[s.place](p)}</g>`);
+  o+=lite?'<g>':'<g filter="url(#wobD)">';
   o+=L(HAIRBACK[s.hair](h,hd));
   o+=L(DRESS[s.dress](f,l,d));
   // neck + torso
@@ -734,7 +736,7 @@ function drawTabs(){
 function drawPanel(){
   const t=TABS.find(t=>t.id===curTab);
   itemsEl.innerHTML=t.items.map((v,i)=>{const s=Object.assign({},look,{[t.id]:v});
-    return `<button class="item chip${look[t.id]===v?' on':''}" data-i="${i}" aria-label="${t.id} ${v}" aria-pressed="${look[t.id]===v}">${render(s,'th'+t.id+i,t.crop)}</button>`;}).join('');
+    return `<button class="item chip${look[t.id]===v?' on':''}" data-i="${i}" aria-label="${t.id} ${v}" aria-pressed="${look[t.id]===v}">${render(s,'th'+t.id+i,t.crop,{lite:true})}</button>`;}).join('');
   if(t.colors){
     const [key,pal]=t.colors;
     colorsEl.innerHTML=Object.keys(pal).map((c,i)=>`<button class="dot${look[key]===c?' on':''}" data-c="${c}" data-i="${i}" aria-label="${c}" style="background:${SWATCH[c]||pal[c]}"></button>`).join('');
@@ -768,7 +770,7 @@ $('saveBtn').addEventListener('click',e=>{
 });
 function openGallery(){
   const g=$('gal');
-  g.innerHTML=looks.length?looks.map((s,i)=>`<button class="chip" data-i="${i}" aria-label="Look ${i+1}">${render(s,'g'+i)}</button>`).join('')
+  g.innerHTML=looks.length?looks.map((s,i)=>`<button class="chip" data-i="${i}" aria-label="Look ${i+1}">${render(s,'g'+i,null,{lite:true})}</button>`).join('')
     :`<div class="empty" style="grid-column:1/-1"><svg viewBox="0 0 40 40"><path d="${heart(20,20,13)}" fill="#FFE3EE" stroke="#4A2C4F" stroke-width="2" stroke-dasharray="4 3"/></svg>Tap the heart to save a look</div>`;
   $('sheet').hidden=false;sfx.open();
 }
@@ -786,7 +788,7 @@ function drawMute(){
     <g filter="url(#wob)" stroke="#4A2C4F" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><circle cx="32" cy="32" r="28" fill="none"/>
     <path d="M32 16c-8 0-11 7-11 13 0 5-2 8-4 10h30c-2-2-4-5-4-10 0-6-3-13-11-13Z" fill="${m?'#E9E1EF':'#F2C14E'}"/><circle cx="32" cy="43" r="3.6" fill="#FFFFFF"/>
     ${m?'<path d="M15 15L49 49" stroke-width="4"/>':''}</g>
-    ${m?'':'<use class="float" href="#spk" x="46" y="8" width="11" height="11" fill="#FF9EC4"/><use class="float" href="#spk" x="8" y="14" width="7" height="7" fill="#F2C14E" style="animation-delay:-1.6s"/>'}</svg>`;
+    ${m?'':'<use href="#spk" x="46" y="8" width="11" height="11" fill="#FF9EC4"/><use href="#spk" x="8" y="14" width="7" height="7" fill="#F2C14E"/>'}</svg>`;
   muteBtn.setAttribute('aria-label',m?'Sound off':'Sound on');
   muteBtn.setAttribute('aria-pressed',String(m));
 }
@@ -920,30 +922,30 @@ const SCENE=`<svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice" xml
     <path d="M0 226 Q25 214 50 226 T100 226 T150 226 T200 226 T250 226 T300 226 V400 H0Z" fill="url(#csea)"/>
     <path d="M0 360 Q75 344 150 356 T300 352 V400 H0Z" fill="#FFE9BE"/>
   </g>
-  <g filter="url(#ink)">${cloud(40,64,.9)}</g><g filter="url(#ink)">${cloud(256,46,.7)}</g>
+  <g filter="url(#inkL)">${cloud(40,64,.9)}</g><g filter="url(#inkL)">${cloud(256,46,.7)}</g>
   <ellipse cx="150" cy="232" rx="125" ry="16" fill="#F6DDBA" filter="url(#wash)"/>
-  <g filter="url(#ink)">
+  <g filter="url(#inkL)">
     <rect x="58" y="120" width="40" height="110" fill="url(#ctow)"/><rect x="202" y="120" width="40" height="110" fill="url(#ctow)"/>
     <rect x="90" y="150" width="120" height="80" fill="#F3E9FF"/>
     ${[96,114,132,150,168,186].map(x=>`<rect x="${x}" y="141" width="11" height="11" rx="2" fill="#F3E9FF"/>`).join('')}
   </g>
-  <g filter="url(#ink)"><rect x="124" y="84" width="52" height="146" fill="url(#ctow)"/></g>
-  <g filter="url(#ink)"><path d="M52 122 Q78 60 78 44 Q78 60 104 122Z" fill="#FFB8D8"/><path d="M196 122 Q222 60 222 44 Q222 60 248 122Z" fill="#FFB8D8"/><path d="M118 86 Q150 20 150 6 Q150 20 182 86Z" fill="#FF9EC4"/></g>
+  <g filter="url(#inkL)"><rect x="124" y="84" width="52" height="146" fill="url(#ctow)"/></g>
+  <g filter="url(#inkL)"><path d="M52 122 Q78 60 78 44 Q78 60 104 122Z" fill="#FFB8D8"/><path d="M196 122 Q222 60 222 44 Q222 60 248 122Z" fill="#FFB8D8"/><path d="M118 86 Q150 20 150 6 Q150 20 182 86Z" fill="#FF9EC4"/></g>
   <path d="M66 112 Q78 76 78 52 M90 112 Q78 76 78 52 M210 112 Q222 76 222 52 M234 112 Q222 76 222 52 M130 78 Q150 36 150 14 M170 78 Q150 36 150 14" stroke="#FFE1EE" stroke-width="2" fill="none"/>
   <g filter="url(#inkT)"><circle cx="78" cy="42" r="4" fill="#F2C14E"/><circle cx="222" cy="42" r="4" fill="#F2C14E"/><path d="${star5(150,6,7)}" fill="#F2C14E"/></g>
   <g filter="url(#inkT)"><path d="${heart(150,118,8)}" fill="#FF9EC4"/><path d="${heart(78,150,6)}" fill="#C9B2F5"/><path d="${heart(222,150,6)}" fill="#C9B2F5"/></g>
-  <g filter="url(#ink)"><path d="M136 230 V196 a14 14 0 0 1 28 0 V230Z" fill="#C9B2F5"/></g><circle cx="158" cy="214" r="2" fill="#F2C14E"/>
+  <g filter="url(#inkL)"><path d="M136 230 V196 a14 14 0 0 1 28 0 V230Z" fill="#C9B2F5"/></g><circle cx="158" cy="214" r="2" fill="#F2C14E"/>
   <g fill="#7C4DCC" opacity=".55"><path d="M72 182 v-8 a4 4 0 0 1 8 0 v8Z"/><path d="M216 182 v-8 a4 4 0 0 1 8 0 v8Z"/><path d="M146 120 v-8 a4 4 0 0 1 8 0 v8Z" opacity="0"/></g>
   <path d="M0 226 Q25 214 50 226 T100 226 T150 226 T200 226 T250 226 T300 226" stroke="#FFFFFF" stroke-width="3" fill="none" opacity=".8"/>
-  <g fill="none" stroke-linecap="round" stroke-width="8" filter="url(#ink)"><path d="M18 400 C8 370 30 350 18 320 C10 300 24 286 20 270" stroke="#8FD9B6"/><path d="M284 400 C296 372 274 352 286 326 C294 306 280 292 284 280" stroke="#A3E2C4"/></g>
+  <g fill="none" stroke-linecap="round" stroke-width="8" filter="url(#inkL)"><path d="M18 400 C8 370 30 350 18 320 C10 300 24 286 20 270" stroke="#8FD9B6"/><path d="M284 400 C296 372 274 352 286 326 C294 306 280 292 284 280" stroke="#A3E2C4"/></g>
   <g fill="rgba(255,255,255,.35)" stroke="#8EC5F2" stroke-width="1.6"><circle cx="46" cy="262" r="6"/><circle cx="54" cy="246" r="3.5"/><circle cx="262" cy="300" r="5"/></g>
   <path d="M30 380 Q50 374 70 380 M180 384 Q200 378 220 384" stroke="#E7C48C" stroke-width="2" fill="none" stroke-linecap="round"/>
 </svg>`;
 function stk(vb,inner,cls){return {vb,inner,cls:cls||''};}
 const STK={
-  mer1:{w:62,tall:true,svg:()=>render(Object.assign({},DEF,{dress:'mermaid',dressColor:'aqua',hair:'long',hairColor:'gold',crown:'tiara',magic:'none',friend:'none',sparkle:'none',place:'none',skin:0}),'sm1','88 40 140 356')},
-  mer2:{w:62,tall:true,svg:()=>render(Object.assign({},DEF,{dress:'mermaid',dressColor:'pink',hair:'curly',hairColor:'brown',crown:'crown',magic:'wand',friend:'none',sparkle:'none',place:'none',skin:2}),'sm2','88 40 160 356')},
-  mer3:{w:62,tall:true,svg:()=>render(Object.assign({},DEF,{dress:'mermaid',dressColor:'lav',hair:'pigtails',hairColor:'rainbow',crown:'flowers',magic:'none',friend:'none',sparkle:'none',place:'none',skin:3}),'sm3','80 40 140 356')},
+  mer1:{w:62,tall:true,svg:()=>render(Object.assign({},DEF,{dress:'mermaid',dressColor:'aqua',hair:'long',hairColor:'gold',crown:'tiara',magic:'none',friend:'none',sparkle:'none',place:'none',skin:0}),'sm1','88 40 140 356',{lite:true})},
+  mer2:{w:62,tall:true,svg:()=>render(Object.assign({},DEF,{dress:'mermaid',dressColor:'pink',hair:'curly',hairColor:'brown',crown:'crown',magic:'wand',friend:'none',sparkle:'none',place:'none',skin:2}),'sm2','88 40 160 356',{lite:true})},
+  mer3:{w:62,tall:true,svg:()=>render(Object.assign({},DEF,{dress:'mermaid',dressColor:'lav',hair:'pigtails',hairColor:'rainbow',crown:'flowers',magic:'none',friend:'none',sparkle:'none',place:'none',skin:3}),'sm3','80 40 140 356',{lite:true})},
   unicorn:{w:70,svg:()=>`<svg viewBox="12 280 106 108" xmlns="http://www.w3.org/2000/svg">${FRIEND.unicorn()}</svg>`},
   crown:{w:46,svg:()=>`<svg viewBox="118 38 64 50" xmlns="http://www.w3.org/2000/svg">${CROWN.crown()}</svg>`},
   shell:{w:44,svg:()=>`<svg viewBox="0 0 100 90" xmlns="http://www.w3.org/2000/svg"><path d="M50 84 L10 40 A44 44 0 0 1 90 40Z" fill="#ffb3d6" stroke="#ff7fb8" stroke-width="3" stroke-linejoin="round"/>${[-60,-35,-12,12,35,60].map(a=>{const r=a*Math.PI/180;return `<path d="M50 84 L${(50+44*Math.sin(r)).toFixed(1)} ${(40-34*Math.cos(r)).toFixed(1)}" stroke="#ff7fb8" stroke-width="2.5"/>`;}).join('')}<path d="M38 84 h24 l-4 6 h-16z" fill="#ff9fc7"/></svg>`},
@@ -958,7 +960,7 @@ const STK={
   bubbles:{w:40,svg:()=>`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g fill="rgba(210,240,255,.55)" stroke="#7fc8ff" stroke-width="3"><circle cx="40" cy="62" r="26"/><circle cx="74" cy="30" r="16"/><circle cx="78" cy="76" r="10"/></g><g fill="#fff"><circle cx="30" cy="52" r="6"/><circle cx="68" cy="24" r="4"/></g></svg>`}
 };
 const STK_ORDER=['mer1','mer2','mer3','unicorn','crown','shell','star','fish','octo','pearl','heart','rainbow','coral','sparkle','bubbles'];
-const STK_INK={unicorn:'ink',crown:'ink'};
+const STK_INK={unicorn:'inkL',crown:'inkL'};
 const STK_SVG={};STK_ORDER.forEach(k=>{const v=STK[k].svg().replace('xMidYMid slice','xMidYMid meet');STK_SVG[k]=ink(v,STK[k].tall?'inkS':(STK_INK[k]||'inkS'));});
 
 const Castle=(function(){
@@ -966,9 +968,11 @@ const Castle=(function(){
   let placed=store.get('castle',[]);if(!Array.isArray(placed))placed=[];
   placed=placed.filter(p=>p&&STK[p.k]&&isFinite(p.x)&&isFinite(p.y));
   let zTop=placed.reduce((m,p)=>Math.max(m,p.z||0),0);
-  $('sceneBg').innerHTML=SCENE.replace(/(<\/defs>)([\s\S]*)(<\/svg>)$/,'$1<g filter="url(#tooth)">$2</g>$3');
+  $('sceneBg').innerHTML=SCENE;
   tray.innerHTML=STK_ORDER.map((k,i)=>`<button data-k="${k}" data-i="${i}" class="chip${STK[k].tall?' t-tall':''}" aria-label="${k} sticker">${STK_SVG[k]}</button>`).join('');
   const save=()=>store.set('castle',placed);
+  // keep every sticker fully inside the scene
+  function fit(p){const w=STK[p.k].w/2,h=STK[p.k].tall?STK[p.k].w*1.25:STK[p.k].w*.5;p.x=Math.max(w+4,Math.min(296-w,p.x));p.y=Math.max(h+4,Math.min(396-h,p.y));return p;}
   function place(el,p){el.style.left=(p.x/300*100)+'%';el.style.top=(p.y/400*100)+'%';el.style.width=(STK[p.k].w/300*100)+'%';el.style.zIndex=p.z||1;}
   function draw(){layer.innerHTML='';placed.forEach((p,i)=>{const el=document.createElement('div');el.className='stk';el.dataset.n=i;el.innerHTML=STK_SVG[p.k];place(el,p);layer.appendChild(el);});}
   function toScene(cx,cy){const r=scene.getBoundingClientRect();return{x:(cx-r.left)/r.width*300,y:(cy-r.top)/r.height*400,inside:cx>=r.left&&cx<=r.right&&cy>=r.top&&cy<=r.bottom};}
@@ -990,7 +994,7 @@ const Castle=(function(){
     if(!drag)return;const {el,p,moved}=drag;drag=null;el.classList.remove('lift');
     const s=toScene(e.clientX,e.clientY);
     if(!s.inside){placed.splice(placed.indexOf(p),1);poof();draw();save();return;}
-    p.x=Math.max(6,Math.min(294,p.x));p.y=Math.max(6,Math.min(394,p.y));place(el,p);
+    fit(p);place(el,p);
     if(!moved){bump(el,'wig');sfx.tap();}else bloop();
     save();
   }
@@ -1011,7 +1015,7 @@ const Castle=(function(){
   });
   function add(k,x,y){
     if(placed.length>=40)placed.shift();
-    const p={k,x,y,z:++zTop};placed.push(p);draw();save();
+    const p=fit({k,x,y,z:++zTop});placed.push(p);draw();save();
     const el=layer.lastElementChild;if(el)bump(el,'drop');
   }
   function endTray(e){
@@ -1020,7 +1024,11 @@ const Castle=(function(){
     if(e.type!=='pointerup')return;
     // a tap: drop it somewhere in the water or sky, a little random
     const sea=STK[t.k].tall||['fish','octo','shell','star','pearl','coral','bubbles'].includes(t.k);
-    add(t.k,60+Math.random()*180,sea?260+Math.random()*90:60+Math.random()*120);sfx.tap();
+    // pick the open spot farthest from the stickers already there, so they don't pile up
+    let best=null,bd=-1;
+    for(let i=0;i<14;i++){const c={k:t.k,x:50+Math.random()*200,y:sea?250+Math.random()*100:50+Math.random()*130};fit(c);
+      const d=placed.reduce((m,q)=>Math.min(m,Math.hypot(q.x-c.x,(q.y-c.y)*.9)),999);if(d>bd){bd=d;best=c;}}
+    add(t.k,best.x,best.y);sfx.tap();
   }
   tray.addEventListener('pointerup',endTray);tray.addEventListener('pointercancel',endTray);
   $('castleClear').addEventListener('click',()=>{if(!placed.length)return;placed=[];draw();save();sfx.home();});
@@ -1032,10 +1040,13 @@ const ROUTES={'dress-up':'dressup','wand':'wand','castle':'castle'};
 const READY={'dress-up':true,'wand':true,'castle':true};
 const WEL={dressup:'dressup-wide',wand:'wand-wide',castle:'mermaid-wide'};
 let curView=null;
+const WELIMG={};
+function preloadWelcome(){Object.keys(WEL).forEach(k=>{const im=new Image();im.decoding='async';im.src='art/'+WEL[k]+'.webp';WELIMG[k]=im;});}
 function welcome(id){
+  const im=WELIMG[id];if(!im||!im.complete||!im.naturalWidth)return;
   document.querySelectorAll('.welcome').forEach(w=>w.remove());
   const w=document.createElement('div');w.className='welcome';w.setAttribute('aria-hidden','true');
-  w.innerHTML=`<div class="card"><svg viewBox="0 0 300 170" preserveAspectRatio="none"><path filter="url(#wob)" vector-effect="non-scaling-stroke" d="M10 8 Q150 2 290 9 Q298 85 291 162 Q150 168 12 162 Q3 85 10 8Z" fill="#FFFFFF" stroke="#4A2C4F" stroke-width="3"/></svg><img class="paint" src="art/${WEL[id]}.jpg" alt="" width="512" height="288"></div>`;
+  w.innerHTML=`<div class="card"><svg viewBox="0 0 300 170" preserveAspectRatio="none"><path filter="url(#wob)" vector-effect="non-scaling-stroke" d="M10 8 Q150 2 290 9 Q298 85 291 162 Q150 168 12 162 Q3 85 10 8Z" fill="#FFFFFF" stroke="#4A2C4F" stroke-width="3"/></svg><img class="paint" src="${WELIMG[id].src}" alt="" width="512" height="288"></div>`;
   document.body.appendChild(w);
   const done=()=>{if(w.dataset.d)return;w.dataset.d='1';w.classList.add('out');setTimeout(()=>w.remove(),400);};
   w.addEventListener('pointerdown',e=>{e.preventDefault();done();});
@@ -1073,7 +1084,7 @@ function skPath(w,h,r,m,seed,round){
   const R=skRand(seed),pts=[];
   if(round){
     const cx=w/2,cy=h/2,rx=w/2-m,ry=h/2-m,n=16,st=R()*6.283;
-    for(let i=0;i<=n+2;i++){const a=st+i/n*6.283,j=1+(R()-.5)*.07;pts.push([cx+rx*j*Math.cos(a),cy+ry*j*Math.sin(a)]);}
+    for(let i=0;i<=n+2;i++){const a=st+i/n*6.283,j=1+(R()-.5)*.03;pts.push([cx+rx*j*Math.cos(a),cy+ry*j*Math.sin(a)]);}
   }else{
     const x0=m,y0=m,x1=w-m,y1=h-m;r=Math.max(4,Math.min(r,(x1-x0)/2,(y1-y0)/2));
     const P=[],seg=(ax,ay,bx,by)=>{const n=Math.max(1,Math.round(Math.hypot(bx-ax,by-ay)/18));for(let i=0;i<n;i++)P.push([ax+(bx-ax)*i/n,ay+(by-ay)*i/n]);},
@@ -1095,10 +1106,10 @@ function sketch(el){
   el._skw=w;el._skh=h;if(!el._sks)el._sks=(++skN)*7919+13;
   const round=el.classList.contains('dot');
   const r=el.classList.contains('frame')?30:el.classList.contains('sheet-card')?32:Math.min(21,Math.min(w,h)*.28);
-  const d1=skPath(w,h,r,2.6,el._sks,round),d2=skPath(w,h,r,3.4,el._sks+31,round);
+  const m=round?2:2.6,d1=skPath(w,h,r,m,el._sks,round),d2=skPath(w,h,r,m+.8,el._sks+31,round);
   el.querySelectorAll(':scope > .sk').forEach(n=>n.remove());
   const mk=(c,inner)=>{const v=document.createElementNS('http://www.w3.org/2000/svg','svg');v.setAttribute('class','sk '+c);v.setAttribute('viewBox',`0 0 ${w} ${h}`);v.setAttribute('aria-hidden','true');v.innerHTML=inner;return v;};
-  if(!round)el.insertBefore(mk('f',`<path d="${d1}Z"/>`),el.firstChild);
+  if(!round)el.insertBefore(mk('f',`<path class="sh" d="${d1}Z" transform="translate(0 4)"/><path d="${d1}Z"/>`),el.firstChild);
   el.appendChild(mk('o',`<path d="${d1}"/><path d="${d2}"/>`));
 }
 const skSeen=new WeakSet();
@@ -1111,6 +1122,7 @@ if(typeof MutationObserver!=='undefined')new MutationObserver(ms=>ms.forEach(m=>
 })).observe(document.body,{childList:true,subtree:true});
 skScan(document.body);
 drawMute();show();
+setTimeout(preloadWelcome,600);
 })();
 </script>
 </body>
