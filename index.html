@@ -241,7 +241,10 @@ body.in-game .tabbar{display:none}
 .wandbar .sep{flex:none;width:3px;height:32px;border-radius:2px;background:var(--mint);margin:0 3px}
 .host{position:absolute;right:100%;bottom:-6px;height:96px;width:auto;margin-right:-8px}
 .hint{position:absolute;left:50%;top:44%;width:110px;height:110px;margin:-55px 0 0 -55px;pointer-events:none;z-index:2;animation:hint 2.6s ease-in-out infinite}
-.hint svg{width:100%;height:100%;filter:drop-shadow(0 4px 6px rgba(42,34,80,.25))}
+.hint.held{left:0;top:0;margin:0;transform-origin:68px 41px;animation:none;transition:none;will-change:transform}
+.hint.held svg{animation:wandwig 1.8s ease-in-out infinite}
+@keyframes wandwig{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+.hint svg{transform-origin:62% 37%;width:100%;height:100%;filter:drop-shadow(0 4px 6px rgba(42,34,80,.25))}
 @keyframes hint{0%{transform:translate(-60px,24px) rotate(-12deg)}50%{transform:translate(60px,-16px) rotate(10deg)}100%{transform:translate(-60px,24px) rotate(-12deg)}}
 
 /* mermaid castle */
@@ -794,8 +797,15 @@ const Wand=(function(){
   }
   function chime(y){const now=performance.now();if(now-lastNote<110)return;lastNote=now;
     const i=Math.max(0,Math.min(P.length-1,Math.floor((1-y/H)*P.length)));Snd.bell(P[i],0,.06);}
+  /* the wand stays in her hand: its star sits under her finger and follows every move */
+  const wandEl=$('wandHint');let tilt=0;
+  function holdWand(x,y,dx){
+    wandEl.classList.add('held');
+    tilt=Math.max(-18,Math.min(18,tilt*.8+dx*.6));
+    wandEl.style.transform=`translate(${x-68}px,${y-41}px) rotate(${tilt}deg)`;
+  }
   function down(e){
-    if(!touched){touched=true;$('wandHint').hidden=true;}
+    touched=true;holdWand(e.offsetX,e.offsetY,0);
     cv.setPointerCapture?.(e.pointerId);
     pts[e.pointerId]={x:e.offsetX,y:e.offsetY,d:0};spawn(e.offsetX,e.offsetY,14,true);lastNote=0;chime(e.offsetY);
   }
@@ -803,7 +813,7 @@ const Wand=(function(){
     const p=pts[e.pointerId];if(!p)return;const x=e.offsetX,y=e.offsetY,dx=x-p.x,dy=y-p.y,d=Math.hypot(dx,dy);if(d<2)return;
     hue+=d*.9;segs.push({x1:p.x,y1:p.y,x2:x,y2:y,c:BR[brush].trail(),w:14,t:performance.now()});
     p.d+=d;while(p.d>16){p.d-=16;spawn(x,y,2,false);}
-    p.x=x;p.y=y;chime(y);
+    p.x=x;p.y=y;chime(y);holdWand(x,y,dx);
   }
   function up(e){delete pts[e.pointerId];}
   cv.addEventListener('pointerdown',down);cv.addEventListener('pointermove',move);
@@ -844,7 +854,7 @@ const Wand=(function(){
   window.addEventListener('resize',()=>{if(on)resize();});
   drawSkyBtn();
   return{
-    start(){on=true;resize();cancelAnimationFrame(raf);raf=requestAnimationFrame(frame);},
+    start(){on=true;wandEl.classList.remove('held');wandEl.style.transform='';tilt=0;resize();cancelAnimationFrame(raf);raf=requestAnimationFrame(frame);},
     stop(){on=false;cancelAnimationFrame(raf);segs=[];parts=[];pts={};}
   };
 })();
