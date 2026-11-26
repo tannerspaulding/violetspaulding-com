@@ -14,7 +14,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="preload" as="image" href="art/scene-home.webp">
 <meta name="apple-mobile-web-app-title" content="Sparkle Palace">
 <style>
@@ -40,12 +40,13 @@ html{height:100%;box-sizing:border-box;background:var(--mint-bg)}
 body{
   height:100%;margin:0;overflow:hidden;background:var(--mint-bg);
   font-family:var(--font);font-weight:600;color:var(--ink);
-  -webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
 }
 button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:pointer;touch-action:manipulation}
 button:focus-visible{outline:3px solid var(--mint-deep);outline-offset:3px}
 svg,img{display:block}
-img{-webkit-user-drag:none;user-select:none}
+img,svg,canvas{-webkit-user-drag:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+img{pointer-events:none}
 .view{height:100%;width:100%;position:relative;z-index:1}
 [hidden]{display:none!important}
 .ico{width:28px;height:28px;color:var(--ink)}
@@ -977,6 +978,11 @@ document.querySelectorAll('.tile,.tabbar button').forEach(t=>{
   });
 });
 /* where the browser allows it (Android), games go full screen and sideways; iPhone shows the turn card instead */
+/* no long-press Save/Share menu or picture dragging for little fingers */
+document.addEventListener('contextmenu',function(e){e.preventDefault();});
+document.addEventListener('dragstart',function(e){e.preventDefault();});
+document.addEventListener('selectstart',function(e){e.preventDefault();});
+Array.prototype.forEach.call(document.images,function(i){i.draggable=false;});
 function landscape(){
   try{const so=screen.orientation,de=document.documentElement;
     if(!so||!so.lock||!de.requestFullscreen||!matchMedia('(pointer:coarse)').matches||document.fullscreenElement)return;
