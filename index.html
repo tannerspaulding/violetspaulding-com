@@ -260,7 +260,7 @@ body.in-game .tabbar{display:none}
 .hint.held{left:0;top:0;margin:0;transform-origin:68px 41px;animation:none;transition:none;will-change:transform}
 .hint.held svg{animation:wandwig 1.8s ease-in-out infinite}
 @keyframes wandwig{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
-.hint svg{transform-origin:62% 37%;width:100%;height:100%;filter:drop-shadow(0 4px 6px rgba(42,34,80,.25))}
+.hint svg{overflow:visible;transform-origin:62% 37%;width:100%;height:100%;filter:drop-shadow(0 4px 6px rgba(42,34,80,.25))}
 @keyframes hint{0%{transform:translate(-60px,24px) rotate(-12deg)}50%{transform:translate(60px,-16px) rotate(10deg)}100%{transform:translate(-60px,24px) rotate(-12deg)}}
 
 /* mermaid castle */
@@ -1051,7 +1051,7 @@ const ROUTES={'dress-up':'dressup','wand':'wand','castle':'castle'};
 const READY={'dress-up':true,'wand':true,'castle':true};
 let curView=null;
 const TITLE={dressup:['Royal Dress-Up','i-gown'],wand:['Sparkle Wand','i-wand'],castle:['Mermaid Castle','i-shell']};
-$('wandHint').innerHTML=`<svg viewBox="0 0 100 100" aria-hidden="true"><image href="art/doll/item-wand.webp" width="207" height="483" transform="translate(62 37) rotate(39) scale(.19) translate(-103 -95)"/><path d="${spk(88,14,9)}" fill="#fff"/><path d="${spk(30,22,7)}" fill="#fff"/></svg>`;
+$('wandHint').innerHTML=`<svg viewBox="0 0 100 100" aria-hidden="true"><image href="art/doll/item-wand.webp" width="207" height="483" transform="translate(62 37) rotate(39) scale(.25) translate(-103 -95)"/><path d="${spk(88,14,9)}" fill="#fff"/><path d="${spk(30,22,7)}" fill="#fff"/></svg>`;
 function show(){
   const r=location.hash.slice(1);const id=ROUTES[r];
   document.querySelectorAll('.view').forEach(v=>v.hidden=true);
