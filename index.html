@@ -115,7 +115,7 @@ body.in-game .tabbar{display:none}
   transition:transform .22s var(--ease-boing);
 }
 .gcard:active{transform:scale(.95)}
-.gcard .pic{aspect-ratio:1/1}
+.gcard .pic{display:block;aspect-ratio:1/1;overflow:hidden}
 .gcard .pic img{width:100%;height:100%;object-fit:cover}
 .gcard.wide{grid-column:1 / -1}
 .gcard.wide .pic{aspect-ratio:16/8}
@@ -265,7 +265,9 @@ body.in-game .tabbar{display:none}
 .ghost svg{width:100%;height:auto;display:block;overflow:visible}
 
 /* turn sideways card: games are played in landscape */
-.turn{position:fixed;inset:0;z-index:15;display:none;place-items:center;padding:90px 24px 40px;background:var(--mint-bg)}
+.turn{position:fixed;inset:0;z-index:15;display:none;place-items:center;padding:90px 24px 40px;background:var(--mint-bg) url(art/scene-home.webp) center/cover}
+.turn::before{content:'';position:absolute;inset:0;background:rgba(230,248,242,.55)}
+.turn-card{position:relative}
 .turn-card{display:grid;justify-items:center;gap:6px;background:var(--card);border-radius:34px;box-shadow:var(--shadow-card);padding:24px 26px 22px;width:min(100%, 330px)}
 .turn-art{position:relative;width:220px;height:200px}
 .turn-friend{position:absolute;left:0;bottom:0;height:150px;width:auto;animation:tilt 2.4s ease-in-out infinite;transform-origin:50% 100%}
@@ -686,7 +688,7 @@ function drawTabs(){
 function drawPanel(){
   const t=TABS.find(t=>t.id===curTab);
   itemsEl.innerHTML=t.items.map((v,i)=>{const s=Object.assign({},look,{[t.id]:v});
-    if(t.id!=='place')s.place='none';if(t.id!=='sparkle')s.sparkle='none';
+    if(t.id!=='place')s.place='none';if(t.id!=='sparkle')s.sparkle='none';if(t.id!=='friend')s.friend='none';
     return `<button class="item chip${look[t.id]===v?' on':''}" data-i="${i}" aria-label="${t.id} ${v}" aria-pressed="${look[t.id]===v}">${render(s,'th'+t.id+i,t.crop,{lite:true})}</button>`;}).join('');
   if(t.colors){
     const [key,pal]=t.colors;
