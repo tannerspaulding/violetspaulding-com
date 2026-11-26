@@ -366,24 +366,24 @@ body.in-game .tabbar{display:none}
 <!-- HOME -->
 <section class="view" id="home">
   <div class="scene">
-    <img src="art/scene-home.webp" alt="" width="1024" height="576" fetchpriority="high">
+    <img src="art/scene-home.webp" alt="" width="1280" height="720" fetchpriority="high">
     <div class="pill home-pill"><svg aria-hidden="true"><use href="#i-castle"/></svg><span>Violet's Sparkle Palace</span></div>
   </div>
   <div class="ground">
     <div class="ground-inner">
-      <img class="peek home-friend" src="art/friend-kitty.webp" alt="" width="234" height="316">
+      <img class="peek home-friend" src="art/friend-kitty.webp" alt="" width="308" height="385">
       <div class="sayrow"><span class="say">Hi, Violet!</span></div>
       <div class="cards">
         <button class="gcard c1 tile" data-go="dress-up" aria-label="Royal Dress-Up">
-          <span class="pic"><img src="art/card-dress.webp" alt="" width="600" height="600"></span>
+          <span class="pic"><img src="art/card-dress.webp" alt="" width="350" height="350"></span>
           <span class="nm"><b><i><svg aria-hidden="true"><use href="#i-gown"/></svg></i>Dress-Up</b><svg aria-hidden="true"><use href="#i-chev"/></svg></span>
         </button>
         <button class="gcard c2 tile" data-go="wand" aria-label="Sparkle Wand">
-          <span class="pic"><img src="art/card-wand.webp" alt="" width="600" height="600"></span>
+          <span class="pic"><img src="art/card-wand.webp" alt="" width="350" height="350"></span>
           <span class="nm"><b><i><svg aria-hidden="true"><use href="#i-wand"/></svg></i>Sparkle Wand</b><svg aria-hidden="true"><use href="#i-chev"/></svg></span>
         </button>
         <button class="gcard c3 wide tile" data-go="castle" aria-label="Mermaid Castle">
-          <span class="pic"><img src="art/card-mermaid.webp" alt="" width="600" height="600"></span>
+          <span class="pic"><img src="art/card-mermaid.webp" alt="" width="350" height="350"></span>
           <span class="nm"><b><i><svg aria-hidden="true"><use href="#i-shell"/></svg></i>Mermaid Castle</b><svg aria-hidden="true"><use href="#i-chev"/></svg></span>
         </button>
       </div>
@@ -399,7 +399,7 @@ body.in-game .tabbar{display:none}
 
 <!-- ROYAL DRESS-UP -->
 <section class="view game" id="dressup" hidden>
-  <img class="bgimg" id="dressBg" src="art/scene-dress.webp" alt="" width="1024" height="576">
+  <img class="bgimg" id="dressBg" src="art/scene-dress.webp" alt="" width="1280" height="720">
   <div class="stage">
     <div class="doll" id="frame">
       <div class="pic" id="pic"></div>
@@ -429,7 +429,7 @@ body.in-game .tabbar{display:none}
   <canvas id="wandCanvas" aria-label="Draw with your finger"></canvas>
   <div class="hint" id="wandHint" aria-hidden="true"></div>
   <div class="wandbar" id="wandbar">
-    <img class="host" src="art/friend-dragon.webp" alt="" width="272" height="318">
+    <img class="host" src="art/friend-dragon.webp" alt="" width="336" height="389">
     <button class="chip on" data-b="rainbow" aria-label="Rainbow wand"><svg viewBox="0 0 40 40"><g fill="none" stroke-width="5" stroke-linecap="round"><path d="M5 31A15 15 0 0 1 35 31" stroke="#FF8F8F"/><path d="M10.5 31A9.5 9.5 0 0 1 29.5 31" stroke="#FFD966"/><path d="M16 31A4 4 0 0 1 24 31" stroke="#8FD3FF"/></g></svg></button>
     <button class="chip" data-b="gold" aria-label="Star wand"><svg viewBox="0 0 40 40"><path d="M20 5 L24 15.4 L35 15.8 L26.4 22.8 L29.4 33.6 L20 27.4 L10.6 33.6 L13.6 22.8 L5 15.8 L16 15.4Z" fill="#FFD966" stroke="#F5B83D" stroke-width="2.4" stroke-linejoin="round"/></svg></button>
     <button class="chip" data-b="hearts" aria-label="Heart wand"><svg viewBox="0 0 40 40"><path d="M20 34 C8 26 4 19 4 13 C4 7 9 5 13 5 C16 5 18.5 7 20 10 C21.5 7 24 5 27 5 C31 5 36 7 36 13 C36 19 32 26 20 34Z" fill="#FF7EB6"/></svg></button>
@@ -441,7 +441,7 @@ body.in-game .tabbar{display:none}
 
 <!-- MERMAID CASTLE -->
 <section class="view game" id="castle" hidden>
-  <img class="bgimg" src="art/scene-sea.webp" alt="" width="1024" height="576">
+  <img class="bgimg" src="art/scene-sea.webp" alt="" width="1280" height="720">
   <div id="scene">
     <div id="stickers"></div>
     <div class="actions">
@@ -457,7 +457,7 @@ body.in-game .tabbar{display:none}
 <div class="turn" aria-hidden="true">
   <div class="turn-card">
     <div class="turn-art">
-      <img class="turn-friend" src="art/friend-unicorn.webp" alt="" width="228" height="344">
+      <img class="turn-friend" src="art/friend-unicorn.webp" alt="" width="283" height="412">
       <svg class="turn-phone" viewBox="0 0 64 64"><rect x="18" y="4" width="28" height="56" rx="7" fill="#fff" stroke="#2A2250" stroke-width="3.5"/><rect x="22" y="11" width="20" height="40" rx="3" fill="#D6F5FF"/><circle cx="32" cy="55.5" r="2" fill="#2A2250"/><path d="M27 31l5-6 5 6Z" fill="#FF7EB6"/><path d="M4 26a28 28 0 0 1 10-17" fill="none" stroke="#3FB59A" stroke-width="3.5" stroke-linecap="round"/><path d="M9 5l6 3-3 6" fill="none" stroke="#3FB59A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
     <div class="turn-words">Turn me sideways!</div>
@@ -636,7 +636,7 @@ const FRIEND={
     <path d="M30 58Q44 66 58 58" stroke="#FF8DBA" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="44" cy="63" r="3.5" fill="${GOLD}"/></g>`,
   none:()=>''
 };
-const FRIMG={unicorn:['friend-unicorn',228,344,118],kitty:['friend-kitty',234,316,108],dragon:['friend-dragon',272,318,108]};
+const FRIMG={unicorn:['friend-unicorn',283,412,118],kitty:['friend-kitty',308,385,108],dragon:['friend-dragon',336,389,108]};
 Object.keys(FRIMG).forEach(k=>{const [f,w,hh,H]=FRIMG[k];const W=Math.round(w/hh*H);FRIEND[k]=()=>`<image href="art/${f}.webp" x="${296-W}" y="${400-H}" width="${W}" height="${H}"/>`;});
 const SPOTS=[[40,58,9],[262,92,7],[66,150,6],[254,196,10],[28,232,7],[272,282,8],[230,36,6],[108,28,5],[204,118,5],[48,332,6],[268,350,7],[150,18,5]];
 const SPARKLE={
@@ -984,13 +984,13 @@ const Wand=(function(){
 BG.none=()=>'';
 function stk(vb,inner,cls){return {vb,inner,cls:cls||''};}
 const STK={
-  mer1:{w:62,tall:true,ar:730/344,svg:()=>`<svg viewBox="0 0 344 730" xmlns="http://www.w3.org/2000/svg"><image href="art/stk-mer1.webp" width="344" height="730"/></svg>`},
-  mer2:{w:62,tall:true,ar:724/344,svg:()=>`<svg viewBox="0 0 344 724" xmlns="http://www.w3.org/2000/svg"><image href="art/stk-mer2.webp" width="344" height="724"/></svg>`},
-  mer3:{w:62,tall:true,ar:729/344,svg:()=>`<svg viewBox="0 0 344 729" xmlns="http://www.w3.org/2000/svg"><image href="art/stk-mer3.webp" width="344" height="729"/></svg>`},
-  unicorn:{w:64,svg:()=>`<svg viewBox="0 0 228 344" xmlns="http://www.w3.org/2000/svg"><image href="art/friend-unicorn.webp" width="228" height="344"/></svg>`,tall:true,ar:344/228},
-  kitty:{w:64,svg:()=>`<svg viewBox="0 0 234 316" xmlns="http://www.w3.org/2000/svg"><image href="art/friend-kitty.webp" width="234" height="316"/></svg>`,tall:true,ar:316/234},
-  dragon:{w:66,svg:()=>`<svg viewBox="0 0 272 318" xmlns="http://www.w3.org/2000/svg"><image href="art/friend-dragon.webp" width="272" height="318"/></svg>`,tall:true,ar:318/272},
-  girl:{w:64,svg:()=>`<svg viewBox="0 0 266 324" xmlns="http://www.w3.org/2000/svg"><image href="art/friend-girl.webp" width="266" height="324"/></svg>`,tall:true,ar:324/266},
+  mer1:{w:62,tall:true,ar:720/332,svg:()=>`<svg viewBox="0 0 332 720" xmlns="http://www.w3.org/2000/svg"><image href="art/stk-mer1.webp" width="332" height="720"/></svg>`},
+  mer2:{w:62,tall:true,ar:715/332,svg:()=>`<svg viewBox="0 0 332 715" xmlns="http://www.w3.org/2000/svg"><image href="art/stk-mer2.webp" width="332" height="715"/></svg>`},
+  mer3:{w:62,tall:true,ar:719/332,svg:()=>`<svg viewBox="0 0 332 719" xmlns="http://www.w3.org/2000/svg"><image href="art/stk-mer3.webp" width="332" height="719"/></svg>`},
+  unicorn:{w:64,svg:()=>`<svg viewBox="0 0 283 412" xmlns="http://www.w3.org/2000/svg"><image href="art/friend-unicorn.webp" width="283" height="412"/></svg>`,tall:true,ar:412/283},
+  kitty:{w:64,svg:()=>`<svg viewBox="0 0 308 385" xmlns="http://www.w3.org/2000/svg"><image href="art/friend-kitty.webp" width="308" height="385"/></svg>`,tall:true,ar:385/308},
+  dragon:{w:66,svg:()=>`<svg viewBox="0 0 336 389" xmlns="http://www.w3.org/2000/svg"><image href="art/friend-dragon.webp" width="336" height="389"/></svg>`,tall:true,ar:389/336},
+  girl:{w:64,svg:()=>`<svg viewBox="0 0 344 395" xmlns="http://www.w3.org/2000/svg"><image href="art/friend-girl.webp" width="344" height="395"/></svg>`,tall:true,ar:395/344},
   crown:{w:46,svg:()=>`<svg viewBox="118 38 64 50" xmlns="http://www.w3.org/2000/svg">${CROWN.crown()}</svg>`},
   shell:{w:44,svg:()=>`<svg viewBox="0 0 100 90" xmlns="http://www.w3.org/2000/svg"><path d="M50 84 L10 40 A44 44 0 0 1 90 40Z" fill="#ffb3d6" stroke="#ff7fb8" stroke-width="3" stroke-linejoin="round"/>${[-60,-35,-12,12,35,60].map(a=>{const r=a*Math.PI/180;return `<path d="M50 84 L${(50+44*Math.sin(r)).toFixed(1)} ${(40-34*Math.cos(r)).toFixed(1)}" stroke="#ff7fb8" stroke-width="2.5"/>`;}).join('')}<path d="M38 84 h24 l-4 6 h-16z" fill="#ff9fc7"/></svg>`},
   star:{w:44,svg:()=>`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="${star5(50,52,46)}" fill="#ffa36b" stroke="#ff7f50" stroke-width="3" stroke-linejoin="round"/><g fill="#ffe1c8"><circle cx="50" cy="22" r="3"/><circle cx="80" cy="44" r="3"/><circle cx="20" cy="44" r="3"/><circle cx="32" cy="76" r="3"/><circle cx="68" cy="76" r="3"/></g><circle cx="42" cy="50" r="3.5" fill="#2A2250"/><circle cx="58" cy="50" r="3.5" fill="#2A2250"/><path d="M43 59Q50 65 57 59" stroke="#2A2250" stroke-width="3" fill="none" stroke-linecap="round"/></svg>`},
