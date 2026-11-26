@@ -3,270 +3,285 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<!--standalone:start-->
-<style>html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}</style>
-<!--standalone:end-->
 <title>Violet's Sparkle Palace</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&family=Patrick+Hand&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="theme-color" content="#FFF9F2">
+<meta name="theme-color" content="#E6F8F2">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preload" as="image" href="art/scene-home.webp">
 <meta name="apple-mobile-web-app-title" content="Sparkle Palace">
 <style>
-/* Layout: one-screen app in a hand-drawn storybook look. Home = painted name + three picture rooms. Each room = stage (the art) + chunky crayon buttons. Single warm-paper look, by choice. */
+/* Layout (brand v3 "Sparkle Garden"): Home = full-bleed painted scene, mint ground sliding over it with a speech-bubble label, a friend on its edge, and picture cards; floating tab bar. Games are landscape-first: the painted scene fills the screen, the play area sits on it, controls live in one frosted white panel. In portrait a game shows a "turn me sideways" card. Light look only, by choice. */
 :root{
-  --paper:#FFF9F2;--card:#FFFFFF;--line:#4A2C4F;--line-soft:#7D6480;--violet:#7C4DCC;
-  --lavender:#C9B2F5;--bubblegum:#FF9EC4;--pink-deep:#C2417A;--mint:#A6E8D4;--butter:#FFE38A;
-  --peach:#FFC7A6;--sky:#B4DDFF;--gold:#F2C14E;
-  --wash-dress:#FFD3E6;--wash-wand:#E3D6FB;--wash-mermaid:#D2F4EA;--wash-sun:#FFF0BF;
-  --display:'Cherry Bomb One','Chalkboard SE','Comic Sans MS',ui-rounded,system-ui,sans-serif;
-  --hand:'Patrick Hand','Chalkboard SE','Comic Sans MS',ui-rounded,system-ui,sans-serif;
+  --mint-bg:#E6F8F2;--mint:#C3EEDF;--mint-deep:#3FB59A;
+  --ink:#2A2250;--ink-soft:#6A6390;--card:#FFFFFF;
+  --pink:#FF7EB6;--lavender:#B79CFF;--butter:#FFD966;--sky:#8FD3FF;--gold:#F5B83D;--gold-deep:#E8B93A;
+  --dress:#FFE1EE;--wand:#ECE3FF;--mermaid:#D6F5FF;
+  --shadow-card:0 6px 0 var(--mint),0 14px 28px rgba(42,34,80,.10);
+  --shadow-lip:0 4px 0 var(--mint);
+  --font:'Fredoka','Baloo 2',ui-rounded,'SF Pro Rounded','Arial Rounded MT Bold',system-ui,sans-serif;
   --ease-boing:cubic-bezier(.34,1.7,.5,1);
-  --stroke:3px;--r-wobble:22px 26px 20px 24px;--r-wobble2:26px 20px 25px 21px;
-  --lift:0 4px 0 rgba(74,44,79,.16);
-  --paper-grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .3 0 0 0 0 .35 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --tap:56px;
+  --top:calc(env(safe-area-inset-top,0px) + 10px);
+  --padL:max(14px, env(safe-area-inset-left,0px));
+  --padR:max(14px, env(safe-area-inset-right,0px));
+  --padB:calc(env(safe-area-inset-bottom,0px) + 10px);
   color-scheme:light;
 }
-html{height:100%;box-sizing:border-box;background:var(--paper)}
+html{height:100%;box-sizing:border-box;background:var(--mint-bg)}
 *,*::before,*::after{box-sizing:border-box}
 body{
-  height:100%;margin:0;overflow:hidden;
-  font-family:var(--hand);color:var(--line);
-  background:var(--paper) var(--paper-grain);
-  -webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
+  height:100%;margin:0;overflow:hidden;background:var(--mint-bg);
+  font-family:var(--font);font-weight:600;color:var(--ink);
+  -webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
 }
 button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:pointer;touch-action:manipulation}
-button:focus-visible{outline:3px dashed var(--violet);outline-offset:4px}
-svg{display:block}
-img{display:block}
-.paint{mix-blend-mode:multiply}
+button:focus-visible{outline:3px solid var(--mint-deep);outline-offset:3px}
+svg,img{display:block}
+img{-webkit-user-drag:none;user-select:none}
 .view{height:100%;width:100%;position:relative;z-index:1}
 [hidden]{display:none!important}
-.washes{position:fixed;inset:-40px;width:calc(100% + 80px);height:calc(100% + 80px);pointer-events:none;z-index:0}
+.ico{width:28px;height:28px;color:var(--ink)}
 
-/* chunky crayon button: butter or white, plum outline, hand-cut corners */
+/* tappable white button with a mint lip */
 .chip{
-  background:var(--card);border:var(--stroke) solid var(--line);border-radius:var(--r-wobble);box-shadow:var(--lift);
-  display:grid;place-items:center;transition:transform .2s var(--ease-boing), background .15s;
+  background:var(--card);border-radius:18px;box-shadow:var(--shadow-lip);
+  display:grid;place-items:center;transition:transform .22s var(--ease-boing), box-shadow .15s, background .15s;
 }
-.chip:nth-child(even){border-radius:var(--r-wobble2)}
-.chip:active{transform:scale(.88) rotate(-3deg)}
+.chip:active{transform:translateY(3px) scale(.95);box-shadow:0 1px 0 var(--mint)}
+.chip svg{width:34px;height:34px}
 
-/* corner buttons: castle = home, bell = sound */
+/* round corner buttons and title pill */
 .corner{
-  position:fixed;z-index:20;width:60px;height:60px;transition:transform .2s var(--ease-boing);
-  top:calc(env(safe-area-inset-top,0px) + 10px);filter:drop-shadow(0 3px 0 rgba(74,44,79,.14));
+  position:fixed;z-index:20;top:var(--top);width:var(--tap);height:var(--tap);border-radius:50%;
+  background:var(--card);box-shadow:var(--shadow-lip),0 8px 18px rgba(42,34,80,.18);
+  display:grid;place-items:center;transition:transform .22s var(--ease-boing);
 }
-.corner svg{width:100%;height:100%;overflow:visible}
-#homeBtn{left:max(12px, env(safe-area-inset-left,0px))}
-#muteBtn{right:max(12px, env(safe-area-inset-right,0px))}
-.corner:active{transform:scale(.88) rotate(-6deg)}
+.corner svg{width:30px;height:30px;color:var(--ink)}
+#homeBtn{left:var(--padL)}
+#muteBtn{right:var(--padR)}
+.corner:active{transform:translateY(3px) scale(.92)}
+.pill{
+  position:fixed;z-index:19;top:calc(var(--top) + 8px);left:50%;transform:translateX(-50%);
+  height:40px;max-width:calc(100% - 2 * (var(--tap) + 30px));display:flex;align-items:center;gap:8px;padding:0 18px 0 12px;
+  background:rgba(42,34,80,.58);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#fff;border-radius:999px;
+  font-weight:600;font-size:1.05rem;white-space:nowrap;pointer-events:none;
+}
+.pill svg{width:22px;height:22px;flex:none;color:#fff}
+.scene .home-pill{position:absolute;top:calc(var(--top) + 8px);max-width:calc(100% - 2 * (var(--tap) + 24px))}
+.pill span{overflow:hidden;text-overflow:ellipsis}
+
+/* floating tab bar (home) */
+.tabbar{
+  position:fixed;z-index:18;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom,0px));
+  width:min(calc(100% - 24px), 480px);height:66px;padding:5px;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;
+  background:rgba(255,255,255,.92);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  border-radius:999px;box-shadow:0 6px 20px rgba(42,34,80,.16);
+}
+.tabbar button{border-radius:999px;display:grid;justify-items:center;align-content:center;gap:1px;font-size:.82rem;font-weight:600;line-height:1;transition:transform .22s var(--ease-boing)}
+.tabbar button svg{width:26px;height:26px}
+.tabbar button.on{background:var(--mint)}
+.tabbar button:active{transform:scale(.92)}
+body.in-game .tabbar{display:none}
 
 /* ---------- home ---------- */
-#home{
-  display:grid;place-items:center;overflow-y:auto;overflow-x:hidden;
-  padding-block:74px 24px;
-  padding-left:max(16px, env(safe-area-inset-left,0px));
-  padding-right:max(16px, env(safe-area-inset-right,0px));
+#home{overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+.scene{position:relative;height:42vh;min-height:170px;max-height:420px;overflow:hidden;background:#BFE6F7}
+.scene > img{width:100%;height:100%;object-fit:cover}
+.ground{
+  position:relative;z-index:2;margin-top:-30px;min-height:calc(58vh + 30px);background:var(--mint-bg);border-radius:34px 34px 0 0;
+  padding:22px var(--padR) calc(100px + env(safe-area-inset-bottom,0px)) var(--padL);
 }
-.home-inner{width:min(100%, 920px);display:grid;gap:clamp(6px,2vh,22px);justify-items:center}
-.logo{margin:0;width:min(100%, 560px)}
-.logo img{width:100%;height:auto;animation:bob 5s ease-in-out infinite}
+.ground-inner{width:min(100%, 780px);margin:0 auto;position:relative}
+.sayrow{display:flex;justify-content:flex-end;align-items:center;min-height:50px;margin:0 104px 14px 0}
+.say{
+  position:relative;display:inline-block;background:var(--card);border-radius:16px;padding:9px 22px 10px;
+  font-weight:600;font-size:1.2rem;box-shadow:var(--shadow-lip);
+}
+.say::after{content:'';position:absolute;right:-7px;top:50%;width:14px;height:14px;background:var(--card);transform:translateY(-50%) rotate(45deg);border-radius:2px}
+.peek{position:absolute;pointer-events:none;animation:bob 3.2s ease-in-out infinite;z-index:3}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
-.tiles{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;width:min(100%, 440px)}
-.tile{
-  position:relative;display:grid;grid-template-columns:104px minmax(0,1fr);align-items:center;gap:12px;
-  padding:10px 14px 10px 10px;min-height:124px;text-align:left;
-  font-family:var(--display);font-size:1.45rem;line-height:1.05;color:var(--line);
+.home-friend{right:0;top:-62px;height:112px;width:auto}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.gcard{
+  display:block;background:var(--card);border-radius:22px;overflow:hidden;box-shadow:var(--shadow-card);text-align:left;
   transition:transform .22s var(--ease-boing);
 }
-.tile > svg.bg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 4px 0 rgba(74,44,79,.13))}
-.tile .art{position:relative;width:104px;height:104px}
-.tile .art img{width:112%;height:112%;margin:-6%;object-fit:contain}
-.tile .name{position:relative}
-.tile .name small{display:block;font-size:.62em;color:var(--violet);margin-bottom:2px}
-.tile:active{transform:scale(.95) rotate(-1.5deg)}
-.tile.t1 .name{color:var(--pink-deep)}.tile.t2 .name{color:var(--violet)}.tile.t3 .name{color:#2E8C7A}
-@media (min-width:760px){
-  .tiles{grid-template-columns:repeat(3,minmax(0,1fr));width:100%;gap:22px}
-  .tile{grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center;padding:18px 16px 20px;gap:10px}
-  .tile .art{width:min(100%,190px);height:auto;aspect-ratio:1}
-  .tile .name{font-size:1.6rem}
+.gcard:active{transform:scale(.95)}
+.gcard .pic{aspect-ratio:1/1}
+.gcard .pic img{width:100%;height:100%;object-fit:cover}
+.gcard.wide{grid-column:1 / -1}
+.gcard.wide .pic{aspect-ratio:16/8}
+.gcard .nm{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:10px 12px 12px 14px;font-size:1.15rem;font-weight:600}
+.gcard .nm svg{width:22px;height:22px;color:var(--mint-deep);flex:none}
+.gcard .nm b{display:flex;align-items:center;gap:8px;font-weight:600}
+.gcard .nm b i{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;flex:none}
+.gcard .nm b i svg{width:18px;height:18px;color:#fff}
+@media (max-width:430px){.gcard .nm b i{display:none}.gcard .nm{font-size:1.05rem;padding:9px 8px 11px 12px}.gcard .nm svg{width:18px;height:18px}}
+.c1 .nm b i{background:var(--pink)}.c2 .nm b i{background:var(--lavender)}.c3 .nm b i{background:var(--sky)}
+@media (min-width:640px){
+  .cards{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .gcard.wide{grid-column:auto}
+  .gcard.wide .pic{aspect-ratio:1/1}
 }
-@media (orientation:landscape) and (max-height:520px){
-  #home{padding-block:66px 14px}
-  .logo{width:min(70%, 420px)}
-  .tiles{grid-template-columns:repeat(3,minmax(0,1fr));width:100%;gap:12px}
-  .tile{grid-template-columns:72px minmax(0,1fr);min-height:96px}
-  .tile .art{width:72px;height:72px}
-  .tile .name{font-size:1.15rem}
+@media (orientation:landscape) and (max-height:560px){
+  .scene{height:36vh}
+  .ground{min-height:calc(64vh + 30px);padding-top:16px}
+  .ground-inner{width:min(100%, 640px)}
+  .sayrow{min-height:44px;margin-bottom:10px}
+  .say{font-size:1.05rem;padding:7px 18px 8px}
+  .home-friend{height:92px;top:-50px}
+  .gcard .pic,.gcard.wide .pic{aspect-ratio:16/10}
+  .gcard .nm{padding:8px 10px 10px 12px;font-size:1.05rem}
+}
+/* big screens: keep the small painting from being stretched edge to edge */
+@media (min-width:1100px){
+  .scene{width:1024px;margin:16px auto 0;border-radius:34px;max-height:440px}
+  .ground{background:transparent}
 }
 .wiggle{animation:wiggle .5s ease}
 @keyframes wiggle{20%{transform:rotate(-4deg)}40%{transform:rotate(4deg)}60%{transform:rotate(-3deg)}80%{transform:rotate(2deg)}}
 
-/* welcome picture when a room opens */
-.welcome{
-  position:fixed;inset:0;z-index:40;display:grid;place-items:center;padding:24px;
-  background:rgba(255,249,242,.72);transition:opacity .35s ease;
+/* ---------- games: painted scene fills the screen ---------- */
+.game{overflow:hidden}
+.bgimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:opacity .25s}
+.panel{
+  background:rgba(255,255,255,.93);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  border-radius:26px;box-shadow:var(--shadow-card);min-width:0;
 }
-.welcome.out{opacity:0;pointer-events:none}
-.welcome .card{
-  position:relative;width:min(92vw, 560px);padding:14px;
-  animation:welcomeIn .6s var(--ease-boing) both;
-}
-.welcome .card > svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.welcome img{position:relative;width:100%;height:auto;border-radius:18px 22px 16px 20px}
-@keyframes welcomeIn{0%{transform:scale(.6) rotate(-4deg);opacity:0}100%{transform:none;opacity:1}}
 
-/* ---------- dress-up ---------- */
+/* dress-up */
 #dressup{
-  display:grid;grid-template-rows:minmax(0,1fr) auto;
-  padding-block:10px 10px;
-  padding-left:max(16px, env(safe-area-inset-left,0px));
-  padding-right:max(16px, env(safe-area-inset-right,0px));
-  gap:10px;
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(300px, min(48%, 560px));grid-template-rows:minmax(0,1fr);gap:12px;align-items:stretch;
+  padding:calc(var(--top) + 62px) var(--padR) var(--padB) var(--padL);
 }
-.stage{min-height:0;container-type:size;display:grid;place-items:center}
-.frame{
-  position:relative;width:min(100cqw - 8px, 75cqh - 6px);height:min(100cqh - 8px, 133.333cqw - 10.667px);
-  border-radius:28px 34px 26px 32px;overflow:hidden;background:var(--paper);
-  border:var(--stroke) solid var(--line);box-shadow:0 5px 0 rgba(74,44,79,.15);
-}
-.frame > .pic, .frame > .pic svg, .frame > .spk, .frame > .spk svg{width:100%;height:100%}
-.frame > .spk{position:absolute;inset:0;pointer-events:none}
+#dressup > *{position:relative;z-index:1}
+#dressup > .bgimg{position:absolute;z-index:0}
+.stage{height:100%;min-height:0;container-type:size;display:grid;place-items:center;position:relative}
+.doll{position:relative;width:min(100%, 50vh);aspect-ratio:3/4;width:min(100cqw, 75cqh);height:min(100cqh, 133.333cqw)}
+.doll::before{content:'';position:absolute;left:14%;right:14%;bottom:-1%;height:7%;border-radius:50%;background:rgba(42,34,80,.18);filter:blur(4px)}
+.doll > .pic,.doll > .pic svg,.doll > .spk,.doll > .spk svg{width:100%;height:100%}
+.doll > .spk{position:absolute;inset:0;pointer-events:none}
 .pop{animation:pop .4s var(--ease-boing)}
 @keyframes pop{30%{transform:scale(.97,1.02)}}
 .spin{animation:spin .6s ease}
 @keyframes spin{30%{transform:scale(.94) rotate(-3deg)}60%{transform:scale(1.04) rotate(3deg)}}
-.actions{position:absolute;right:10px;bottom:10px;display:grid;gap:10px}
-.act{width:64px;height:64px;background:var(--butter)}
-.act svg{width:38px;height:38px;overflow:visible}
-.flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+.flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:25}
 .flash.go{animation:flash .5s ease}
-@keyframes flash{0%{opacity:.85}100%{opacity:0}}
-
-.controls{display:grid;gap:8px;min-width:0}
-.tabs{display:flex;gap:8px;overflow-x:auto;padding:6px 4px 8px;scrollbar-width:none}
+@keyframes flash{0%{opacity:.8}100%{opacity:0}}
+.actions{position:absolute;left:0;bottom:0;display:grid;gap:10px;z-index:3}
+.act{width:var(--tap);height:var(--tap);border-radius:50%;box-shadow:var(--shadow-lip),0 6px 14px rgba(42,34,80,.16)}
+.act svg{width:30px;height:30px}
+.controls{align-self:center;display:grid;gap:6px;padding:10px 8px 8px;max-height:100%;overflow-y:auto;align-content:start}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:2px 4px 8px;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
-.tab{flex:0 0 auto;width:60px;height:60px}
-.tab svg{width:38px;height:38px;overflow:visible}
-.tab[aria-selected="true"]{background:var(--butter);transform:translateY(-3px) rotate(-3deg)}
-.items{display:flex;gap:10px;overflow-x:auto;padding:6px 4px 10px;scrollbar-width:none}
+.tab{flex:0 0 auto;width:58px;height:50px;border-radius:999px;background:#F3FBF8}
+.tab svg{width:30px;height:30px}
+.tab[aria-selected="true"]{background:var(--mint);box-shadow:0 4px 0 var(--mint-deep)}
+.items{display:flex;gap:10px;overflow-x:auto;padding:2px 4px 10px;scrollbar-width:none}
 .items::-webkit-scrollbar{display:none}
-.item{flex:0 0 auto;width:86px;height:86px;overflow:hidden;background:var(--paper);padding:0}
+.item{flex:0 0 auto;width:78px;height:78px;overflow:hidden;padding:0;border-radius:18px;position:relative;background:#F3FBF8}
 .item svg{width:100%;height:100%}
-.item.on{border-width:5px;border-color:var(--pink-deep);transform:translateY(-4px) rotate(2deg)}
-.colors{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;padding:2px 0 4px}
-.dot{width:48px;height:48px;border-radius:50% 46% 52% 48%;border:var(--stroke) solid var(--line);box-shadow:var(--lift);transition:transform .2s var(--ease-boing)}
-.dot.on{transform:scale(1.14) rotate(-6deg);box-shadow:0 0 0 4px var(--paper),0 0 0 7px var(--line)}
-.dot:active{transform:scale(.88)}
-
-@media (orientation:landscape) and (min-width:700px){
-  #dressup{grid-template-rows:minmax(0,1fr);grid-template-columns:minmax(0,1fr) minmax(300px, 46%);padding-top:10px;align-items:center}
-  .stage{height:100%}
-  .controls{align-content:center;padding-top:64px}
-  .tabs{flex-wrap:wrap;overflow:visible;justify-content:center}
-  .items{flex-wrap:wrap;overflow:visible;justify-content:center}
-  .item{width:96px;height:96px}
+.item.on{box-shadow:0 0 0 4px var(--pink),0 5px 0 4px #E35E98}
+.item.on::after{
+  content:'';position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;border:2px solid #fff;
+  background:var(--pink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10.5l3.2 3.2L15 6.8' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat;
 }
-@media (orientation:portrait) and (max-height:640px){
-  .item{width:72px;height:72px}
-  .tab{width:54px;height:54px}
-  .dot{width:42px;height:42px}
+.colors{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;padding:2px 0 6px}
+.dot{width:42px;height:42px;border-radius:50%;border:4px solid #fff;box-shadow:0 0 0 2px var(--mint),0 4px 0 2px var(--mint);transition:transform .2s var(--ease-boing)}
+.dot.on{transform:scale(1.14);box-shadow:0 0 0 3px var(--mint-deep),0 4px 0 3px var(--mint-deep)}
+.dot:active{transform:scale(.9)}
+@media (max-height:380px){
+  #dressup{padding-top:calc(var(--top) + 58px)}
+  .tab{width:54px;height:46px}.tab svg{width:28px;height:28px}
+  .item{width:68px;height:68px}
+  .dot{width:38px;height:38px}
+  .act{width:52px;height:52px}
 }
+@media (min-height:600px){.item{width:92px;height:92px}}
 
 /* gallery sheet */
-.sheet{
-  position:fixed;inset:0;z-index:30;background:rgba(74,44,79,.28);display:grid;place-items:end center;
-  padding-left:max(12px, env(safe-area-inset-left,0px));padding-right:max(12px, env(safe-area-inset-right,0px));
+.gsheet{position:fixed;inset:0;z-index:30;background:rgba(42,34,80,.28);display:grid;place-items:end center;padding:0 max(12px, env(safe-area-inset-right,0px)) 0 max(12px, env(safe-area-inset-left,0px))}
+.gsheet-card{
+  width:min(100%, 760px);max-height:84%;overflow-y:auto;background:var(--mint-bg);border-radius:34px 34px 0 0;
+  padding:16px 16px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 28px rgba(42,34,80,.16);
+  animation:up .35s ease-out;
 }
-.sheet-card{
-  width:min(100%, 720px);max-height:78%;overflow-y:auto;background:var(--paper) var(--paper-grain);
-  border:var(--stroke) solid var(--line);border-bottom:0;border-radius:34px 28px 0 0;
-  padding:16px 16px calc(20px + env(safe-area-inset-bottom,0px));
-}
-.sheet-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.sheet-top .title{display:flex;align-items:center;gap:8px;font-family:var(--display);font-size:1.5rem;color:var(--pink-deep)}
-.sheet-top .title svg{width:38px;height:38px;overflow:visible}
-.close{width:60px;height:60px}
-.close svg{width:28px;height:28px;overflow:visible}
+@keyframes up{0%{transform:translateY(40px);opacity:.4}100%{transform:none;opacity:1}}
+.gsheet-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.close{width:var(--tap);height:var(--tap);border-radius:50%}
+.close svg{width:22px;height:22px}
 .gal{display:grid;grid-template-columns:repeat(auto-fill, minmax(96px,1fr));gap:14px}
-.gal button{aspect-ratio:3/4;overflow:hidden;padding:0;background:var(--paper)}
-.gal button svg{width:100%;height:100%}
-.empty{display:grid;justify-items:center;gap:6px;padding:20px 0 10px;color:var(--line-soft);font-size:1.3rem}
-.empty svg{width:90px;height:90px;overflow:visible}
+.gal .chip{aspect-ratio:3/4;overflow:hidden;padding:0;border-radius:18px}
+.gal .chip svg{width:100%;height:100%}
+.empty{display:grid;justify-items:center;gap:8px;padding:14px 0 6px;color:var(--ink-soft);font-size:1.1rem}
+.empty svg{width:70px;height:70px}
 
-/* ---------- sparkle wand ---------- */
-#wand{position:relative;overflow:hidden}
+/* sparkle wand */
 #wandCanvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;display:block}
 .wandbar{
-  position:absolute;left:0;right:0;bottom:calc(12px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;
-  padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px));pointer-events:none;
+  position:absolute;left:50%;transform:translateX(-50%);bottom:var(--padB);z-index:2;
+  display:flex;align-items:center;gap:6px;padding:6px;max-width:calc(100% - 140px);
+  background:rgba(255,255,255,.93);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  border-radius:999px;box-shadow:var(--shadow-card);
 }
-.wandbar button{pointer-events:auto;width:64px;height:64px}
-.wandbar button svg{width:38px;height:38px;overflow:visible}
-.wandbar button.on{background:var(--butter);transform:translateY(-6px) rotate(-4deg)}
-.wandbar .sep{width:6px}
-.hint{position:absolute;left:50%;top:42%;width:150px;height:150px;margin:-75px 0 0 -75px;pointer-events:none;animation:hint 2.6s ease-in-out infinite}
-.hint img{width:100%;height:100%;object-fit:contain}
-@keyframes hint{0%{transform:translate(-50px,30px) rotate(-12deg)}50%{transform:translate(50px,-20px) rotate(10deg)}100%{transform:translate(-50px,30px) rotate(-12deg)}}
+.wandbar .chip{width:var(--tap);height:var(--tap);border-radius:50%;background:transparent;box-shadow:none}
+.wandbar .chip svg{width:34px;height:34px}
+.wandbar .chip.on{background:var(--mint);box-shadow:0 4px 0 var(--mint-deep)}
+.wandbar .chip:active{transform:scale(.9)}
+.wandbar .sep{flex:none;width:3px;height:32px;border-radius:2px;background:var(--mint);margin:0 3px}
+.host{position:absolute;right:100%;bottom:-6px;height:96px;width:auto;margin-right:-8px}
+.hint{position:absolute;left:50%;top:44%;width:110px;height:110px;margin:-55px 0 0 -55px;pointer-events:none;z-index:2;animation:hint 2.6s ease-in-out infinite}
+.hint svg{width:100%;height:100%;filter:drop-shadow(0 4px 6px rgba(42,34,80,.25))}
+@keyframes hint{0%{transform:translate(-60px,24px) rotate(-12deg)}50%{transform:translate(60px,-16px) rotate(10deg)}100%{transform:translate(-60px,24px) rotate(-12deg)}}
 
-/* ---------- mermaid castle ---------- */
-#castle{
-  display:grid;grid-template-rows:minmax(0,1fr) auto;gap:8px;padding-block:10px 10px;
-  padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px));
+/* mermaid castle */
+#castle > .bgimg{object-position:70% 50%}
+#scene{position:absolute;left:0;top:0;bottom:0;right:calc(var(--padR) + 104px);z-index:1}
+#stickers{position:absolute;inset:0}
+#scene .actions{left:var(--padL);bottom:var(--padB)}
+.traywrap{
+  position:absolute;z-index:2;right:var(--padR);top:calc(var(--top) + 64px);bottom:var(--padB);width:96px;padding:8px 6px;
 }
-.scene-bg, .scene-bg svg{position:absolute;inset:0;width:100%;height:100%}
-#stickers{z-index:1}
-#scene .actions{z-index:2}
+.tray{height:100%;display:grid;grid-auto-rows:76px;justify-content:center;gap:8px;overflow-y:auto;padding:2px 2px 8px;scrollbar-width:none;touch-action:pan-y}
+.tray::-webkit-scrollbar{display:none}
+.tray .chip{width:76px;height:76px;border-radius:18px;background:#F3FBF8;touch-action:pan-y}
+.tray .chip svg{max-width:58px;max-height:60px;width:auto;height:auto;overflow:visible}
+.tray .chip.t-tall svg{height:62px;width:auto;max-height:none}
 .stk{position:absolute;transform:translate(-50%,-50%);touch-action:none;cursor:grab}
-.stk svg{width:100%;height:auto;display:block;overflow:visible;filter:drop-shadow(0 3px 0 rgba(74,44,79,.18))}
-.stk.lift svg{transform:scale(1.12);filter:drop-shadow(0 8px 2px rgba(74,44,79,.2))}
+.stk svg{width:100%;height:auto;display:block;overflow:visible;filter:drop-shadow(0 4px 3px rgba(42,34,80,.25))}
+.stk.lift svg{transform:scale(1.12);filter:drop-shadow(0 10px 6px rgba(42,34,80,.28))}
 .stk.wig svg{animation:wiggle .5s ease}
 .stk.drop svg{animation:dropin .45s var(--ease-boing)}
 @keyframes dropin{0%{transform:scale(.6)}100%{transform:scale(1)}}
-.tray{display:flex;gap:10px;overflow-x:auto;padding:6px 4px 12px;scrollbar-width:none;touch-action:pan-x}
-.tray::-webkit-scrollbar{display:none}
-.tray button{flex:0 0 auto;width:80px;height:80px;touch-action:pan-x}
-.tray button svg{max-width:60px;max-height:62px;width:auto;height:auto;overflow:visible}
-.tray button.t-tall svg{height:64px;width:auto}
-.ghost{position:fixed;z-index:50;pointer-events:none;transform:translate(-50%,-50%) scale(1.1);filter:drop-shadow(0 10px 2px rgba(74,44,79,.2))}
+.ghost{position:fixed;z-index:50;pointer-events:none;transform:translate(-50%,-50%) scale(1.1);filter:drop-shadow(0 10px 6px rgba(42,34,80,.28))}
 .ghost svg{width:100%;height:auto;display:block;overflow:visible}
-@media (orientation:landscape) and (min-width:700px){
-  #castle{grid-template-rows:minmax(0,1fr);grid-template-columns:minmax(0,1fr) minmax(280px, 40%);align-items:center}
-  .tray{flex-wrap:wrap;overflow:visible;justify-content:center;touch-action:auto;padding-top:64px}
-  .tray button{touch-action:none}
+
+/* turn sideways card: games are played in landscape */
+.turn{position:fixed;inset:0;z-index:15;display:none;place-items:center;padding:90px 24px 40px;background:var(--mint-bg)}
+.turn-card{display:grid;justify-items:center;gap:6px;background:var(--card);border-radius:34px;box-shadow:var(--shadow-card);padding:24px 26px 22px;width:min(100%, 330px)}
+.turn-art{position:relative;width:220px;height:200px}
+.turn-friend{position:absolute;left:0;bottom:0;height:150px;width:auto;animation:tilt 2.4s ease-in-out infinite;transform-origin:50% 100%}
+.turn-phone{position:absolute;right:6px;top:22px;width:96px;height:96px;animation:rot 2.4s ease-in-out infinite}
+.turn-words{font-size:1.35rem;font-weight:600;text-align:center}
+@keyframes tilt{0%,30%{transform:rotate(0)}55%,85%{transform:rotate(-14deg)}100%{transform:rotate(0)}}
+@keyframes rot{0%,30%{transform:rotate(0)}55%,85%{transform:rotate(-90deg)}100%{transform:rotate(0)}}
+@media (orientation:portrait){
+  body.in-game .turn{display:grid}
+  body.in-game .game{visibility:hidden}
+  body.in-game .pill{display:none}
 }
 
-.float{animation:float 3.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
-@keyframes float{0%,100%{transform:translateY(0) scale(.85);opacity:.55}50%{transform:translateY(-4px) scale(1.05);opacity:1}}
-/* twinkles inside art */
 .tw{animation:tw 1.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
 @keyframes tw{0%,100%{transform:scale(.55);opacity:.55}50%{transform:scale(1);opacity:1}}
 .flyheart{position:fixed;z-index:40;width:60px;height:60px;pointer-events:none;transition:transform .7s cubic-bezier(.5,-0.3,.6,1), opacity .7s}
-
-/* hand-drawn frames: every button and panel gets a wobbly double crayon line drawn by JS (sketch) */
-.chip,.frame,.sheet-card,.dot{border-color:transparent!important;isolation:isolate}
-.chip{background:transparent!important;box-shadow:none!important;position:relative}
-.dot{position:relative;box-shadow:none}
-.chip > svg.sk,.dot > svg.sk,.frame > svg.sk,.sheet-card > svg.sk{position:absolute;inset:0;width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;margin:0;pointer-events:none;overflow:visible}
-.sk.f{z-index:-1}
-.sk.f path{fill:var(--bg,#fff)}
-.sk.f path.sh{fill:rgba(74,44,79,.16)}
-.sk.o{z-index:5}
-.sk.o path{fill:none;stroke:var(--ln,#4A2C4F);stroke-width:var(--sw,3px);stroke-linecap:round;stroke-linejoin:round}
-.sk.o path + path{stroke-width:calc(var(--sw,3px) * .55);opacity:.55}
-.act,.tab[aria-selected="true"],.wandbar button.on{--bg:var(--butter)}
-.item,.gal button,.frame,.sheet-card{--bg:var(--paper)}
-.item.on{--ln:var(--pink-deep);--sw:5px}
-.dot.on{--sw:4.5px;box-shadow:none}
-.wand-tooth,.frame::after{position:absolute;inset:0;pointer-events:none;z-index:1;background:url(art/grain.png) 0 0/144px 144px repeat}
-.frame::after{content:'';z-index:4}
-.wandbar{z-index:2}
 
 @media (prefers-reduced-motion: reduce){
   *{animation:none!important;transition:none!important}
@@ -275,124 +290,77 @@ img{display:block}
 </head>
 <body>
 
-<!-- shared drawing filters: crayon wobble, watercolor puddle, plum crayon outline (ink, inkS for small stickers, inkT for tiny icons) -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <defs>
-    <filter id="wob" x="-10%" y="-10%" width="120%" height="120%">
-      <feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="3" result="t"/>
-      <feDisplacementMap in="SourceGraphic" in2="t" scale="4.5" xChannelSelector="R" yChannelSelector="G"/>
-    </filter>
-    <filter id="wash" x="-20%" y="-20%" width="140%" height="140%">
-      <feTurbulence type="fractalNoise" baseFrequency=".022" numOctaves="3" seed="11" result="t"/>
-      <feDisplacementMap in="SourceGraphic" in2="t" scale="16" xChannelSelector="R" yChannelSelector="G" result="d"/>
-      <feGaussianBlur in="d" stdDeviation="1.2" result="b"/>
-      <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="5" result="g"/>
-      <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -.9 1.25" result="ga"/>
-      <feComposite in="b" in2="ga" operator="in"/>
-    </filter>
-    <filter id="ink" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB">
-      <feMorphology in="SourceAlpha" operator="dilate" radius="2.4" result="d"/>
-      <feFlood flood-color="#4A2C4F"/>
-      <feComposite in2="d" operator="in" result="o"/>
-      <feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="2" seed="4" result="t"/>
-      <feDisplacementMap in="o" in2="t" scale="3.6" xChannelSelector="R" yChannelSelector="G" result="w"/>
-      <feMerge><feMergeNode in="w"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-    <filter id="inkS" x="-14%" y="-14%" width="128%" height="128%" color-interpolation-filters="sRGB">
-      <feMorphology in="SourceAlpha" operator="dilate" radius="4" result="d"/>
-      <feFlood flood-color="#4A2C4F"/>
-      <feComposite in2="d" operator="in" result="o"/>
-      <feMerge><feMergeNode in="o"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-    <filter id="inkT" x="-14%" y="-14%" width="128%" height="128%" color-interpolation-filters="sRGB">
-      <feMorphology in="SourceAlpha" operator="dilate" radius="1.7" result="d"/>
-      <feFlood flood-color="#4A2C4F"/>
-      <feComposite in2="d" operator="in" result="o"/>
-      <feMerge><feMergeNode in="o"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-    <filter id="inkL" x="-14%" y="-14%" width="128%" height="128%" color-interpolation-filters="sRGB">
-      <feMorphology in="SourceAlpha" operator="dilate" radius="2.4" result="d"/>
-      <feFlood flood-color="#4A2C4F"/>
-      <feComposite in2="d" operator="in" result="o"/>
-      <feMerge><feMergeNode in="o"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-    <filter id="wobD" x="-6%" y="-6%" width="112%" height="112%">
-      <feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="2" seed="4" result="t"/>
-      <feDisplacementMap in="SourceGraphic" in2="t" scale="3.6" xChannelSelector="R" yChannelSelector="G"/>
-    </filter>
     <symbol id="spk" viewBox="-10 -10 20 20"><path d="M0-10C1.2-2.2 2.2-1.2 10 0C2.2 1.2 1.2 2.2 0 10C-1.2 2.2-2.2 1.2-10 0C-2.2-1.2-1.2-2.2 0-10Z"/></symbol>
+    <symbol id="i-castle" viewBox="0 0 32 32"><path fill="currentColor" d="M5 28V13l3-5 3 5v3h3v-4l2-6 2 6v4h3v-3l3-5 3 5v15h-9v-6a2 2 0 0 0-4 0v6Z"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 32 32"><path fill="currentColor" d="M16 4c-5.5 0-8 4.5-8 9.5 0 4-1.6 6.5-3.4 8.2-.6.6-.2 1.6.7 1.6h21.4c.9 0 1.3-1 .7-1.6-1.8-1.7-3.4-4.2-3.4-8.2C24 8.5 21.5 4 16 4Zm-3 21.5a3 3 0 0 0 6 0Z"/></symbol>
+    <symbol id="i-gown" viewBox="0 0 32 32"><path fill="currentColor" d="M12 3h8l-1 6 2 3-1 2 7 14H5l7-14-1-2 2-3Z"/></symbol>
+    <symbol id="i-wand" viewBox="0 0 32 32"><path fill="currentColor" d="m20 3 2.4 5 5.6.8-4 3.9 1 5.5-5-2.6-5 2.6 1-5.5-4-3.9 5.6-.8Z"/><rect x="2" y="21" width="15" height="4" rx="2" transform="rotate(-40 9.5 23)" fill="currentColor"/></symbol>
+    <symbol id="i-shell" viewBox="0 0 32 32"><path fill="currentColor" d="M16 4C8 4 3 11 3 18c0 2 1 3 2 4l3 5h16l3-5c1-1 2-2 2-4 0-7-5-14-13-14Zm-1 5h2v13h-2Zm-6 2 1.8-1 4 12-1.8.6Zm14 0-4 11.6-1.8-.6 4-12Z"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   </defs>
 </svg>
 
-<!-- soft watercolor puddles behind everything -->
-<svg class="washes" viewBox="0 0 400 800" preserveAspectRatio="none" aria-hidden="true">
-  <g filter="url(#wash)" opacity=".5">
-    <ellipse cx="70" cy="110" rx="150" ry="120" fill="#FFD3E6"/>
-    <ellipse cx="340" cy="210" rx="130" ry="130" fill="#E3D6FB"/>
-    <ellipse cx="230" cy="770" rx="270" ry="130" fill="#D2F4EA"/>
-    <ellipse cx="30" cy="520" rx="100" ry="100" fill="#FFF0BF"/>
-  </g>
-</svg>
-
-<button class="corner" id="homeBtn" aria-label="Home" hidden>
-  <svg viewBox="0 0 64 64" aria-hidden="true">
-    <circle cx="32" cy="32" r="28" fill="#FFFFFF" filter="url(#wob)"/>
-    <g filter="url(#wob)" stroke="#4A2C4F" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
-      <circle cx="32" cy="32" r="28" fill="none"/>
-      <path d="M17 46V30h7v16M40 46V30h7v16" fill="#C9B2F5"/>
-      <path d="M24 46V25h16v21Z" fill="#FFB3D1"/>
-      <path d="M15 30l5.5-10 5.5 10ZM38 30l5.5-10 5.5 10ZM22 25l10-11 10 11Z" fill="#F2C14E"/>
-      <path d="M29 46v-6q3-4 6 0v6" fill="#7C4DCC"/>
-    </g>
-  </svg>
-</button>
+<button class="corner" id="homeBtn" aria-label="Home" hidden><svg aria-hidden="true"><use href="#i-castle"/></svg></button>
+<div class="pill" id="appTitle" hidden></div>
 <button class="corner" id="muteBtn" aria-label="Sound on or off"></button>
 
 <!-- HOME -->
 <section class="view" id="home">
-  <div class="home-inner">
-    <h1 class="logo"><img src="art/logo-painted.webp" alt="Violet's Sparkle Palace" width="512" height="288"></h1>
-    <div class="tiles">
-      <button class="tile t1" data-go="dress-up" aria-label="Royal Dress-Up">
-        <svg class="bg" viewBox="0 0 300 110" preserveAspectRatio="none" aria-hidden="true"><path filter="url(#wob)" vector-effect="non-scaling-stroke" d="M14 8 Q150 2 288 10 Q296 55 290 100 Q150 108 12 102 Q4 55 14 8Z" fill="#FFFFFF" stroke="#4A2C4F" stroke-width="3"/></svg>
-        <span class="art"><img src="art/dressup-tile.webp" alt="" width="288" height="288"></span>
-        <span class="name"><small>Royal</small>Dress-Up</span>
-      </button>
-      <button class="tile t2" data-go="wand" aria-label="Sparkle Wand">
-        <svg class="bg" viewBox="0 0 300 110" preserveAspectRatio="none" aria-hidden="true"><path filter="url(#wob)" vector-effect="non-scaling-stroke" d="M10 10 Q150 4 290 8 Q298 55 292 102 Q150 106 14 100 Q6 55 10 10Z" fill="#FFFFFF" stroke="#4A2C4F" stroke-width="3"/></svg>
-        <span class="art"><img src="art/wand-tile.webp" alt="" width="288" height="288"></span>
-        <span class="name"><small>Sparkle</small>Wand</span>
-      </button>
-      <button class="tile t3" data-go="castle" aria-label="Mermaid Castle">
-        <svg class="bg" viewBox="0 0 300 110" preserveAspectRatio="none" aria-hidden="true"><path filter="url(#wob)" vector-effect="non-scaling-stroke" d="M12 6 Q150 10 288 6 Q294 55 290 104 Q150 100 10 104 Q4 55 12 6Z" fill="#FFFFFF" stroke="#4A2C4F" stroke-width="3"/></svg>
-        <span class="art"><img src="art/mermaid-tile.webp" alt="" width="288" height="288"></span>
-        <span class="name"><small>Mermaid</small>Castle</span>
-      </button>
-    </div>
+  <div class="scene">
+    <img src="art/scene-home.webp" alt="" width="1024" height="576" fetchpriority="high">
+    <div class="pill home-pill"><svg aria-hidden="true"><use href="#i-castle"/></svg><span>Violet's Sparkle Palace</span></div>
   </div>
-</section>
-
-<!-- ROYAL DRESS-UP -->
-<section class="view" id="dressup" hidden>
-  <div class="stage">
-    <div class="frame" id="frame">
-      <div class="pic" id="pic"></div>
-      <div class="spk" id="spkLayer" aria-hidden="true"></div>
-      <div class="flash" id="flash"></div>
-      <div class="actions">
-        <button class="act chip" id="surpriseBtn" aria-label="Surprise me">
-          <svg viewBox="0 0 40 40"><path d="M20 3 L24 15 L37 15 L26.5 22.5 L30.5 35 L20 27.5 L9.5 35 L13.5 22.5 L3 15 L16 15Z" fill="#F2C14E" stroke="#D9A23A" stroke-width="2" stroke-linejoin="round"/><path d="M33 3 Q33 7 37 7 Q33 7 33 11 Q33 7 29 7 Q33 7 33 3Z" fill="#ff7fb8"/><path d="M6 28 Q6 31 9 31 Q6 31 6 34 Q6 31 3 31 Q6 31 6 28Z" fill="#8fd0ff"/></svg>
+  <div class="ground">
+    <div class="ground-inner">
+      <img class="peek home-friend" src="art/friend-kitty.webp" alt="" width="234" height="316">
+      <div class="sayrow"><span class="say">Hi, Violet!</span></div>
+      <div class="cards">
+        <button class="gcard c1 tile" data-go="dress-up" aria-label="Royal Dress-Up">
+          <span class="pic"><img src="art/card-dress.webp" alt="" width="600" height="600"></span>
+          <span class="nm"><b><i><svg aria-hidden="true"><use href="#i-gown"/></svg></i>Dress-Up</b><svg aria-hidden="true"><use href="#i-chev"/></svg></span>
         </button>
-        <button class="act chip" id="saveBtn" aria-label="Save this look">
-          <svg viewBox="0 0 40 40"><path d="M20 34 C8 26 3 19 3 13 C3 7 8 4 12.5 4 C16 4 18.5 6 20 9 C21.5 6 24 4 27.5 4 C32 4 37 7 37 13 C37 19 32 26 20 34Z" fill="#FF8DBA" stroke="#C2417A" stroke-width="2"/><path d="M11 11 Q12 8 15 8" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+        <button class="gcard c2 tile" data-go="wand" aria-label="Sparkle Wand">
+          <span class="pic"><img src="art/card-wand.webp" alt="" width="600" height="600"></span>
+          <span class="nm"><b><i><svg aria-hidden="true"><use href="#i-wand"/></svg></i>Sparkle Wand</b><svg aria-hidden="true"><use href="#i-chev"/></svg></span>
         </button>
-        <button class="act chip" id="galleryBtn" aria-label="My looks">
-          <svg viewBox="0 0 40 40"><rect x="4" y="6" width="32" height="28" rx="6" fill="#fff" stroke="#b48cff" stroke-width="3"/><rect x="9" y="11" width="22" height="18" rx="3" fill="#d9ecff"/><path d="M9 26 L16 18 L21 23 L25 19 L31 26 V29 H9Z" fill="#9be39b"/><circle cx="26" cy="15" r="2.5" fill="#F2C14E"/></svg>
+        <button class="gcard c3 wide tile" data-go="castle" aria-label="Mermaid Castle">
+          <span class="pic"><img src="art/card-mermaid.webp" alt="" width="600" height="600"></span>
+          <span class="nm"><b><i><svg aria-hidden="true"><use href="#i-shell"/></svg></i>Mermaid Castle</b><svg aria-hidden="true"><use href="#i-chev"/></svg></span>
         </button>
       </div>
     </div>
   </div>
-  <div class="controls">
+  <nav class="tabbar" aria-label="Games">
+    <button class="on" data-go="" aria-label="Home"><svg aria-hidden="true" style="color:#3FB59A"><use href="#i-castle"/></svg>Home</button>
+    <button data-go="dress-up" aria-label="Royal Dress-Up"><svg aria-hidden="true" style="color:#FF7EB6"><use href="#i-gown"/></svg>Dress-Up</button>
+    <button data-go="wand" aria-label="Sparkle Wand"><svg aria-hidden="true" style="color:#B79CFF"><use href="#i-wand"/></svg>Wand</button>
+    <button data-go="castle" aria-label="Mermaid Castle"><svg aria-hidden="true" style="color:#5BB8E8"><use href="#i-shell"/></svg>Castle</button>
+  </nav>
+</section>
+
+<!-- ROYAL DRESS-UP -->
+<section class="view game" id="dressup" hidden>
+  <img class="bgimg" id="dressBg" src="art/scene-dress.webp" alt="" width="1024" height="576">
+  <div class="stage">
+    <div class="doll" id="frame">
+      <div class="pic" id="pic"></div>
+      <div class="spk" id="spkLayer" aria-hidden="true"></div>
+    </div>
+    <div class="actions">
+      <button class="act chip" id="surpriseBtn" aria-label="Surprise me">
+        <svg viewBox="0 0 40 40"><path d="M20 4 L24.2 15 L36 15.4 L26.8 22.8 L30 34.4 L20 27.8 L10 34.4 L13.2 22.8 L4 15.4 L15.8 15Z" fill="#FFD966" stroke="#F5B83D" stroke-width="2.4" stroke-linejoin="round"/><path d="M33 2 Q33 6 37 6 Q33 6 33 10 Q33 6 29 6 Q33 6 33 2Z" fill="#FF7EB6"/><path d="M6 28 Q6 31 9 31 Q6 31 6 34 Q6 31 3 31 Q6 31 6 28Z" fill="#8FD3FF"/></svg>
+      </button>
+      <button class="act chip" id="saveBtn" aria-label="Save this look">
+        <svg viewBox="0 0 40 40"><path d="M20 34 C8 26 3 19 3 13 C3 7 8 4 12.5 4 C16 4 18.5 6 20 9 C21.5 6 24 4 27.5 4 C32 4 37 7 37 13 C37 19 32 26 20 34Z" fill="#FF7EB6"/><path d="M10.5 11.5 Q11.5 8.5 14.5 8" stroke="#fff" stroke-width="2.8" fill="none" stroke-linecap="round"/></svg>
+      </button>
+      <button class="act chip" id="galleryBtn" aria-label="My looks">
+        <svg viewBox="0 0 40 40"><rect x="4" y="6" width="32" height="28" rx="7" fill="#B79CFF"/><rect x="8.5" y="10.5" width="23" height="19" rx="4" fill="#ECE3FF"/><path d="M8.5 25.5 L16 18 L21 23 L25 19 L31.5 25.5 V29.5 H8.5Z" fill="#3FB59A"/><circle cx="26" cy="15" r="2.6" fill="#FFD966"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="controls panel">
     <div class="tabs" id="tabs" role="tablist"></div>
     <div class="items" id="items"></div>
     <div class="colors" id="colors"></div>
@@ -400,41 +368,53 @@ img{display:block}
 </section>
 
 <!-- SPARKLE WAND -->
-<section class="view" id="wand" hidden>
-  <canvas id="wandCanvas" aria-label="Draw with your finger"></canvas><div class="wand-tooth" aria-hidden="true"></div>
-  <div class="hint" id="wandHint" aria-hidden="true"><img src="art/wand-tile.webp" alt="" width="288" height="288"></div>
+<section class="view game" id="wand" hidden>
+  <canvas id="wandCanvas" aria-label="Draw with your finger"></canvas>
+  <div class="hint" id="wandHint" aria-hidden="true"></div>
   <div class="wandbar" id="wandbar">
-    <button class="chip on" data-b="rainbow" aria-label="Rainbow wand"><svg viewBox="0 0 40 40"><g fill="none" stroke-width="4" stroke-linecap="round"><path d="M5 30A15 15 0 0 1 35 30" stroke="#ff8f8f"/><path d="M10 30A10 10 0 0 1 30 30" stroke="#ffe070"/><path d="M15 30A5 5 0 0 1 25 30" stroke="#7fc8ff"/></g></svg></button>
-    <button class="chip" data-b="gold" aria-label="Star wand"><svg viewBox="0 0 40 40"><path d="M20 4 L24 15 L36 15 L26 22 L30 34 L20 27 L10 34 L14 22 L4 15 L16 15Z" fill="#F2C14E" stroke="#D9A23A" stroke-width="2" stroke-linejoin="round"/></svg></button>
-    <button class="chip" data-b="hearts" aria-label="Heart wand"><svg viewBox="0 0 40 40"><path d="M20 34 C8 26 4 19 4 13 C4 7 9 5 13 5 C16 5 18.5 7 20 10 C21.5 7 24 5 27 5 C31 5 36 7 36 13 C36 19 32 26 20 34Z" fill="#FF8DBA"/></svg></button>
-    <button class="chip" data-b="unicorn" aria-label="Unicorn wand"><svg viewBox="0 0 40 40"><path d="M18 12L22 0L25 13Z" fill="#F2C14E"/><circle cx="22" cy="22" r="13" fill="#fff" stroke="#c9b3ee" stroke-width="2"/><circle cx="12" cy="14" r="5" fill="#ffb3d9"/><circle cx="9" cy="22" r="5" fill="#c5a8ff"/><circle cx="10" cy="30" r="4" fill="#9fe8f0"/><path d="M21 21Q24 24 27 21" stroke="#4A2C4F" stroke-width="2" fill="none" stroke-linecap="round"/><ellipse cx="29" cy="28" rx="6" ry="4.5" fill="#ffe0ef"/></svg></button>
+    <img class="host" src="art/friend-dragon.webp" alt="" width="272" height="318">
+    <button class="chip on" data-b="rainbow" aria-label="Rainbow wand"><svg viewBox="0 0 40 40"><g fill="none" stroke-width="5" stroke-linecap="round"><path d="M5 31A15 15 0 0 1 35 31" stroke="#FF8F8F"/><path d="M10.5 31A9.5 9.5 0 0 1 29.5 31" stroke="#FFD966"/><path d="M16 31A4 4 0 0 1 24 31" stroke="#8FD3FF"/></g></svg></button>
+    <button class="chip" data-b="gold" aria-label="Star wand"><svg viewBox="0 0 40 40"><path d="M20 5 L24 15.4 L35 15.8 L26.4 22.8 L29.4 33.6 L20 27.4 L10.6 33.6 L13.6 22.8 L5 15.8 L16 15.4Z" fill="#FFD966" stroke="#F5B83D" stroke-width="2.4" stroke-linejoin="round"/></svg></button>
+    <button class="chip" data-b="hearts" aria-label="Heart wand"><svg viewBox="0 0 40 40"><path d="M20 34 C8 26 4 19 4 13 C4 7 9 5 13 5 C16 5 18.5 7 20 10 C21.5 7 24 5 27 5 C31 5 36 7 36 13 C36 19 32 26 20 34Z" fill="#FF7EB6"/></svg></button>
+    <button class="chip" data-b="unicorn" aria-label="Unicorn wand"><svg viewBox="0 0 40 40"><path d="M18 12L22 1L25.5 13Z" fill="#F5B83D"/><circle cx="12" cy="14" r="5.5" fill="#FFB3D9"/><circle cx="9" cy="22.5" r="5.5" fill="#C5A8FF"/><circle cx="10.5" cy="30.5" r="4.5" fill="#9FE8F0"/><circle cx="22" cy="22" r="12.5" fill="#fff" stroke="#E2D6F7" stroke-width="2"/><path d="M20 21Q23 24 26 21" stroke="#2A2250" stroke-width="2.2" fill="none" stroke-linecap="round"/><ellipse cx="29" cy="28" rx="6" ry="4.5" fill="#FFE0EF"/></svg></button>
     <span class="sep"></span>
     <button class="chip" id="wandSky" aria-label="Day or night sky"></button>
-    <button class="chip" id="wandClear" aria-label="Clear the sky"><svg viewBox="0 0 40 40"><g fill="#e7dcff"><circle cx="13" cy="22" r="8"/><circle cx="22" cy="17" r="10"/><circle cx="29" cy="24" r="7"/><ellipse cx="20" cy="27" rx="14" ry="6"/></g><path d="M8 8 Q8 11 11 11 Q8 11 8 14 Q8 11 5 11 Q8 11 8 8Z M33 6 Q33 9 36 9 Q33 9 33 12 Q33 9 30 9 Q33 9 33 6Z" fill="#F2C14E"/></svg></button>
+    <button class="chip" id="wandClear" aria-label="Clear the sky"><svg viewBox="0 0 40 40"><g fill="#D6F5FF" stroke="#8FD3FF" stroke-width="1.6"><circle cx="13" cy="23" r="8"/><circle cx="22" cy="18" r="10"/><circle cx="29" cy="25" r="7"/><ellipse cx="20" cy="28" rx="14" ry="6"/></g><path d="M8 7 Q8 10 11 10 Q8 10 8 13 Q8 10 5 10 Q8 10 8 7Z M33 5 Q33 8 36 8 Q33 8 33 11 Q33 8 30 8 Q33 8 33 5Z" fill="#F5B83D"/></svg></button>
   </div>
 </section>
 
 <!-- MERMAID CASTLE -->
-<section class="view" id="castle" hidden>
-  <div class="stage">
-    <div class="frame" id="scene">
-      <div class="scene-bg" id="sceneBg"></div>
-      <div id="stickers" style="position:absolute;inset:0"></div>
-      <div class="actions">
-        <button class="act chip" id="castleClear" aria-label="Clear the stickers">
-          <svg viewBox="0 0 40 40"><g fill="#cdeffd" stroke="#7fc8ff" stroke-width="1.5"><circle cx="14" cy="24" r="8"/><circle cx="26" cy="18" r="6"/><circle cx="27" cy="30" r="4"/></g><circle cx="11" cy="21" r="2" fill="#fff"/><circle cx="24" cy="16" r="1.6" fill="#fff"/></svg>
-        </button>
-      </div>
+<section class="view game" id="castle" hidden>
+  <img class="bgimg" src="art/scene-sea.webp" alt="" width="1024" height="576">
+  <div id="scene">
+    <div id="stickers"></div>
+    <div class="actions">
+      <button class="act chip" id="castleClear" aria-label="Clear the stickers">
+        <svg viewBox="0 0 40 40"><g fill="#D6F5FF" stroke="#8FD3FF" stroke-width="2"><circle cx="14" cy="24" r="8.5"/><circle cx="26.5" cy="17.5" r="6.5"/><circle cx="27.5" cy="30" r="4.5"/></g><circle cx="11" cy="21" r="2.2" fill="#fff"/><circle cx="24.5" cy="15.5" r="1.7" fill="#fff"/></svg>
+      </button>
     </div>
   </div>
-  <div class="tray" id="tray" aria-label="Stickers"></div>
+  <div class="traywrap panel"><div class="tray" id="tray" aria-label="Stickers"></div></div>
 </section>
 
-<div class="sheet" id="sheet" hidden>
-  <div class="sheet-card" role="dialog" aria-label="My looks">
-    <div class="sheet-top">
-      <div class="title"><svg viewBox="0 0 40 40"><path d="M20 34 C8 26 3 19 3 13 C3 7 8 4 12.5 4 C16 4 18.5 6 20 9 C21.5 6 24 4 27.5 4 C32 4 37 7 37 13 C37 19 32 26 20 34Z" fill="#FF8DBA"/></svg>My looks</div>
-      <button class="close chip" id="closeSheet" aria-label="Close"><svg viewBox="0 0 30 30"><path d="M8 8 L22 22 M22 8 L8 22" stroke="#4A2C4F" stroke-width="4" stroke-linecap="round"/></svg></button>
+<!-- turn sideways (games only, portrait only) -->
+<div class="turn" aria-hidden="true">
+  <div class="turn-card">
+    <div class="turn-art">
+      <img class="turn-friend" src="art/friend-unicorn.webp" alt="" width="228" height="344">
+      <svg class="turn-phone" viewBox="0 0 64 64"><rect x="18" y="4" width="28" height="56" rx="7" fill="#fff" stroke="#2A2250" stroke-width="3.5"/><rect x="22" y="11" width="20" height="40" rx="3" fill="#D6F5FF"/><circle cx="32" cy="55.5" r="2" fill="#2A2250"/><path d="M27 31l5-6 5 6Z" fill="#FF7EB6"/><path d="M4 26a28 28 0 0 1 10-17" fill="none" stroke="#3FB59A" stroke-width="3.5" stroke-linecap="round"/><path d="M9 5l6 3-3 6" fill="none" stroke="#3FB59A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="turn-words">Turn me sideways!</div>
+  </div>
+</div>
+
+<div class="flash" id="flash"></div>
+
+<div class="gsheet" id="sheet" hidden>
+  <div class="gsheet-card" role="dialog" aria-label="My looks">
+    <div class="gsheet-top">
+      <span class="say">My looks</span>
+      <button class="close chip" id="closeSheet" aria-label="Close"><svg viewBox="0 0 30 30"><path d="M8 8 L22 22 M22 8 L8 22" stroke="#2A2250" stroke-width="4" stroke-linecap="round"/></svg></button>
     </div>
     <div class="gal" id="gal"></div>
   </div>
@@ -491,8 +471,8 @@ function spk(x,y,r){return `M${x} ${y-r}Q${x} ${y} ${x+r} ${y}Q${x} ${y} ${x} ${
 function star5(x,y,r){let d='';for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2?r*.45:r;d+=(i?'L':'M')+(x+rr*Math.cos(a)).toFixed(1)+' '+(y+rr*Math.sin(a)).toFixed(1);}return d+'Z';}
 function heart(x,y,s){return `M${x} ${y+s*.9}C${x-s*1.4} ${y+s*.1} ${x-s*.9} ${y-s*1.1} ${x} ${y-s*.35}C${x+s*.9} ${y-s*1.1} ${x+s*1.4} ${y+s*.1} ${x} ${y+s*.9}Z`;}
 function cloud(x,y,s){return `<g fill="#fff"><circle cx="${x-18*s}" cy="${y}" r="${12*s}"/><circle cx="${x}" cy="${y-8*s}" r="${16*s}"/><circle cx="${x+18*s}" cy="${y}" r="${12*s}"/><ellipse cx="${x}" cy="${y+4*s}" rx="${30*s}" ry="${10*s}"/></g>`;}
-const L=(x,f)=>x?`<g filter="url(#${f||'inkL'})">${x}</g>`:'';
-function ink(svg,f){const k=svg.indexOf('>')+1,e=svg.lastIndexOf('</svg>');return svg.slice(0,k)+`<g filter="url(#${f||'inkT'})">`+svg.slice(k,e)+'</g>'+svg.slice(e);}
+const L=x=>x||'';
+function ink(svg){return svg;}
 function rng(seed){let s=seed;return()=>{s=(s*16807)%2147483647;return(s-1)/2147483646;};}
 const RB=['#ffa9a9','#ffcc96','#ffe68a','#b2e8a8','#a6d6ff','#cdb6fb'];
 const RBSTOPS=RB.map((c,i)=>`<stop offset="${(i/(RB.length-1)).toFixed(2)}" stop-color="${c}"/>`).join('');
@@ -505,43 +485,8 @@ const DRESSC={pink:'#FF9EC4',lav:'#BFA3F2',aqua:'#8ED6EC',sun:'#FFDC7A',rose:'#F
 const SWATCH={rainbow:'conic-gradient(#ffa9a9,#ffcc96,#ffe68a,#b2e8a8,#a6d6ff,#cdb6fb,#ffa9a9)'};
 
 /* ---------------- backgrounds ---------------- */
-const BG={
-  rainbow(p){
-    let s=`<linearGradient id="${p}bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D9EEFF"/><stop offset="1" stop-color="#FFEAF4"/></linearGradient><rect width="300" height="400" fill="url(#${p}bg)"/>`;
-    s+='<g fill="none" stroke-width="13" opacity=".85">';
-    RB.forEach((c,i)=>{const r=178-i*13;s+=`<path d="M${150-r} 300A${r} ${r} 0 0 1 ${150+r} 300" stroke="${c}"/>`;});
-    s+='</g>'+cloud(34,300,1.25)+cloud(266,300,1.25)+cloud(228,62,.75);
-    s+=`<ellipse cx="150" cy="430" rx="240" ry="78" fill="#CDEFC4"/><g fill="#ffb3d6"><circle cx="40" cy="372" r="4"/><circle cx="262" cy="380" r="4"/><circle cx="230" cy="362" r="3"/></g><g fill="#fff3a0"><circle cx="70" cy="384" r="3"/><circle cx="246" cy="392" r="3"/></g>`;
-    return s;
-  },
-  sea(p){
-    let s=`<linearGradient id="${p}bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CDF3F2"/><stop offset="1" stop-color="#8EC5F2"/></linearGradient><rect width="300" height="400" fill="url(#${p}bg)"/>`;
-    s+='<g fill="#fff" opacity=".14"><path d="M40 0 L80 0 L30 400 L-10 400Z"/><path d="M150 0 L185 0 L160 400 L120 400Z"/><path d="M250 0 L290 0 L300 300 L270 400Z"/></g>';
-    s+='<g fill="rgba(255,255,255,.18)" stroke="#fff" stroke-width="2" opacity=".85"><circle cx="40" cy="90" r="9"/><circle cx="52" cy="66" r="5"/><circle cx="262" cy="140" r="8"/><circle cx="250" cy="116" r="4"/><circle cx="276" cy="236" r="6"/></g>';
-    s+='<g fill="none" stroke-linecap="round" stroke-width="9"><path d="M26 400 C14 360 40 340 26 300 C16 272 34 256 28 236" stroke="#7FD3AE"/><path d="M276 400 C290 366 264 344 278 310 C288 286 270 270 276 252" stroke="#95DDBB"/></g>';
-    s+='<ellipse cx="150" cy="432" rx="260" ry="80" fill="#FFE9BE"/>';
-    s+=`<path d="M232 372 c4 -10 18 -10 22 0Z" fill="#ffb0c8"/><path d="${star5(62,380,10)}" fill="#ff9f7a"/><g fill="#ff7fa0"><path d="M268 360 v-18 M268 350 l-8 -8 M268 352 l8 -9" stroke="#ff7fa0" stroke-width="5" stroke-linecap="round"/></g>`;
-    return s;
-  },
-  castle(p){
-    let s=`<linearGradient id="${p}bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd3ec"/><stop offset="1" stop-color="#fff1c6"/></linearGradient><rect width="300" height="400" fill="url(#${p}bg)"/>`;
-    s+=cloud(150,40,.8);
-    s+='<rect x="40" y="196" width="220" height="160" fill="#e9dbff"/>';
-    for(let x=40;x<260;x+=22)s+=`<rect x="${x}" y="184" width="13" height="14" fill="#e9dbff"/>`;
-    [[16,'#dcc8ff'],[238,'#dcc8ff']].forEach(([x,c])=>{
-      s+=`<rect x="${x}" y="112" width="46" height="250" fill="${c}"/><path d="M${x-6} 114 L${x+23} 38 L${x+52} 114Z" fill="#ff9fcf"/><line x1="${x+23}" y1="38" x2="${x+23}" y2="20" stroke="#b48cff" stroke-width="2.5"/><path d="M${x+23} 20 L${x+38} 25 L${x+23} 30Z" fill="#ffcc47"/><path d="M${x+14} 160 V148 a9 9 0 0 1 18 0 V160Z" fill="#b99cf0"/><path d="M${x+14} 220 V208 a9 9 0 0 1 18 0 V220Z" fill="#b99cf0"/>`;
-    });
-    s+='<ellipse cx="150" cy="430" rx="240" ry="80" fill="#c9f0bc"/><g fill="#ff9fcf"><circle cx="30" cy="376" r="4"/><circle cx="276" cy="372" r="4"/></g>';
-    return s;
-  },
-  night(p){
-    let s=`<linearGradient id="${p}bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a3b8c"/><stop offset="1" stop-color="#a98bd8"/></linearGradient><rect width="300" height="400" fill="url(#${p}bg)"/>`;
-    s+='<circle cx="248" cy="62" r="34" fill="#fff4c4" opacity=".18"/><circle cx="248" cy="62" r="22" fill="#fff4c4"/><circle cx="242" cy="58" r="4" fill="#f3e4a6"/><circle cx="254" cy="70" r="3" fill="#f3e4a6"/>';
-    const r=rng(7);s+='<g fill="#fff">';for(let i=0;i<40;i++)s+=`<circle cx="${(r()*300).toFixed(0)}" cy="${(r()*260).toFixed(0)}" r="${(r()*1.5+.6).toFixed(1)}" opacity="${(r()*.5+.4).toFixed(2)}"/>`;s+='</g>';
-    s+='<ellipse cx="60" cy="420" rx="170" ry="70" fill="#7a62b8"/><ellipse cx="260" cy="430" rx="170" ry="80" fill="#6a55a8"/>';
-    return s;
-  }
-};
+const BGIMG={room:'scene-dress',garden:'scene-home',sea:'scene-sea',night:'scene-wand',rainbow:'scene-dress',castle:'scene-home'};
+const BG={};Object.keys(BGIMG).forEach(k=>{BG[k]=()=>`<image href="art/${BGIMG[k]}.webp" width="300" height="400" preserveAspectRatio="xMidYMid slice"/>`;});
 
 /* ---------------- character parts ---------------- */
 const HAIRBACK={
@@ -612,14 +557,14 @@ const FRIEND={
     <path d="M68 22L65 9L77 17Z" fill="#fff" stroke="#dccbf2" stroke-width="2" stroke-linejoin="round"/>
     <ellipse cx="91" cy="42" rx="10" ry="8" fill="#ffe0ef"/><circle cx="94" cy="41" r="1.4" fill="#c06a92"/>
     <g><circle cx="66" cy="23" r="7" fill="#ffb3d9"/><circle cx="60" cy="33" r="7" fill="#c5a8ff"/><circle cx="58" cy="45" r="6" fill="#9fe8f0"/><circle cx="60" cy="56" r="5" fill="#ffe27a"/></g>
-    <path d="M76 32Q80 36 85 32" stroke="#4A2C4F" stroke-width="2.2" fill="none" stroke-linecap="round"/><circle cx="83" cy="40" r="3.5" fill="#ff9fb8" opacity=".6"/></g>`,
+    <path d="M76 32Q80 36 85 32" stroke="#2A2250" stroke-width="2.2" fill="none" stroke-linecap="round"/><circle cx="83" cy="40" r="3.5" fill="#ff9fb8" opacity=".6"/></g>`,
   bunny:()=>`<g transform="translate(24 292)"><g fill="#fff" stroke="#dccbf2" stroke-width="2"><ellipse cx="34" cy="10" rx="7" ry="20" transform="rotate(-10 34 10)"/><ellipse cx="54" cy="10" rx="7" ry="20" transform="rotate(10 54 10)"/></g>
     <g fill="#ffc6de"><ellipse cx="34" cy="11" rx="3" ry="13" transform="rotate(-10 34 11)"/><ellipse cx="54" cy="11" rx="3" ry="13" transform="rotate(10 54 11)"/></g>
     <circle cx="16" cy="76" r="8" fill="#fff" stroke="#dccbf2" stroke-width="2"/>
     <ellipse cx="44" cy="72" rx="28" ry="24" fill="#fff" stroke="#dccbf2" stroke-width="2"/>
     <circle cx="44" cy="40" r="20" fill="#fff" stroke="#dccbf2" stroke-width="2"/>
     <g fill="#fff" stroke="#dccbf2" stroke-width="2"><ellipse cx="32" cy="94" rx="10" ry="5"/><ellipse cx="58" cy="94" rx="10" ry="5"/></g>
-    <circle cx="37" cy="38" r="2.6" fill="#4A2C4F"/><circle cx="51" cy="38" r="2.6" fill="#4A2C4F"/><circle cx="38" cy="37" r=".9" fill="#fff"/><circle cx="52" cy="37" r=".9" fill="#fff"/>
+    <circle cx="37" cy="38" r="2.6" fill="#2A2250"/><circle cx="51" cy="38" r="2.6" fill="#2A2250"/><circle cx="38" cy="37" r=".9" fill="#fff"/><circle cx="52" cy="37" r=".9" fill="#fff"/>
     <path d="M41 45L47 45L44 48Z" fill="#ff8fb8"/><path d="M44 48Q41 52 38 50M44 48Q47 52 50 50" stroke="#c06a92" stroke-width="1.5" fill="none" stroke-linecap="round"/>
     <circle cx="31" cy="46" r="3.5" fill="#ff9fb8" opacity=".5"/><circle cx="57" cy="46" r="3.5" fill="#ff9fb8" opacity=".5"/>
     <path d="M30 22l6 4l-6 4z M40 26l-6 -4v8z" fill="#FF8DBA" transform="translate(4 -2)"/></g>`,
@@ -628,13 +573,15 @@ const FRIEND={
     <path d="M24 30L22 6L40 20Z M64 30L66 6L48 20Z" fill="#ffd9a8" stroke="#f0b878" stroke-width="2" stroke-linejoin="round"/><path d="M27 24L26 13L35 20Z M61 24L62 13L53 20Z" fill="#ffc6de"/>
     <circle cx="44" cy="38" r="21" fill="#ffd9a8" stroke="#f0b878" stroke-width="2"/>
     <path d="M38 20Q40 26 38 30M50 20Q48 26 50 30" stroke="#f0a95e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-    <path d="M33 37Q36 34 39 37M49 37Q52 34 55 37" stroke="#4A2C4F" stroke-width="2.3" fill="none" stroke-linecap="round"/>
+    <path d="M33 37Q36 34 39 37M49 37Q52 34 55 37" stroke="#2A2250" stroke-width="2.3" fill="none" stroke-linecap="round"/>
     <path d="M41 43L47 43L44 46Z" fill="#ff8fb8"/><path d="M28 45L16 43M28 48L17 50M60 45L72 43M60 48L71 50" stroke="#c99a6a" stroke-width="1.4" stroke-linecap="round"/>
     <circle cx="31" cy="46" r="3.5" fill="#ff9fb8" opacity=".55"/><circle cx="57" cy="46" r="3.5" fill="#ff9fb8" opacity=".55"/>
     <g fill="#ffd9a8" stroke="#f0b878" stroke-width="2"><ellipse cx="32" cy="92" rx="9" ry="5"/><ellipse cx="56" cy="92" rx="9" ry="5"/></g>
     <path d="M30 58Q44 66 58 58" stroke="#FF8DBA" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="44" cy="63" r="3.5" fill="${GOLD}"/></g>`,
   none:()=>''
 };
+const FRIMG={unicorn:['friend-unicorn',228,344,118],kitty:['friend-kitty',234,316,108],dragon:['friend-dragon',272,318,108]};
+Object.keys(FRIMG).forEach(k=>{const [f,w,hh,H]=FRIMG[k];const W=Math.round(w/hh*H);FRIEND[k]=()=>`<image href="art/${f}.webp" x="${4}" y="${400-H}" width="${W}" height="${H}"/>`;});
 const SPOTS=[[40,58,9],[262,92,7],[66,150,6],[254,196,10],[28,232,7],[272,282,8],[230,36,6],[108,28,5],[204,118,5],[48,332,6],[268,350,7],[150,18,5]];
 const SPARKLE={
   stars:()=>SPOTS.map(([x,y,r],i)=>`<g class="tw" style="animation-delay:${(i*.27).toFixed(2)}s"><path d="${spk(x,y,r*1.4)}" fill="#FFF3C4" stroke="#E0A93A" stroke-width="1.4"/></g>`).join(''),
@@ -654,8 +601,9 @@ function render(s,p,vb,opt){
     `<linearGradient id="${p}rbv" x1="0" y1="0" x2="0" y2="1">${RBSTOPS}</linearGradient>`+
     `<linearGradient id="${p}rbh" x1="0" y1="0" x2="1" y2="1">${RBSTOPS}</linearGradient></defs>`;
   const lite=opt&&opt.lite;
-  if(s.place!=='none')o+=`<rect width="300" height="400" fill="#FFF9F2"/>`+(lite?`<g opacity=".85">${BG[s.place](p)}</g>`:`<g filter="url(#wash)">${BG[s.place](p)}</g>`);
-  o+=lite?'<g>':'<g filter="url(#wobD)">';
+  if(opt&&opt.cut)o=o.replace('</defs>',`<filter id="${p}cut" x="-5%" y="-5%" width="110%" height="110%"><feMorphology in="SourceAlpha" operator="dilate" radius="3.5" result="d"/><feFlood flood-color="#fff"/><feComposite in2="d" operator="in"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>`);
+  if(s.place!=='none'&&BG[s.place]&&!(opt&&opt.noBg))o+=`<rect width="300" height="400" fill="#E6F8F2"/>`+BG[s.place](p);
+  o+=(opt&&opt.cut)?`<g filter="url(#${p}cut)">`:'<g>';
   o+=L(HAIRBACK[s.hair](h,hd));
   o+=L(DRESS[s.dress](f,l,d));
   // neck + torso
@@ -699,8 +647,8 @@ const ICON={
   hair:`<svg viewBox="0 0 40 40"><path d="M8 20C5 6 35 6 32 20C35 28 34 34 30 36H10C6 34 5 28 8 20Z" fill="#f6c84c"/><circle cx="20" cy="21" r="10" fill="#fde3d3"/><path d="M10 19C9 9 31 9 30 19C26 14 22 13 18 15C15 14 12 16 10 19Z" fill="#f6c84c"/></svg>`,
   crown:`<svg viewBox="0 0 40 40"><path d="M6 30L7 10L14 19L20 7L26 19L33 10L34 30Z" fill="#F2C14E" stroke="#e3a51c" stroke-width="2" stroke-linejoin="round"/><circle cx="20" cy="24" r="3" fill="#FF7FB0"/></svg>`,
   magic:`<svg viewBox="0 0 40 40"><line x1="9" y1="34" x2="24" y2="16" stroke="#F2C14E" stroke-width="4" stroke-linecap="round"/><path d="${star5(27,12,10)}" fill="#ffe27a" stroke="#D9A23A" stroke-width="1.6" stroke-linejoin="round"/></svg>`,
-  friend:`<svg viewBox="0 0 40 40"><path d="M18 12L22 0L25 13Z" fill="#F2C14E"/><circle cx="22" cy="22" r="13" fill="#fff" stroke="#c9b3ee" stroke-width="2"/><circle cx="12" cy="14" r="5" fill="#ffb3d9"/><circle cx="9" cy="22" r="5" fill="#c5a8ff"/><circle cx="10" cy="30" r="4" fill="#9fe8f0"/><path d="M21 21Q24 24 27 21" stroke="#4A2C4F" stroke-width="2" fill="none" stroke-linecap="round"/><ellipse cx="29" cy="28" rx="6" ry="4.5" fill="#ffe0ef"/></svg>`,
-  place:`<svg viewBox="0 0 40 40"><g fill="none" stroke-width="4">${RB.slice(0,5).map((c,i)=>`<path d="M${4+i*4} 30A${16-i*4} ${16-i*4} 0 0 1 ${36-i*4} 30" stroke="${c}"/>`).join('')}</g><ellipse cx="20" cy="36" rx="20" ry="6" fill="#CDEFC4"/></svg>`,
+  friend:`<svg viewBox="0 0 40 40"><path d="M18 12L22 0L25 13Z" fill="#F2C14E"/><circle cx="22" cy="22" r="13" fill="#fff" stroke="#c9b3ee" stroke-width="2"/><circle cx="12" cy="14" r="5" fill="#ffb3d9"/><circle cx="9" cy="22" r="5" fill="#c5a8ff"/><circle cx="10" cy="30" r="4" fill="#9fe8f0"/><path d="M21 21Q24 24 27 21" stroke="#2A2250" stroke-width="2" fill="none" stroke-linecap="round"/><ellipse cx="29" cy="28" rx="6" ry="4.5" fill="#ffe0ef"/></svg>`,
+  place:`<svg viewBox="0 0 40 40" data-x="1"><g fill="none" stroke-width="4">${RB.slice(0,5).map((c,i)=>`<path d="M${4+i*4} 30A${16-i*4} ${16-i*4} 0 0 1 ${36-i*4} 30" stroke="${c}"/>`).join('')}</g><ellipse cx="20" cy="36" rx="20" ry="6" fill="#CDEFC4"/></svg>`,
   sparkle:`<svg viewBox="0 0 40 40"><path d="${spk(17,20,13)}" fill="#F2C14E"/><path d="${spk(31,9,6)}" fill="#ff8fc7"/><path d="${spk(32,31,5)}" fill="#8fd0ff"/></svg>`,
   skin:`<svg viewBox="0 0 40 40"><circle cx="11" cy="12" r="7" fill="${SKIN[0]}"/><circle cx="29" cy="12" r="7" fill="${SKIN[1]}"/><circle cx="11" cy="29" r="7" fill="${SKIN[2]}"/><circle cx="29" cy="29" r="7" fill="${SKIN[3]}"/></svg>`
 };
@@ -709,12 +657,12 @@ const TABS=[
   {id:'hair',items:['long','curly','pigtails','bun'],colors:['hairColor',HAIRC],crop:'70 30 160 230'},
   {id:'crown',items:['crown','tiara','flowers','horn','star','none'],crop:'96 20 108 100'},
   {id:'magic',items:['wand','mirror','flowers','none'],crop:'170 128 92 106'},
-  {id:'friend',items:['unicorn','bunny','kitty','none'],crop:'8 270 124 128'},
-  {id:'place',items:['rainbow','sea','castle','night']},
+  {id:'friend',items:['unicorn','kitty','dragon','none'],crop:'0 284 116 116'},
+  {id:'place',items:['room','garden','sea','night']},
   {id:'sparkle',items:['stars','hearts','bubbles','none']},
   {id:'skin',items:[0,1,2,3],crop:'100 62 100 104'}
 ];
-const DEF={dress:'ball',dressColor:'pink',hair:'long',hairColor:'gold',crown:'crown',magic:'wand',friend:'unicorn',place:'castle',sparkle:'stars',skin:0};
+const DEF={dress:'ball',dressColor:'pink',hair:'long',hairColor:'gold',crown:'crown',magic:'wand',friend:'unicorn',place:'room',sparkle:'stars',skin:0};
 let look=Object.assign({},DEF,store.get('look',{}));
 for(const k in DEF){ // drop any stale values
   const t=TABS.find(t=>t.id===k);
@@ -728,7 +676,9 @@ const $=id=>document.getElementById(id);
 const pic=$('pic'),frame=$('frame'),tabsEl=$('tabs'),itemsEl=$('items'),colorsEl=$('colors');
 
 function bump(el,cls){el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);}
-function drawStage(){pic.innerHTML=render(look,'st',null,{noSpk:true});
+const dressBg=$('dressBg');
+function drawStage(){pic.innerHTML=render(look,'st',null,{noSpk:true,noBg:true,cut:true}).replace('xMidYMid slice','xMidYMid meet');
+  const src='art/'+(BGIMG[look.place]||'scene-dress')+'.webp';if(dressBg.getAttribute('src')!==src)dressBg.setAttribute('src',src);
   $('spkLayer').innerHTML=`<svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${SPARKLE[look.sparkle]()}</svg>`;store.set('look',look);}
 function drawTabs(){
   tabsEl.innerHTML=TABS.map(t=>`<button class="tab chip" role="tab" aria-selected="${t.id===curTab}" aria-label="${t.id}" data-t="${t.id}">${ink(ICON[t.id])}</button>`).join('');
@@ -736,6 +686,7 @@ function drawTabs(){
 function drawPanel(){
   const t=TABS.find(t=>t.id===curTab);
   itemsEl.innerHTML=t.items.map((v,i)=>{const s=Object.assign({},look,{[t.id]:v});
+    if(t.id!=='place')s.place='none';if(t.id!=='sparkle')s.sparkle='none';
     return `<button class="item chip${look[t.id]===v?' on':''}" data-i="${i}" aria-label="${t.id} ${v}" aria-pressed="${look[t.id]===v}">${render(s,'th'+t.id+i,t.crop,{lite:true})}</button>`;}).join('');
   if(t.colors){
     const [key,pal]=t.colors;
@@ -763,7 +714,7 @@ $('saveBtn').addEventListener('click',e=>{
   sfx.save();bump($('flash'),'go');
   const from=e.currentTarget.getBoundingClientRect(),to=$('galleryBtn').getBoundingClientRect();
   const h=document.createElement('div');h.className='flyheart';
-  h.innerHTML=`<svg viewBox="0 0 40 40"><path d="${heart(20,20,13)}" fill="#FF8DBA" stroke="#fff" stroke-width="2"/></svg>`;
+  h.innerHTML=`<svg viewBox="0 0 40 40"><path d="${heart(20,20,13)}" fill="#FF7EB6" stroke="#fff" stroke-width="2"/></svg>`;
   h.style.left=(from.left)+'px';h.style.top=(from.top)+'px';document.body.appendChild(h);
   requestAnimationFrame(()=>requestAnimationFrame(()=>{h.style.transform=`translate(${to.left-from.left}px,${to.top-from.top}px) scale(.5)`;h.style.opacity='0.2';}));
   setTimeout(()=>h.remove(),800);
@@ -771,24 +722,20 @@ $('saveBtn').addEventListener('click',e=>{
 function openGallery(){
   const g=$('gal');
   g.innerHTML=looks.length?looks.map((s,i)=>`<button class="chip" data-i="${i}" aria-label="Look ${i+1}">${render(s,'g'+i,null,{lite:true})}</button>`).join('')
-    :`<div class="empty" style="grid-column:1/-1"><svg viewBox="0 0 40 40"><path d="${heart(20,20,13)}" fill="#FFE3EE" stroke="#4A2C4F" stroke-width="2" stroke-dasharray="4 3"/></svg>Tap the heart to save a look</div>`;
+    :`<div class="empty" style="grid-column:1/-1"><svg viewBox="0 0 40 40"><path d="${heart(20,20,13)}" fill="#FFE1EE" stroke="#FF7EB6" stroke-width="2" stroke-dasharray="4 3"/></svg>Tap the heart to save a look</div>`;
   $('sheet').hidden=false;sfx.open();
 }
 $('galleryBtn').addEventListener('click',openGallery);
 $('closeSheet').addEventListener('click',()=>{$('sheet').hidden=true;sfx.tab();});
 $('sheet').addEventListener('click',e=>{if(e.target.id==='sheet'){$('sheet').hidden=true;return;}
-  const b=e.target.closest('.gal button');if(!b)return;look=Object.assign({},DEF,looks[+b.dataset.i]);
+  const b=e.target.closest('.gal button');if(!b)return;look=Object.assign({},DEF,looks[+b.dataset.i]);if(!FRIEND[look.friend])look.friend=DEF.friend;if(!BG[look.place])look.place=DEF.place;
   $('sheet').hidden=true;sfx.save();drawStage();drawPanel();bump(frame,'spin');});
 
 /* ---------------- mute button ---------------- */
 const muteBtn=$('muteBtn');
 function drawMute(){
   const m=Snd.muted;
-  muteBtn.innerHTML=`<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="28" fill="#FFFFFF" filter="url(#wob)"/>
-    <g filter="url(#wob)" stroke="#4A2C4F" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><circle cx="32" cy="32" r="28" fill="none"/>
-    <path d="M32 16c-8 0-11 7-11 13 0 5-2 8-4 10h30c-2-2-4-5-4-10 0-6-3-13-11-13Z" fill="${m?'#E9E1EF':'#F2C14E'}"/><circle cx="32" cy="43" r="3.6" fill="#FFFFFF"/>
-    ${m?'<path d="M15 15L49 49" stroke-width="4"/>':''}</g>
-    ${m?'':'<use href="#spk" x="46" y="8" width="11" height="11" fill="#FF9EC4"/><use href="#spk" x="8" y="14" width="7" height="7" fill="#F2C14E"/>'}</svg>`;
+  muteBtn.innerHTML=`<svg viewBox="0 0 32 32" aria-hidden="true" style="color:${m?'#B9B3CF':'#2A2250'}"><use href="#i-bell"/>${m?'<path d="M5 5L27 27" stroke="#fff" stroke-width="6" stroke-linecap="round"/><path d="M5 5L27 27" stroke="#2A2250" stroke-width="3" stroke-linecap="round"/>':'<path d="M27.5 2.5Q27.5 6.5 31 6.5Q27.5 6.5 27.5 10.5Q27.5 6.5 24 6.5Q27.5 6.5 27.5 2.5Z" fill="#F5B83D"/>'}</svg>`;
   muteBtn.setAttribute('aria-label',m?'Sound off':'Sound on');
   muteBtn.setAttribute('aria-pressed',String(m));
 }
@@ -797,7 +744,8 @@ muteBtn.addEventListener('click',()=>{Snd.muted=!Snd.muted;store.set('muted',Snd
 /* ================= SPARKLE WAND ================= */
 const Wand=(function(){
   const cv=$('wandCanvas'),ctx=cv.getContext('2d');
-  let W=0,H=0,dpr=1,on=false,raf=0,bg=null,night=store.get('wandNight',false),brush='rainbow';
+  let W=0,H=0,dpr=1,on=false,raf=0,bg=null,night=!store.get('wandDay',false),brush='rainbow';
+  const SKY={};['scene-wand','scene-home'].forEach(f=>{const im=new Image();im.decoding='async';im.onload=()=>{if(on)resize();};im.src='art/'+f+'.webp';SKY[f]=im;});
   let segs=[],parts=[],pts={},hue=0,lastNote=0,noteIdx=0,touched=false;
   const bgStars=[];
   function resize(){
@@ -805,23 +753,11 @@ const Wand=(function(){
     cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);
     bg=document.createElement('canvas');bg.width=cv.width;bg.height=cv.height;
     const b=bg.getContext('2d');b.scale(dpr,dpr);
-    const g=b.createLinearGradient(0,0,0,H);
-    if(night){g.addColorStop(0,'#241a5c');g.addColorStop(.6,'#4b2f8f');g.addColorStop(1,'#8a55c2');}
-    if(night){b.fillStyle=g;b.fillRect(0,0,W,H);}
-    else{b.fillStyle='#FFF9F2';b.fillRect(0,0,W,H);}
+    const im=SKY[night?'scene-wand':'scene-home'];
+    b.fillStyle=night?'#6E62C9':'#BFE6F7';b.fillRect(0,0,W,H);
+    if(im&&im.complete&&im.naturalWidth){const s=Math.max(W/im.naturalWidth,H/im.naturalHeight),iw=im.naturalWidth*s,ih=im.naturalHeight*s;b.drawImage(im,(W-iw)/2,(H-ih)/2,iw,ih);}
     const r=rng(11);
-    if(night){
-      for(let i=0;i<Math.round(W*H/2600);i++){b.globalAlpha=r()*.6+.25;b.fillStyle='#fff';b.beginPath();b.arc(r()*W,r()*H*.85,r()*1.4+.4,0,7);b.fill();}
-      b.globalAlpha=.16;b.fillStyle='#fff4c4';b.beginPath();b.arc(W*.82,H*.14,46,0,7);b.fill();
-      b.globalAlpha=1;b.beginPath();b.arc(W*.82,H*.14,28,0,7);b.fill();
-    }else{
-      const m=Math.min(W,H);
-      [[.12,.14,'#FFD3E6',.42],[.88,.26,'#E3D6FB',.42],[.5,1.02,'#D2F4EA',.62],[.04,.62,'#FFF0BF',.34],[.92,.78,'#FFD3E6',.26]].forEach(([x,y,c,rr])=>{
-        b.fillStyle=c;for(let k=0;k<9;k++){b.globalAlpha=.16+r()*.08;b.beginPath();b.ellipse(W*x+(r()-.5)*m*.2,H*y+(r()-.5)*m*.2,m*rr*(.55+r()*.45),m*rr*(.5+r()*.4),r()*3,0,7);b.fill();}});
-      b.globalAlpha=.35;const cols=['#ffa9a9','#ffcc96','#ffe68a','#b2e8a8','#a6d6ff','#cdb6fb'];
-      cols.forEach((c,i)=>{b.strokeStyle=c;b.lineWidth=13;b.beginPath();b.arc(W/2,H*1.08,Math.max(W,H)*.6-i*13,Math.PI,2*Math.PI);b.stroke();});
-      b.globalAlpha=1;b.fillStyle='#6d5560';for(let i=0;i<Math.round(W*H/40);i++){b.globalAlpha=r()*.07;b.fillRect(r()*W,r()*H,1.2,1.2);}
-    }
+    if(!night){b.fillStyle='rgba(255,255,255,.18)';b.fillRect(0,0,W,H);}
     b.globalAlpha=1;
     bgStars.length=0;for(let i=0;i<14;i++)bgStars.push({x:r()*W,y:r()*H*.8,s:r()*5+4,p:r()*6});
   }
@@ -834,10 +770,10 @@ const Wand=(function(){
     [['#ffb3d9',-.75,-.55,.38],['#c5a8ff',-.95,-.05,.36],['#9fe8f0',-.8,.45,.3]].forEach(([c,dx,dy,r])=>{ctx.fillStyle=c;ctx.beginPath();ctx.arc(x+dx*s,y+dy*s,r*s,0,7);ctx.fill();});
     ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(x,y,s*.85,0,7);ctx.fill();
     ctx.fillStyle='#ffe0ef';ctx.beginPath();ctx.ellipse(x+s*.55,y+s*.35,s*.42,s*.32,0,0,7);ctx.fill();
-    ctx.strokeStyle='#4A2C4F';ctx.lineWidth=Math.max(1.2,s*.11);ctx.lineCap='round';ctx.beginPath();ctx.arc(x+s*.05,y-s*.1,s*.2,.15*Math.PI,.85*Math.PI);ctx.stroke();
+    ctx.strokeStyle='#2A2250';ctx.lineWidth=Math.max(1.2,s*.11);ctx.lineCap='round';ctx.beginPath();ctx.arc(x+s*.05,y-s*.1,s*.2,.15*Math.PI,.85*Math.PI);ctx.stroke();
   }
   const BR={
-    rainbow:{trail:()=>`hsl(${hue%360},95%,78%)`,kinds:['spark','spark','star'],col:()=>`hsl(${(hue+Math.random()*60)%360},100%,78%)`},
+    rainbow:{trail:()=>night?`hsl(${hue%360},95%,78%)`:`hsl(${hue%360},90%,68%)`,kinds:['spark','spark','star'],col:()=>`hsl(${(hue+Math.random()*60)%360},100%,78%)`},
     gold:{trail:()=>'#FFDC7A',kinds:['star','spark','star'],col:()=>Math.random()<.5?'#fff3a8':'#F2C14E'},
     hearts:{trail:()=>'#FF9EC4',kinds:['heart','heart','spark'],col:()=>['#FF8DBA','#ffa6d2','#ff4f86','#d9a8ff'][Math.floor(Math.random()*4)]},
     unicorn:{trail:()=>['#ffb3d9','#c5a8ff','#9fe8f0','#ffe070'][Math.floor(hue/40)%4],kinds:['uni','spark','star','heart'],col:()=>['#ffb3d9','#c5a8ff','#9fe8f0','#fff3a8'][Math.floor(Math.random()*4)]}
@@ -872,13 +808,13 @@ const Wand=(function(){
     if(!on)return;raf=requestAnimationFrame(frame);
     ctx.setTransform(1,0,0,1,0,0);ctx.drawImage(bg,0,0);ctx.setTransform(dpr,0,0,dpr,0,0);
     // twinkling background stars
-    ctx.fillStyle=night?'#fff':'#F2C14E';ctx.strokeStyle='#4A2C4F';
+    ctx.fillStyle=night?'#fff':'#FFD966';
     bgStars.forEach(s=>{ctx.globalAlpha=.35+.35*Math.sin(now/600+s.p);spark(s.x,s.y,s.s*(.7+.3*Math.sin(now/700+s.p)));});
-    ctx.globalCompositeOperation=night?'lighter':'source-over';
+    ctx.globalCompositeOperation='source-over';
     const TL=2600;segs=segs.filter(s=>now-s.t<TL);
     ctx.lineCap='round';
     if(!night)for(const s of segs){const k=1-(now-s.t)/TL;
-      ctx.strokeStyle='#4A2C4F';ctx.globalAlpha=k*.85;ctx.lineWidth=s.w*k+5;ctx.beginPath();ctx.moveTo(s.x1,s.y1);ctx.lineTo(s.x2,s.y2);ctx.stroke();}
+      ctx.strokeStyle='#fff';ctx.globalAlpha=k*.95;ctx.lineWidth=s.w*k+9;ctx.beginPath();ctx.moveTo(s.x1,s.y1);ctx.lineTo(s.x2,s.y2);ctx.stroke();}
     for(const s of segs){const k=1-(now-s.t)/TL;
       ctx.strokeStyle=s.c;ctx.globalAlpha=k*(night?.22:0);ctx.lineWidth=s.w*2.6*k+2;ctx.beginPath();ctx.moveTo(s.x1,s.y1);ctx.lineTo(s.x2,s.y2);ctx.stroke();
       ctx.globalAlpha=k*.95;ctx.lineWidth=s.w*k+1;ctx.beginPath();ctx.moveTo(s.x1,s.y1);ctx.lineTo(s.x2,s.y2);ctx.stroke();}
@@ -888,18 +824,18 @@ const Wand=(function(){
       ctx.globalAlpha=Math.min(1,k*1.6);ctx.fillStyle=p.c;
       ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.kind==='uni'?Math.sin(p.r)*.3:p.r);
       if(p.kind==='spark')spark(0,0,p.s);else if(p.kind==='star')star(0,0,p.s);else if(p.kind==='heart')hrt(0,0,p.s);else uni(0,0,p.s);
-      if(!night&&p.kind!=='uni'){ctx.strokeStyle='#4A2C4F';ctx.lineWidth=1.6;ctx.stroke();}
+      if(!night&&p.kind!=='uni'){ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();}
       ctx.restore();}
     ctx.globalAlpha=1;
   }
   function drawSkyBtn(){$('wandSky').innerHTML=ink(night
-    ?`<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="9" fill="#F2C14E"/><g stroke="#ffb02e" stroke-width="3" stroke-linecap="round"><path d="M20 4v4M20 32v4M4 20h4M32 20h4M8.7 8.7l2.8 2.8M28.5 28.5l2.8 2.8M8.7 31.3l2.8-2.8M28.5 11.5l2.8-2.8"/></g></svg>`
-    :`<svg viewBox="0 0 40 40"><path d="M26 6A15 15 0 1 0 34 28A12 12 0 1 1 26 6Z" fill="#8a6ae6"/><path d="M30 10 Q30 13 33 13 Q30 13 30 16 Q30 13 27 13 Q30 13 30 10Z" fill="#F2C14E"/></svg>`);
+    ?`<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="9" fill="#FFD966"/><g stroke="#F5B83D" stroke-width="3" stroke-linecap="round"><path d="M20 4v4M20 32v4M4 20h4M32 20h4M8.7 8.7l2.8 2.8M28.5 28.5l2.8 2.8M8.7 31.3l2.8-2.8M28.5 11.5l2.8-2.8"/></g></svg>`
+    :`<svg viewBox="0 0 40 40"><path d="M26 6A15 15 0 1 0 34 28A12 12 0 1 1 26 6Z" fill="#B79CFF"/><path d="M30 10 Q30 13 33 13 Q30 13 30 16 Q30 13 27 13 Q30 13 30 10Z" fill="#F5B83D"/></svg>`);
     $('wandSky').setAttribute('aria-label',night?'Day sky':'Night sky');}
   $('wandbar').addEventListener('click',e=>{const b=e.target.closest('[data-b]');if(!b)return;brush=b.dataset.b;
     $('wandbar').querySelectorAll('[data-b]').forEach(x=>x.classList.toggle('on',x===b));sfx.tap();
     const r=b.getBoundingClientRect(),c=cv.getBoundingClientRect();spawn(r.left+r.width/2-c.left,r.top-c.top,12,true);});
-  $('wandSky').addEventListener('click',()=>{night=!night;store.set('wandNight',night);resize();drawSkyBtn();sfx.open();});
+  $('wandSky').addEventListener('click',()=>{night=!night;store.set('wandDay',!night);resize();drawSkyBtn();sfx.open();});
   $('wandClear').addEventListener('click',()=>{for(const s of segs)if(Math.random()<.12)spawn(s.x2,s.y2,1,true);segs=[];sfx.home();});
   window.addEventListener('resize',()=>{if(on)resize();});
   drawSkyBtn();
@@ -911,47 +847,20 @@ const Wand=(function(){
 
 /* ================= MERMAID CASTLE STICKERS ================= */
 BG.none=()=>'';
-const SCENE=`<svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
-  <linearGradient id="csky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE0EE"/><stop offset="1" stop-color="#FFF4DE"/></linearGradient>
-  <linearGradient id="csea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C9F1EC"/><stop offset=".6" stop-color="#A6DDF2"/><stop offset="1" stop-color="#93CBF0"/></linearGradient>
-  <linearGradient id="ctow" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FBF2FF"/><stop offset="1" stop-color="#E7DAFB"/></linearGradient></defs>
-  <rect width="300" height="400" fill="#FFF9F2"/>
-  <g filter="url(#wash)">
-    <rect width="300" height="232" fill="url(#csky)"/>
-    <g fill="none" stroke-width="10" opacity=".8">${RB.map((c,i)=>{const r=150-i*10;return `<path d="M${150-r} 210A${r} ${r} 0 0 1 ${150+r} 210" stroke="${c}"/>`;}).join('')}</g>
-    <path d="M0 226 Q25 214 50 226 T100 226 T150 226 T200 226 T250 226 T300 226 V400 H0Z" fill="url(#csea)"/>
-    <path d="M0 360 Q75 344 150 356 T300 352 V400 H0Z" fill="#FFE9BE"/>
-  </g>
-  <g filter="url(#inkL)">${cloud(40,64,.9)}</g><g filter="url(#inkL)">${cloud(256,46,.7)}</g>
-  <ellipse cx="150" cy="232" rx="125" ry="16" fill="#F6DDBA" filter="url(#wash)"/>
-  <g filter="url(#inkL)">
-    <rect x="58" y="120" width="40" height="110" fill="url(#ctow)"/><rect x="202" y="120" width="40" height="110" fill="url(#ctow)"/>
-    <rect x="90" y="150" width="120" height="80" fill="#F3E9FF"/>
-    ${[96,114,132,150,168,186].map(x=>`<rect x="${x}" y="141" width="11" height="11" rx="2" fill="#F3E9FF"/>`).join('')}
-  </g>
-  <g filter="url(#inkL)"><rect x="124" y="84" width="52" height="146" fill="url(#ctow)"/></g>
-  <g filter="url(#inkL)"><path d="M52 122 Q78 60 78 44 Q78 60 104 122Z" fill="#FFB8D8"/><path d="M196 122 Q222 60 222 44 Q222 60 248 122Z" fill="#FFB8D8"/><path d="M118 86 Q150 20 150 6 Q150 20 182 86Z" fill="#FF9EC4"/></g>
-  <path d="M66 112 Q78 76 78 52 M90 112 Q78 76 78 52 M210 112 Q222 76 222 52 M234 112 Q222 76 222 52 M130 78 Q150 36 150 14 M170 78 Q150 36 150 14" stroke="#FFE1EE" stroke-width="2" fill="none"/>
-  <g filter="url(#inkT)"><circle cx="78" cy="42" r="4" fill="#F2C14E"/><circle cx="222" cy="42" r="4" fill="#F2C14E"/><path d="${star5(150,6,7)}" fill="#F2C14E"/></g>
-  <g filter="url(#inkT)"><path d="${heart(150,118,8)}" fill="#FF9EC4"/><path d="${heart(78,150,6)}" fill="#C9B2F5"/><path d="${heart(222,150,6)}" fill="#C9B2F5"/></g>
-  <g filter="url(#inkL)"><path d="M136 230 V196 a14 14 0 0 1 28 0 V230Z" fill="#C9B2F5"/></g><circle cx="158" cy="214" r="2" fill="#F2C14E"/>
-  <g fill="#7C4DCC" opacity=".55"><path d="M72 182 v-8 a4 4 0 0 1 8 0 v8Z"/><path d="M216 182 v-8 a4 4 0 0 1 8 0 v8Z"/><path d="M146 120 v-8 a4 4 0 0 1 8 0 v8Z" opacity="0"/></g>
-  <path d="M0 226 Q25 214 50 226 T100 226 T150 226 T200 226 T250 226 T300 226" stroke="#FFFFFF" stroke-width="3" fill="none" opacity=".8"/>
-  <g fill="none" stroke-linecap="round" stroke-width="8" filter="url(#inkL)"><path d="M18 400 C8 370 30 350 18 320 C10 300 24 286 20 270" stroke="#8FD9B6"/><path d="M284 400 C296 372 274 352 286 326 C294 306 280 292 284 280" stroke="#A3E2C4"/></g>
-  <g fill="rgba(255,255,255,.35)" stroke="#8EC5F2" stroke-width="1.6"><circle cx="46" cy="262" r="6"/><circle cx="54" cy="246" r="3.5"/><circle cx="262" cy="300" r="5"/></g>
-  <path d="M30 380 Q50 374 70 380 M180 384 Q200 378 220 384" stroke="#E7C48C" stroke-width="2" fill="none" stroke-linecap="round"/>
-</svg>`;
 function stk(vb,inner,cls){return {vb,inner,cls:cls||''};}
 const STK={
   mer1:{w:62,tall:true,svg:()=>render(Object.assign({},DEF,{dress:'mermaid',dressColor:'aqua',hair:'long',hairColor:'gold',crown:'tiara',magic:'none',friend:'none',sparkle:'none',place:'none',skin:0}),'sm1','88 40 140 356',{lite:true})},
   mer2:{w:62,tall:true,svg:()=>render(Object.assign({},DEF,{dress:'mermaid',dressColor:'pink',hair:'curly',hairColor:'brown',crown:'crown',magic:'wand',friend:'none',sparkle:'none',place:'none',skin:2}),'sm2','88 40 160 356',{lite:true})},
   mer3:{w:62,tall:true,svg:()=>render(Object.assign({},DEF,{dress:'mermaid',dressColor:'lav',hair:'pigtails',hairColor:'rainbow',crown:'flowers',magic:'none',friend:'none',sparkle:'none',place:'none',skin:3}),'sm3','80 40 140 356',{lite:true})},
-  unicorn:{w:70,svg:()=>`<svg viewBox="12 280 106 108" xmlns="http://www.w3.org/2000/svg">${FRIEND.unicorn()}</svg>`},
+  unicorn:{w:64,svg:()=>`<svg viewBox="0 0 228 344" xmlns="http://www.w3.org/2000/svg"><image href="art/friend-unicorn.webp" width="228" height="344"/></svg>`,tall:true,ar:344/228},
+  kitty:{w:64,svg:()=>`<svg viewBox="0 0 234 316" xmlns="http://www.w3.org/2000/svg"><image href="art/friend-kitty.webp" width="234" height="316"/></svg>`,tall:true,ar:316/234},
+  dragon:{w:66,svg:()=>`<svg viewBox="0 0 272 318" xmlns="http://www.w3.org/2000/svg"><image href="art/friend-dragon.webp" width="272" height="318"/></svg>`,tall:true,ar:318/272},
+  girl:{w:64,svg:()=>`<svg viewBox="0 0 266 324" xmlns="http://www.w3.org/2000/svg"><image href="art/friend-girl.webp" width="266" height="324"/></svg>`,tall:true,ar:324/266},
   crown:{w:46,svg:()=>`<svg viewBox="118 38 64 50" xmlns="http://www.w3.org/2000/svg">${CROWN.crown()}</svg>`},
   shell:{w:44,svg:()=>`<svg viewBox="0 0 100 90" xmlns="http://www.w3.org/2000/svg"><path d="M50 84 L10 40 A44 44 0 0 1 90 40Z" fill="#ffb3d6" stroke="#ff7fb8" stroke-width="3" stroke-linejoin="round"/>${[-60,-35,-12,12,35,60].map(a=>{const r=a*Math.PI/180;return `<path d="M50 84 L${(50+44*Math.sin(r)).toFixed(1)} ${(40-34*Math.cos(r)).toFixed(1)}" stroke="#ff7fb8" stroke-width="2.5"/>`;}).join('')}<path d="M38 84 h24 l-4 6 h-16z" fill="#ff9fc7"/></svg>`},
-  star:{w:44,svg:()=>`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="${star5(50,52,46)}" fill="#ffa36b" stroke="#ff7f50" stroke-width="3" stroke-linejoin="round"/><g fill="#ffe1c8"><circle cx="50" cy="22" r="3"/><circle cx="80" cy="44" r="3"/><circle cx="20" cy="44" r="3"/><circle cx="32" cy="76" r="3"/><circle cx="68" cy="76" r="3"/></g><circle cx="42" cy="50" r="3.5" fill="#4A2C4F"/><circle cx="58" cy="50" r="3.5" fill="#4A2C4F"/><path d="M43 59Q50 65 57 59" stroke="#4A2C4F" stroke-width="3" fill="none" stroke-linecap="round"/></svg>`},
-  fish:{w:52,svg:()=>`<svg viewBox="0 0 110 80" xmlns="http://www.w3.org/2000/svg"><path d="M78 40 L106 18 Q100 40 106 62Z" fill="#b796ff"/><ellipse cx="48" cy="40" rx="40" ry="30" fill="#7fd8f0"/><path d="M40 12 Q56 0 68 16Z M44 66 Q56 78 64 64Z" fill="#b796ff"/><path d="M58 22 Q66 40 58 58" stroke="#5fbfe0" stroke-width="3" fill="none"/><circle cx="28" cy="34" r="7" fill="#fff"/><circle cx="27" cy="35" r="4.5" fill="#4A2C4F"/><circle cx="25.5" cy="33" r="1.5" fill="#fff"/><path d="M16 48 Q22 53 28 48" stroke="#4A2C4F" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="36" cy="46" r="4" fill="#ff9fb8" opacity=".6"/></svg>`},
-  octo:{w:56,svg:()=>`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#c5a8ff" stroke-width="9" stroke-linecap="round"><path d="M28 56 Q14 76 24 90"/><path d="M40 60 Q34 82 42 94"/><path d="M60 60 Q66 82 58 94"/><path d="M72 56 Q86 76 76 90"/></g><ellipse cx="50" cy="40" rx="30" ry="28" fill="#c5a8ff"/><circle cx="40" cy="40" r="4" fill="#4A2C4F"/><circle cx="60" cy="40" r="4" fill="#4A2C4F"/><path d="M43 50 Q50 56 57 50" stroke="#4A2C4F" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="33" cy="50" r="4" fill="#ff9fb8" opacity=".6"/><circle cx="67" cy="50" r="4" fill="#ff9fb8" opacity=".6"/><path d="M58 14 c-4 -5 -12 -2 -8 5 l5 4 l5 -4 c4 -7 -4 -10 -8 -5z" fill="#FF8DBA" transform="translate(4 0)"/></svg>`},
+  star:{w:44,svg:()=>`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="${star5(50,52,46)}" fill="#ffa36b" stroke="#ff7f50" stroke-width="3" stroke-linejoin="round"/><g fill="#ffe1c8"><circle cx="50" cy="22" r="3"/><circle cx="80" cy="44" r="3"/><circle cx="20" cy="44" r="3"/><circle cx="32" cy="76" r="3"/><circle cx="68" cy="76" r="3"/></g><circle cx="42" cy="50" r="3.5" fill="#2A2250"/><circle cx="58" cy="50" r="3.5" fill="#2A2250"/><path d="M43 59Q50 65 57 59" stroke="#2A2250" stroke-width="3" fill="none" stroke-linecap="round"/></svg>`},
+  fish:{w:52,svg:()=>`<svg viewBox="0 0 110 80" xmlns="http://www.w3.org/2000/svg"><path d="M78 40 L106 18 Q100 40 106 62Z" fill="#b796ff"/><ellipse cx="48" cy="40" rx="40" ry="30" fill="#7fd8f0"/><path d="M40 12 Q56 0 68 16Z M44 66 Q56 78 64 64Z" fill="#b796ff"/><path d="M58 22 Q66 40 58 58" stroke="#5fbfe0" stroke-width="3" fill="none"/><circle cx="28" cy="34" r="7" fill="#fff"/><circle cx="27" cy="35" r="4.5" fill="#2A2250"/><circle cx="25.5" cy="33" r="1.5" fill="#fff"/><path d="M16 48 Q22 53 28 48" stroke="#2A2250" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="36" cy="46" r="4" fill="#ff9fb8" opacity=".6"/></svg>`},
+  octo:{w:56,svg:()=>`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#c5a8ff" stroke-width="9" stroke-linecap="round"><path d="M28 56 Q14 76 24 90"/><path d="M40 60 Q34 82 42 94"/><path d="M60 60 Q66 82 58 94"/><path d="M72 56 Q86 76 76 90"/></g><ellipse cx="50" cy="40" rx="30" ry="28" fill="#c5a8ff"/><circle cx="40" cy="40" r="4" fill="#2A2250"/><circle cx="60" cy="40" r="4" fill="#2A2250"/><path d="M43 50 Q50 56 57 50" stroke="#2A2250" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="33" cy="50" r="4" fill="#ff9fb8" opacity=".6"/><circle cx="67" cy="50" r="4" fill="#ff9fb8" opacity=".6"/><path d="M58 14 c-4 -5 -12 -2 -8 5 l5 4 l5 -4 c4 -7 -4 -10 -8 -5z" fill="#FF8DBA" transform="translate(4 0)"/></svg>`},
   pearl:{w:46,svg:()=>`<svg viewBox="0 0 100 90" xmlns="http://www.w3.org/2000/svg"><path d="M10 52 Q50 92 90 52Z" fill="#c5b2e8" stroke="#a48ad6" stroke-width="2.5"/><path d="M12 50 Q16 10 50 8 Q84 10 88 50 Q50 36 12 50Z" fill="#dccdf5" stroke="#a48ad6" stroke-width="2.5"/><circle cx="50" cy="56" r="14" fill="#fff"/><circle cx="45" cy="51" r="4" fill="#fff" stroke="#e6e0f5"/><path d="M42 50 Q44 46 48 45" stroke="#d6ecff" stroke-width="2" fill="none"/></svg>`},
   heart:{w:38,svg:()=>`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="${heart(50,50,40)}" fill="#FF8DBA"/><path d="M28 34 Q30 24 40 22" stroke="#fff" stroke-width="6" fill="none" stroke-linecap="round"/></svg>`},
   rainbow:{w:70,svg:()=>`<svg viewBox="0 0 120 70" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke-width="8">${RB.map((c,i)=>{const r=52-i*8;return `<path d="M${60-r} 62A${r} ${r} 0 0 1 ${60+r} 62" stroke="${c}"/>`;}).join('')}</g>${cloud(14,60,.42)}${cloud(106,60,.42)}</svg>`},
@@ -959,23 +868,26 @@ const STK={
   sparkle:{w:40,svg:()=>`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="${spk(46,54,40)}" fill="#F2C14E"/><path d="${spk(80,20,14)}" fill="#ff8fc7"/><path d="${spk(84,82,10)}" fill="#8fd0ff"/></svg>`},
   bubbles:{w:40,svg:()=>`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g fill="rgba(210,240,255,.55)" stroke="#7fc8ff" stroke-width="3"><circle cx="40" cy="62" r="26"/><circle cx="74" cy="30" r="16"/><circle cx="78" cy="76" r="10"/></g><g fill="#fff"><circle cx="30" cy="52" r="6"/><circle cx="68" cy="24" r="4"/></g></svg>`}
 };
-const STK_ORDER=['mer1','mer2','mer3','unicorn','crown','shell','star','fish','octo','pearl','heart','rainbow','coral','sparkle','bubbles'];
+const STK_ORDER=['mer1','mer2','mer3','kitty','dragon','girl','unicorn','crown','shell','star','fish','octo','pearl','heart','rainbow','coral','sparkle','bubbles'];
 const STK_INK={unicorn:'inkL',crown:'inkL'};
 const STK_SVG={};STK_ORDER.forEach(k=>{const v=STK[k].svg().replace('xMidYMid slice','xMidYMid meet');STK_SVG[k]=ink(v,STK[k].tall?'inkS':(STK_INK[k]||'inkS'));});
 
 const Castle=(function(){
+  /* positions are fractions of the play area (x of its width, y of its height); size is a fraction of its height */
   const scene=$('scene'),layer=$('stickers'),tray=$('tray');
-  let placed=store.get('castle',[]);if(!Array.isArray(placed))placed=[];
+  let placed=store.get('castle2',[]);if(!Array.isArray(placed))placed=[];
   placed=placed.filter(p=>p&&STK[p.k]&&isFinite(p.x)&&isFinite(p.y));
   let zTop=placed.reduce((m,p)=>Math.max(m,p.z||0),0);
-  $('sceneBg').innerHTML=SCENE;
   tray.innerHTML=STK_ORDER.map((k,i)=>`<button data-k="${k}" data-i="${i}" class="chip${STK[k].tall?' t-tall':''}" aria-label="${k} sticker">${STK_SVG[k]}</button>`).join('');
-  const save=()=>store.set('castle',placed);
-  // keep every sticker fully inside the scene
-  function fit(p){const w=STK[p.k].w/2,h=STK[p.k].tall?STK[p.k].w*1.25:STK[p.k].w*.5;p.x=Math.max(w+4,Math.min(296-w,p.x));p.y=Math.max(h+4,Math.min(396-h,p.y));return p;}
-  function place(el,p){el.style.left=(p.x/300*100)+'%';el.style.top=(p.y/400*100)+'%';el.style.width=(STK[p.k].w/300*100)+'%';el.style.zIndex=p.z||1;}
-  function draw(){layer.innerHTML='';placed.forEach((p,i)=>{const el=document.createElement('div');el.className='stk';el.dataset.n=i;el.innerHTML=STK_SVG[p.k];place(el,p);layer.appendChild(el);});}
-  function toScene(cx,cy){const r=scene.getBoundingClientRect();return{x:(cx-r.left)/r.width*300,y:(cy-r.top)/r.height*400,inside:cx>=r.left&&cx<=r.right&&cy>=r.top&&cy<=r.bottom};}
+  const save=()=>store.set('castle2',placed);
+  const box=()=>scene.getBoundingClientRect();
+  const wpx=(k,r)=>STK[k].w/400*1.15*r.height; // sticker width in px
+  const hpx=(k,r)=>wpx(k,r)*(STK[k].ar||(STK[k].tall?2.3:.9));
+  function fit(p,r){r=r||box();if(!r.width)return p;const w=wpx(p.k,r)/2/r.width,hh=hpx(p.k,r)/2/r.height;
+    p.x=Math.max(w+.01,Math.min(.99-w,p.x));p.y=Math.max(hh+.01,Math.min(.99-hh,p.y));return p;}
+  function place(el,p,r){r=r||box();el.style.left=(p.x*100)+'%';el.style.top=(p.y*100)+'%';el.style.width=wpx(p.k,r)+'px';el.style.zIndex=p.z||1;}
+  function draw(){const r=box();layer.innerHTML='';placed.forEach((p,i)=>{fit(p,r);const el=document.createElement('div');el.className='stk';el.dataset.n=i;el.innerHTML=STK_SVG[p.k];place(el,p,r);layer.appendChild(el);});}
+  function toScene(cx,cy){const r=box();return{x:(cx-r.left)/r.width,y:(cy-r.top)/r.height,inside:cx>=r.left&&cx<=r.right&&cy>=r.top&&cy<=r.bottom};}
   const bloop=()=>{Snd.bell(NT.E6,0,.06);Snd.bell(NT.G6,.08,.055);};
   const poof=()=>{Snd.bell(NT.G6,0,.05);Snd.bell(NT.E6,.08,.045);};
   /* move stickers already on the scene */
@@ -983,7 +895,7 @@ const Castle=(function(){
   layer.addEventListener('pointerdown',e=>{
     const el=e.target.closest('.stk');if(!el)return;e.preventDefault();
     const p=placed[+el.dataset.n];const s=toScene(e.clientX,e.clientY);
-    p.z=++zTop;el.style.zIndex=p.z;el.setPointerCapture(e.pointerId);el.classList.add('lift');
+    p.z=++zTop;el.style.zIndex=p.z;try{el.setPointerCapture(e.pointerId);}catch(_){}el.classList.add('lift');
     drag={el,p,dx:p.x-s.x,dy:p.y-s.y,sx:e.clientX,sy:e.clientY,moved:false};
   });
   layer.addEventListener('pointermove',e=>{
@@ -1008,7 +920,7 @@ const Castle=(function(){
     if(!tdrag.ghost){
       if(Math.hypot(e.clientX-tdrag.sx,e.clientY-tdrag.sy)<10)return;
       const g=document.createElement('div');g.className='ghost';g.innerHTML=STK_SVG[tdrag.k];
-      const r=scene.getBoundingClientRect();g.style.width=(STK[tdrag.k].w/300*r.width)+'px';document.body.appendChild(g);tdrag.ghost=g;
+      g.style.width=wpx(tdrag.k,box())+'px';document.body.appendChild(g);tdrag.ghost=g;
       sfx.tab();
     }
     tdrag.ghost.style.left=e.clientX+'px';tdrag.ghost.style.top=e.clientY+'px';
@@ -1022,107 +934,58 @@ const Castle=(function(){
     if(!tdrag||e.pointerId!==tdrag.id)return;const t=tdrag;tdrag=null;
     if(t.ghost){t.ghost.remove();const s=toScene(e.clientX,e.clientY);if(s.inside&&e.type==='pointerup'){add(t.k,s.x,s.y);bloop();}return;}
     if(e.type!=='pointerup')return;
-    // a tap: drop it somewhere in the water or sky, a little random
-    const sea=STK[t.k].tall||['fish','octo','shell','star','pearl','coral','bubbles'].includes(t.k);
-    // pick the open spot farthest from the stickers already there, so they don't pile up
-    let best=null,bd=-1;
-    for(let i=0;i<14;i++){const c={k:t.k,x:50+Math.random()*200,y:sea?250+Math.random()*100:50+Math.random()*130};fit(c);
-      const d=placed.reduce((m,q)=>Math.min(m,Math.hypot(q.x-c.x,(q.y-c.y)*.9)),999);if(d>bd){bd=d;best=c;}}
+    // a tap: pick the open spot farthest from the stickers already there, so they don't pile up
+    const r=box(),ar=r.width/r.height||1.6;let best=null,bd=-1;
+    for(let i=0;i<16;i++){const c=fit({k:t.k,x:.14+Math.random()*.72,y:.3+Math.random()*.6},r);
+      const d=placed.reduce((m,q)=>Math.min(m,Math.hypot((q.x-c.x)*ar,q.y-c.y)),9);if(d>bd){bd=d;best=c;}}
     add(t.k,best.x,best.y);sfx.tap();
   }
   tray.addEventListener('pointerup',endTray);tray.addEventListener('pointercancel',endTray);
   $('castleClear').addEventListener('click',()=>{if(!placed.length)return;placed=[];draw();save();sfx.home();});
-  return{start(){draw();}};
+  let on=false;
+  window.addEventListener('resize',()=>{if(on)draw();});
+  return{start(){on=true;draw();},stop(){on=false;}};
 })();
 
 /* ---------------- routing ---------------- */
 const ROUTES={'dress-up':'dressup','wand':'wand','castle':'castle'};
 const READY={'dress-up':true,'wand':true,'castle':true};
-const WEL={dressup:'dressup-wide',wand:'wand-wide',castle:'mermaid-wide'};
 let curView=null;
-const WELIMG={};
-function preloadWelcome(){Object.keys(WEL).forEach(k=>{const im=new Image();im.decoding='async';im.src='art/'+WEL[k]+'.webp';WELIMG[k]=im;});}
-function welcome(id){
-  const im=WELIMG[id];if(!im||!im.complete||!im.naturalWidth)return;
-  document.querySelectorAll('.welcome').forEach(w=>w.remove());
-  const w=document.createElement('div');w.className='welcome';w.setAttribute('aria-hidden','true');
-  w.innerHTML=`<div class="card"><svg viewBox="0 0 300 170" preserveAspectRatio="none"><path filter="url(#wob)" vector-effect="non-scaling-stroke" d="M10 8 Q150 2 290 9 Q298 85 291 162 Q150 168 12 162 Q3 85 10 8Z" fill="#FFFFFF" stroke="#4A2C4F" stroke-width="3"/></svg><img class="paint" src="${WELIMG[id].src}" alt="" width="512" height="288"></div>`;
-  document.body.appendChild(w);
-  const done=()=>{if(w.dataset.d)return;w.dataset.d='1';w.classList.add('out');setTimeout(()=>w.remove(),400);};
-  w.addEventListener('pointerdown',e=>{e.preventDefault();done();});
-  setTimeout(done,1500);
-}
+const TITLE={dressup:['Royal Dress-Up','i-gown'],wand:['Sparkle Wand','i-wand'],castle:['Mermaid Castle','i-shell']};
+$('wandHint').innerHTML=`<svg viewBox="0 0 100 100" aria-hidden="true"><line x1="22" y1="86" x2="58" y2="42" stroke="#F5B83D" stroke-width="9" stroke-linecap="round"/><path d="${star5(62,36,22)}" fill="#FFD966" stroke="#F5B83D" stroke-width="4" stroke-linejoin="round"/><circle cx="62" cy="37" r="6" fill="#FF7EB6"/><path d="${spk(88,14,9)}" fill="#fff"/><path d="${spk(30,22,7)}" fill="#fff"/></svg>`;
 function show(){
   const r=location.hash.slice(1);const id=ROUTES[r];
-  document.querySelectorAll('.welcome').forEach(w=>w.remove());
   document.querySelectorAll('.view').forEach(v=>v.hidden=true);
-  Wand.stop();
-  if(id&&READY[r]){$(id).hidden=false;$('homeBtn').hidden=false;
+  Wand.stop();Castle.stop();const at=$('appTitle');
+  document.body.classList.toggle('in-game',!!(id&&READY[r]));
+  if(id&&READY[r]){$(id).hidden=false;$('homeBtn').hidden=false;at.innerHTML=`<svg aria-hidden="true"><use href="#${TITLE[id][1]}"/></svg><span>${TITLE[id][0]}</span>`;at.hidden=false;
     if(id==='dressup'){drawStage();drawTabs();drawPanel();}
     if(id==='wand')Wand.start();
     if(id==='castle')Castle.start();
-    if(curView!==id)welcome(id);curView=id;}
-  else{$('home').hidden=false;$('homeBtn').hidden=true;curView='home';}
+    curView=id;}
+  else{$('home').hidden=false;$('homeBtn').hidden=true;at.hidden=true;curView='home';}
 }
-document.querySelectorAll('.tile').forEach(t=>{
+document.querySelectorAll('.tile,.tabbar button').forEach(t=>{
   const r=t.dataset.go;if(READY[r])t.querySelector('[data-soon]')?.remove();else t.classList.add('soon');
   t.addEventListener('click',()=>{
+    if(!r){sfx.tab();return;}
     if(!READY[r]){sfx.soon();bump(t,'wiggle');return;}
-    sfx.open();location.hash=r;
+    sfx.open();landscape();location.hash=r;
   });
 });
-$('homeBtn').addEventListener('click',()=>{sfx.home();history.replaceState(null,'',location.pathname+location.search);show();});
+/* where the browser allows it (Android), games go full screen and sideways; iPhone shows the turn card instead */
+function landscape(){
+  try{const so=screen.orientation,de=document.documentElement;
+    if(!so||!so.lock||!de.requestFullscreen||!matchMedia('(pointer:coarse)').matches||document.fullscreenElement)return;
+    de.requestFullscreen({navigationUI:'hide'}).then(()=>so.lock('landscape')).catch(()=>{});
+  }catch(_){}
+}
+function unlandscape(){try{if(document.fullscreenElement){screen.orientation&&screen.orientation.unlock&&screen.orientation.unlock();document.exitFullscreen().catch(()=>{});}}catch(_){}}
+$('homeBtn').addEventListener('click',()=>{sfx.home();unlandscape();history.replaceState(null,'',location.pathname+location.search);show();});
 window.addEventListener('hashchange',show);
 document.addEventListener('pointerdown',()=>Snd.ensure(),{once:true});
 
-document.querySelectorAll('.act svg, #wandbar [data-b] svg, #wandClear svg, .close svg, .sheet-top .title svg').forEach(v=>{v.outerHTML=ink(v.outerHTML);});
-/* ---------- hand-drawn frames ---------- */
-const SK_SEL='.chip,.dot,.frame,.sheet-card';
-let skN=0;
-function skRand(seed){let x=seed>>>0||1;return()=>{x=(x*1664525+1013904223)>>>0;return x/4294967296;};}
-function skPath(w,h,r,m,seed,round){
-  const R=skRand(seed),pts=[];
-  if(round){
-    const cx=w/2,cy=h/2,rx=w/2-m,ry=h/2-m,n=16,st=R()*6.283;
-    for(let i=0;i<=n+2;i++){const a=st+i/n*6.283,j=1+(R()-.5)*.03;pts.push([cx+rx*j*Math.cos(a),cy+ry*j*Math.sin(a)]);}
-  }else{
-    const x0=m,y0=m,x1=w-m,y1=h-m;r=Math.max(4,Math.min(r,(x1-x0)/2,(y1-y0)/2));
-    const P=[],seg=(ax,ay,bx,by)=>{const n=Math.max(1,Math.round(Math.hypot(bx-ax,by-ay)/18));for(let i=0;i<n;i++)P.push([ax+(bx-ax)*i/n,ay+(by-ay)*i/n]);},
-      arc=(cx,cy,a0)=>{for(let i=0;i<4;i++){const a=a0+i/4*Math.PI/2;P.push([cx+r*Math.cos(a),cy+r*Math.sin(a)]);}};
-    seg(x0+r,y0,x1-r,y0);arc(x1-r,y0+r,-Math.PI/2);seg(x1,y0+r,x1,y1-r);arc(x1-r,y1-r,0);
-    seg(x1-r,y1,x0+r,y1);arc(x0+r,y1-r,Math.PI/2);seg(x0,y1-r,x0,y0+r);arc(x0+r,y0+r,Math.PI);
-    const k=Math.floor(R()*P.length),amp=Math.min(1.7,Math.min(w,h)*.025+.7);
-    for(let i=0;i<P.length+2;i++){const p=P[(k+i)%P.length];pts.push([p[0]+(R()-.5)*2*amp,p[1]+(R()-.5)*2*amp]);}
-  }
-  const f=p=>p[0].toFixed(1)+' '+p[1].toFixed(1);
-  let d='M'+f(pts[0]);
-  for(let i=1;i<pts.length-1;i++){const p=pts[i],q=pts[i+1];d+='Q'+f(p)+' '+f([(p[0]+q[0])/2,(p[1]+q[1])/2]);}
-  return d+'L'+f(pts[pts.length-1]);
-}
-function sketch(el){
-  const w=el.offsetWidth,h=el.offsetHeight;if(!w||!h)return;
-  const has=el.querySelector(':scope > .sk.o');
-  if(has&&el._skw===w&&el._skh===h)return;
-  el._skw=w;el._skh=h;if(!el._sks)el._sks=(++skN)*7919+13;
-  const round=el.classList.contains('dot');
-  const r=el.classList.contains('frame')?30:el.classList.contains('sheet-card')?32:Math.min(21,Math.min(w,h)*.28);
-  const m=round?2:2.6,d1=skPath(w,h,r,m,el._sks,round),d2=skPath(w,h,r,m+.8,el._sks+31,round);
-  el.querySelectorAll(':scope > .sk').forEach(n=>n.remove());
-  const mk=(c,inner)=>{const v=document.createElementNS('http://www.w3.org/2000/svg','svg');v.setAttribute('class','sk '+c);v.setAttribute('viewBox',`0 0 ${w} ${h}`);v.setAttribute('aria-hidden','true');v.innerHTML=inner;return v;};
-  if(!round)el.insertBefore(mk('f',`<path class="sh" d="${d1}Z" transform="translate(0 4)"/><path d="${d1}Z"/>`),el.firstChild);
-  el.appendChild(mk('o',`<path d="${d1}"/><path d="${d2}"/>`));
-}
-const skSeen=new WeakSet();
-const skRO=typeof ResizeObserver!=='undefined'?new ResizeObserver(es=>es.forEach(e=>sketch(e.target))):null;
-function skWatch(el){if(!skSeen.has(el)){skSeen.add(el);skRO&&skRO.observe(el);}sketch(el);}
-function skScan(root){if(root.matches&&root.matches(SK_SEL))skWatch(root);root.querySelectorAll&&root.querySelectorAll(SK_SEL).forEach(skWatch);}
-if(typeof MutationObserver!=='undefined')new MutationObserver(ms=>ms.forEach(m=>{
-  if(m.target.matches&&m.target.matches(SK_SEL))sketch(m.target);
-  m.addedNodes.forEach(n=>{if(n.nodeType===1&&!(n.classList&&n.classList.contains('sk')))skScan(n);});
-})).observe(document.body,{childList:true,subtree:true});
-skScan(document.body);
 drawMute();show();
-setTimeout(preloadWelcome,600);
 })();
 </script>
 </body>
