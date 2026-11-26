@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Violet's Sparkle Palace</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -114,9 +114,9 @@ img{pointer-events:none}
 .gcard .nm b i{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;flex:none}
 .gcard .nm b i svg{width:18px;height:18px;color:#fff}
 @media (max-width:430px){.gcard .nm b i{display:none}.gcard .nm{font-size:1.05rem;padding:9px 8px 11px 12px}.gcard .nm svg{width:18px;height:18px}}
-.c1 .nm b i{background:var(--pink)}.c2 .nm b i{background:var(--lavender)}.c3 .nm b i{background:var(--sky)}
+.c1 .nm b i{background:var(--pink)}.c2 .nm b i{background:var(--lavender)}.c3 .nm b i{background:var(--sky)}.c4 .nm b i{background:#FFB547}
 @media (min-width:640px){
-  .cards{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .cards{grid-template-columns:repeat(4,minmax(0,1fr))}
   .gcard.wide{grid-column:auto}
   .gcard.wide .pic{aspect-ratio:1/1}
 }
@@ -247,6 +247,56 @@ img{pointer-events:none}
 .empty{display:grid;justify-items:center;gap:8px;padding:14px 0 6px;color:var(--ink-soft);font-size:1.1rem}
 .empty svg{width:70px;height:70px}
 
+/* mermaid castle: clear check, saved scenes */
+.clearask{position:absolute;inset:0;z-index:20;display:grid;place-items:center;background:rgba(42,34,80,.35);animation:up .25s ease-out}
+.clearask[hidden]{display:none}
+.clearask-card{display:flex;align-items:center;gap:26px;background:#fff;border-radius:999px;padding:16px 22px;box-shadow:var(--shadow-card)}
+.clearask button{width:84px;height:84px;border-radius:50%;display:grid;place-items:center}
+.clearask .yes{background:#FF7EB6;box-shadow:0 5px 0 #E35E98}
+.clearask .yes svg{width:52px;height:52px}
+.clearask .no{background:#E6F8F2;box-shadow:0 5px 0 var(--mint-deep)}
+.clearask .no svg{width:40px;height:40px}
+.gal.scenes{grid-template-columns:repeat(auto-fill, minmax(150px,1fr))}
+.gal.scenes .chip{aspect-ratio:auto}
+.scn{position:relative;width:100%;overflow:hidden;border-radius:18px;background:#D6F5FF center/cover}
+.scn .s{position:absolute;transform:translate(-50%,-50%)}
+.scn .s svg{width:100%;height:auto;display:block;overflow:visible}
+
+/* unicorn stable */
+#stScene{position:absolute;left:0;top:0;bottom:0;right:calc(var(--padR) + 104px);z-index:1}
+#uniBox{position:absolute;touch-action:none}
+#uniBody{position:absolute;inset:0;transform-origin:50% 96%;animation:breathe 3.4s ease-in-out infinite}
+#uniBody .ul{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;-webkit-user-drag:none}
+#uniBody .ov{opacity:0;transition:opacity .08s}
+#uniBody .ov.on{opacity:1}
+.uni-shadow{position:absolute;left:14%;right:6%;bottom:-1.5%;height:8%;border-radius:50%;background:radial-gradient(closest-side,rgba(90,60,40,.32),rgba(90,60,40,0))}
+#uniDeco{position:absolute;inset:0;pointer-events:none}
+#uniDeco img{position:absolute;translate:-50% -50%;filter:drop-shadow(0 3px 3px rgba(42,34,80,.22));animation:dropin .45s var(--ease-boing)}
+#uniDeco img.out{animation:poof .3s ease forwards}
+.shim{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+#uniFx{position:absolute;inset:0;pointer-events:none;overflow:visible}
+#uniFx .fx{position:absolute;width:30px;height:30px;margin:-15px 0 0 -15px;transition:transform .9s cubic-bezier(.2,.7,.3,1),opacity .9s}
+#uniBody.wig{animation:uwig .45s ease, breathe 3.4s ease-in-out infinite}
+#uniBody.toss{animation:utoss .7s var(--ease-boing), breathe 3.4s ease-in-out infinite}
+#uniBody.hop{animation:uhop .6s var(--ease-boing), breathe 3.4s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:scale(1,1)}50%{transform:scale(1.008,1.016)}}
+@keyframes uwig{25%{transform:rotate(-1.6deg)}50%{transform:rotate(1.4deg)}75%{transform:rotate(-.8deg)}}
+@keyframes utoss{30%{transform:rotate(-3.5deg) translateY(-2%)}65%{transform:rotate(2deg)}}
+@keyframes uhop{35%{transform:translateY(-5%) scale(.98,1.03)}70%{transform:translateY(0) scale(1.03,.97)}}
+.treat{position:fixed;z-index:40;pointer-events:none;transition:transform .55s cubic-bezier(.4,-.2,.5,1),opacity .2s .5s}
+.brushing{position:fixed;z-index:40;pointer-events:none;transform:translate(-30%,-70%) rotate(-25deg)}
+.petals{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1}
+.petals i{position:absolute;top:-30px;width:14px;height:10px;border-radius:70% 0 70% 0;background:#FFC2DA;opacity:.85;animation:petal 12s linear infinite}
+.petals i:nth-child(2n){background:#FFE1EE;width:11px;height:8px}
+@keyframes petal{0%{transform:translate(0,-30px) rotate(0)}25%{transform:translate(24px,25vh) rotate(90deg)}50%{transform:translate(-12px,50vh) rotate(200deg)}75%{transform:translate(20px,75vh) rotate(280deg)}100%{transform:translate(0,105vh) rotate(360deg)}}
+.tray .chip img{max-width:60px;max-height:60px;width:auto;height:auto;pointer-events:none;-webkit-user-drag:none}
+.tray .chip.on{background:var(--mint);box-shadow:0 4px 0 var(--mint-deep)}
+.tray .chip .sw{width:52px;height:52px;border-radius:50%;border:4px solid #fff;box-shadow:0 2px 6px rgba(42,34,80,.2)}
+.shim path{transform-box:fill-box;transform-origin:center;animation:ushim 1.9s ease-in-out infinite}
+@keyframes ushim{0%,100%{opacity:0;transform:scale(.3)}50%{opacity:1;transform:scale(1)}}
+.ghost img{pointer-events:none}
+@media (prefers-reduced-motion:reduce){.petals{display:none}#uniBody{animation:none}}
+
 /* sparkle wand */
 #wandCanvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;display:block}
 .wandbar{
@@ -265,7 +315,7 @@ img{pointer-events:none}
 .hint.held{left:0;top:0;margin:0;transform-origin:68px 41px;animation:none;transition:none;will-change:transform}
 .hint.held svg{animation:wandwig 1.8s ease-in-out infinite}
 @keyframes wandwig{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
-.hint svg{overflow:visible;transform-origin:62% 37%;width:100%;height:100%;filter:drop-shadow(0 4px 6px rgba(42,34,80,.25))}
+.hint svg{overflow:visible;position:absolute;left:-33px;top:-11px;width:154px;height:165px;transform-origin:101.2px 51.7px;filter:drop-shadow(0 4px 6px rgba(42,34,80,.25))}
 @keyframes hint{0%{transform:translate(-60px,24px) rotate(-12deg)}50%{transform:translate(60px,-16px) rotate(10deg)}100%{transform:translate(-60px,24px) rotate(-12deg)}}
 
 /* mermaid castle */
@@ -286,12 +336,14 @@ img{pointer-events:none}
 .stk.lift svg{transform:scale(1.12);filter:drop-shadow(0 10px 6px rgba(42,34,80,.28))}
 .stk.wig svg{animation:wiggle .5s ease}
 .stk.drop svg{animation:dropin .45s var(--ease-boing)}
+.stk.poof svg{animation:poof .3s ease forwards}
 @keyframes dropin{0%{transform:scale(.6)}100%{transform:scale(1)}}
 .ghost{position:fixed;z-index:50;pointer-events:none;transform:translate(-50%,-50%) scale(1.1);filter:drop-shadow(0 10px 6px rgba(42,34,80,.28))}
 .ghost svg{width:100%;height:auto;display:block;overflow:visible}
 
 /* turn sideways card: games are played in landscape */
 .turn{position:fixed;inset:0;z-index:15;display:none;place-items:center;padding:90px 24px 40px;background:var(--mint-bg) url(art/scene-home.webp) center/cover}
+@media (orientation:portrait){.turn{background-image:url(art/scene-home-tall.webp)}}
 .turn::before{content:'';position:absolute;inset:0;background:rgba(230,248,242,.55)}
 .turn-card{position:relative}
 .turn-card{display:grid;justify-items:center;gap:6px;background:var(--card);border-radius:34px;box-shadow:var(--shadow-card);padding:24px 26px 22px;width:min(100%, 330px)}
@@ -311,8 +363,9 @@ img{pointer-events:none}
   .wandbar .chip{width:50px;height:50px}
   .wandbar .chip svg{width:30px;height:30px}
   .wandbar .sep{margin:0 2px}
-  #castle > .bgimg{object-position:85% 50%}
-  #scene{right:0;bottom:calc(var(--padB) + 102px)}
+  #castle > .bgimg{object-position:50% 60%}
+  #scene,#stScene{right:0;bottom:calc(var(--padB) + 102px)}
+  #stable > .bgimg{object-position:50% 60%}
   #scene .actions{bottom:10px}
   .traywrap{top:auto;left:var(--padL);right:var(--padR);bottom:var(--padB);width:auto;height:94px;padding:6px 8px}
   .tray{grid-auto-flow:column;grid-auto-columns:76px;grid-template-rows:76px;grid-auto-rows:76px;justify-content:start;align-content:center;overflow-x:auto;overflow-y:hidden;touch-action:pan-x;padding:2px}
@@ -337,6 +390,7 @@ img{pointer-events:none}
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <defs>
     <symbol id="spk" viewBox="-10 -10 20 20"><path d="M0-10C1.2-2.2 2.2-1.2 10 0C2.2 1.2 1.2 2.2 0 10C-1.2 2.2-2.2 1.2-10 0C-2.2-1.2-1.2-2.2 0-10Z"/></symbol>
+    <symbol id="i-uni" viewBox="0 0 32 32"><path fill="currentColor" d="M21 2l-1.6 7.2c3.4 1.4 5.6 4.6 5.6 8.3V27a3 3 0 0 1-3 3h-2v-6h-4v6h-3a3 3 0 0 1-3-3v-4.4l-3.2 1.6a2.2 2.2 0 0 1-3-1.2l-.4-1a2.2 2.2 0 0 1 1-2.7L13 12.6c.6-1.8 1.9-3.2 3.6-3.9L16 5l2.4 2.6Z"/></symbol>
     <symbol id="i-castle" viewBox="0 0 32 32"><path fill="currentColor" d="M5 28V13l3-5 3 5v3h3v-4l2-6 2 6v4h3v-3l3-5 3 5v15h-9v-6a2 2 0 0 0-4 0v6Z"/></symbol>
     <symbol id="i-bell" viewBox="0 0 32 32"><path fill="currentColor" d="M16 4c-5.5 0-8 4.5-8 9.5 0 4-1.6 6.5-3.4 8.2-.6.6-.2 1.6.7 1.6h21.4c.9 0 1.3-1 .7-1.6-1.8-1.7-3.4-4.2-3.4-8.2C24 8.5 21.5 4 16 4Zm-3 21.5a3 3 0 0 0 6 0Z"/></symbol>
     <symbol id="i-gown" viewBox="0 0 32 32"><path fill="currentColor" d="M12 3h8l-1 6 2 3-1 2 7 14H5l7-14-1-2 2-3Z"/></symbol>
@@ -369,9 +423,13 @@ img{pointer-events:none}
           <span class="pic"><img src="art/card-wand.webp" alt="" width="350" height="350"></span>
           <span class="nm"><b><i><svg aria-hidden="true"><use href="#i-wand"/></svg></i>Sparkle Wand</b><svg aria-hidden="true"><use href="#i-chev"/></svg></span>
         </button>
-        <button class="gcard c3 wide tile" data-go="castle" aria-label="Mermaid Castle">
-          <span class="pic"><picture><source media="(max-width:639px)" srcset="art/card-mermaid-wide.webp"><img src="art/card-mermaid.webp" alt="" width="350" height="350"></picture></span>
+        <button class="gcard c3 tile" data-go="castle" aria-label="Mermaid Castle">
+          <span class="pic"><img src="art/card-mermaid.webp" alt="" width="350" height="350"></span>
           <span class="nm"><b><i><svg aria-hidden="true"><use href="#i-shell"/></svg></i>Mermaid Castle</b><svg aria-hidden="true"><use href="#i-chev"/></svg></span>
+        </button>
+        <button class="gcard c4 tile" data-go="stable" aria-label="Unicorn Stable">
+          <span class="pic"><img src="art/card-stable.webp" alt="" width="350" height="350"></span>
+          <span class="nm"><b><i><svg aria-hidden="true"><use href="#i-uni"/></svg></i>Unicorn Stable</b><svg aria-hidden="true"><use href="#i-chev"/></svg></span>
         </button>
       </div>
     </div>
@@ -380,7 +438,7 @@ img{pointer-events:none}
 
 <!-- ROYAL DRESS-UP -->
 <section class="view game" id="dressup" hidden>
-  <img class="bgimg" id="dressBg" src="art/scene-dress.webp" alt="" width="1280" height="720">
+  <img class="bgimg" id="dressBg" data-bg="scene-dress" src="art/scene-dress.webp" alt="" width="1280" height="720">
   <div class="stage">
     <div class="doll" id="frame">
       <div class="pic" id="pic"></div>
@@ -422,16 +480,46 @@ img{pointer-events:none}
 
 <!-- MERMAID CASTLE -->
 <section class="view game" id="castle" hidden>
-  <img class="bgimg" src="art/scene-sea.webp" alt="" width="1280" height="720">
+  <img class="bgimg" data-bg="scene-sea" src="art/scene-sea.webp" alt="" width="1280" height="720">
   <div id="scene">
     <div id="stickers"></div>
+    <div class="clearask" id="clearAsk" hidden>
+      <div class="clearask-card">
+        <button class="yes" id="clearYes" aria-label="Yes, clear them all"><svg viewBox="0 0 40 40" aria-hidden="true"><g fill="#D6F5FF" stroke="#fff" stroke-width="2"><circle cx="14" cy="24" r="8.5"/><circle cx="26.5" cy="17.5" r="6.5"/><circle cx="27.5" cy="30" r="4.5"/></g><circle cx="11" cy="21" r="2.2" fill="#fff"/><circle cx="24.5" cy="15.5" r="1.7" fill="#fff"/></svg></button>
+        <button class="no" id="clearNo" aria-label="No, keep them"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5L8.5 15L16 6" stroke="#3FB98F" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </div>
     <div class="actions">
-      <button class="act chip" id="castleClear" aria-label="Clear the stickers">
+      <button class="act chip" id="sceneSave" aria-label="Save this scene"><span class="lbl">Save</span><svg viewBox="0 0 40 40"><path d="M20 34 C8 26 3 19 3 13 C3 7 8 4 12.5 4 C16 4 18.5 6 20 9 C21.5 6 24 4 27.5 4 C32 4 37 7 37 13 C37 19 32 26 20 34Z" fill="#FF7EB6"/><path d="M10.5 11.5 Q11.5 8.5 14.5 8" stroke="#fff" stroke-width="2.8" fill="none" stroke-linecap="round"/></svg></button>
+      <button class="act chip" id="sceneGalBtn" aria-label="My scenes"><span class="lbl">My scenes</span><span class="badge" id="sceneCount" hidden></span><svg viewBox="0 0 40 40"><rect x="4" y="6" width="32" height="28" rx="7" fill="#8FD3FF"/><rect x="8.5" y="10.5" width="23" height="19" rx="4" fill="#D6F5FF"/><path d="M8.5 25.5 L16 18 L21 23 L25 19 L31.5 25.5 V29.5 H8.5Z" fill="#3FB59A"/><circle cx="26" cy="15" r="2.6" fill="#FFD966"/></svg></button>
+      <button class="act chip" id="castleClear" aria-label="Clear the stickers"><span class="lbl">Clear</span>
         <svg viewBox="0 0 40 40"><g fill="#D6F5FF" stroke="#8FD3FF" stroke-width="2"><circle cx="14" cy="24" r="8.5"/><circle cx="26.5" cy="17.5" r="6.5"/><circle cx="27.5" cy="30" r="4.5"/></g><circle cx="11" cy="21" r="2.2" fill="#fff"/><circle cx="24.5" cy="15.5" r="1.7" fill="#fff"/></svg>
       </button>
     </div>
   </div>
   <div class="traywrap panel"><div class="tray" id="tray" aria-label="Stickers"></div></div>
+</section>
+
+<!-- UNICORN STABLE -->
+<section class="view game" id="stable" hidden>
+  <img class="bgimg" data-bg="scene-stable" src="art/scene-stable.webp" alt="" width="2048" height="1152">
+  <div class="petals" aria-hidden="true"><i style="left:8%;animation-delay:0s;animation-duration:11s"></i><i style="left:22%;animation-delay:4s;animation-duration:13s"></i><i style="left:41%;animation-delay:8s;animation-duration:12s"></i><i style="left:58%;animation-delay:2s;animation-duration:14s"></i><i style="left:74%;animation-delay:6s;animation-duration:12s"></i><i style="left:90%;animation-delay:10s;animation-duration:13s"></i></div>
+  <div id="stScene">
+    <div id="uniBox" aria-label="Your unicorn" role="img">
+      <div class="uni-shadow"></div>
+      <div id="uniBody">
+        <img class="ul" src="art/stable/uni.webp" alt="" draggable="false">
+        <img class="ul" id="uniMane" alt="" draggable="false" hidden>
+        <img class="ul ov" id="uniBlink" src="art/stable/uni-blink.webp" alt="" draggable="false">
+        <img class="ul ov" id="uniMunch" src="art/stable/uni-munch.webp" alt="" draggable="false">
+        <img class="ul ov" id="uniGiggle" src="art/stable/uni-giggle.webp" alt="" draggable="false">
+        <div id="uniDeco"></div>
+        <svg id="uniShim" class="shim" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
+      </div>
+      <div id="uniFx"></div>
+    </div>
+  </div>
+  <div class="traywrap panel"><div class="tray" id="stTray" aria-label="Unicorn things"></div></div>
 </section>
 
 <!-- turn sideways (games only, portrait only) -->
@@ -446,6 +534,16 @@ img{pointer-events:none}
 </div>
 
 <div class="flash" id="flash"></div>
+
+<div class="gsheet" id="sceneSheet" hidden>
+  <div class="gsheet-card" role="dialog" aria-label="My scenes">
+    <div class="gsheet-top">
+      <span class="say">My scenes</span>
+      <button class="close chip" id="closeScenes" aria-label="Close"><svg viewBox="0 0 30 30"><path d="M8 8 L22 22 M22 8 L8 22" stroke="#2A2250" stroke-width="4" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="gal scenes" id="sceneGal"></div>
+  </div>
+</div>
 
 <div class="gsheet" id="sheet" hidden>
   <div class="gsheet-card" role="dialog" aria-label="My looks">
@@ -482,7 +580,35 @@ const Snd={
     g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.012);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
     o.connect(g);g.connect(this.out);o.start(t);o.stop(t+dur+.05);
   },
-  bell(f,when,vol){vol=vol||.08;this.note(f,when,1.1,vol);this.note(f*2,when,.35,vol*.18);}
+  bell(f,when,vol){vol=vol||.08;this.note(f,when,1.1,vol);this.note(f*2,when,.35,vol*.18);},
+  /* iPhone: play through the ring/silent switch. A tap starts a silent looping clip, which puts the page in "playback" mode */
+  unlock(){
+    try{if(navigator.audioSession&&navigator.audioSession.type!=='playback')navigator.audioSession.type='playback';}catch(_){}
+    if(!this.keep){try{
+      const n=4000,b=new Uint8Array(44+n),v=new DataView(b.buffer),w=(o,s)=>{for(let i=0;i<s.length;i++)b[o+i]=s.charCodeAt(i);};
+      w(0,'RIFF');v.setUint32(4,36+n,true);w(8,'WAVEfmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);
+      v.setUint32(24,8000,true);v.setUint32(28,8000,true);v.setUint16(32,1,true);v.setUint16(34,8,true);w(36,'data');v.setUint32(40,n,true);b.fill(128,44);
+      const a=new Audio(URL.createObjectURL(new Blob([b],{type:'audio/wav'})));a.loop=true;a.setAttribute('playsinline','');a.preload='auto';this.keep=a;}catch(_){}}
+    if(this.keep&&this.keep.paused&&!this.muted)this.keep.play().catch(()=>{});
+    this.ensure();
+  },
+  noise(when,dur,vol,type,f0,f1,q){ /* soft filtered noise: swishes and crunches */
+    if(this.muted)return;const c=this.ensure();if(!c)return;
+    if(!this.nb){const len=c.sampleRate;this.nb=c.createBuffer(1,len,c.sampleRate);const d=this.nb.getChannelData(0);for(let i=0;i<len;i++)d[i]=Math.random()*2-1;}
+    const t=c.currentTime+(when||0),s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();
+    s.buffer=this.nb;f.type=type||'bandpass';f.Q.value=q||1.2;f.frequency.setValueAtTime(f0,t);f.frequency.exponentialRampToValueAtTime(f1||f0,t+dur);
+    g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+Math.min(.04,dur/3));g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    s.connect(f);f.connect(g);g.connect(this.out);s.start(t,Math.random()*.5);s.stop(t+dur+.05);
+  },
+  glide(f0,f1,when,dur,vol,vib){ /* a soft voice-like tone that slides, with a little wobble */
+    if(this.muted)return;const c=this.ensure();if(!c)return;
+    const t=c.currentTime+(when||0),o=c.createOscillator(),l=c.createOscillator(),lg=c.createGain(),f=c.createBiquadFilter(),g=c.createGain();
+    o.type='triangle';o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(f1,t+dur);
+    l.frequency.value=vib||14;lg.gain.value=f0*.035;l.connect(lg);lg.connect(o.frequency);
+    f.type='lowpass';f.frequency.value=2400;
+    g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.03);g.gain.setValueAtTime(vol,t+dur*.6);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    o.connect(f);f.connect(g);g.connect(this.out);o.start(t);l.start(t);o.stop(t+dur+.05);l.stop(t+dur+.05);
+  }
 };
 const P=[523.3,587.3,659.3,784,880,1046.5,1174.7,1318.5,1568,1760];
 const NT={C6:1046.5,E6:1318.5,G6:1568,A6:1760,C7:2093,E7:2637};
@@ -523,7 +649,11 @@ const SWATCH={rainbow:'conic-gradient(#ffa9a9,#ffcc96,#ffe68a,#b2e8a8,#a6d6ff,#c
 
 /* ---------------- backgrounds ---------------- */
 const BGIMG={room:'scene-dress',garden:'scene-home',sea:'scene-sea',night:'scene-wand',rainbow:'scene-dress',castle:'scene-home'};
-const BG={};Object.keys(BGIMG).forEach(k=>{BG[k]=()=>`<image href="art/${BGIMG[k]}.webp" width="300" height="400" preserveAspectRatio="xMidYMid slice"/>`;});
+/* tall paintings for phones held upright, wide ones for sideways */
+const UPRIGHT=matchMedia('(orientation:portrait)');
+const bgFile=(n,tall)=>'art/'+n+((tall===undefined?UPRIGHT.matches:tall)?'-tall':'')+'.webp';
+function fitBgs(){document.querySelectorAll('img[data-bg]').forEach(im=>{const f=bgFile(im.dataset.bg);if(im.getAttribute('src')!==f)im.setAttribute('src',f);});}
+const BG={};Object.keys(BGIMG).forEach(k=>{BG[k]=()=>`<image href="${bgFile(BGIMG[k],true)}" width="300" height="400" preserveAspectRatio="xMidYMid slice"/>`;});
 
 /* ---------------- character parts ---------------- */
 const HAIRBACK={
@@ -629,9 +759,14 @@ const SPARKLE={
 
 /* ---------------- render a look ---------------- */
 const DOLL_CROWN={crown:'crown',tiara:'tiara',flowers:'flowers',horn:'horn',star:'stars'},DOLL_MAGIC={wand:'wand',mirror:'mirror',flowers:'bouquet'};
+/* headpieces are seated per hairstyle; flowers and the headband have a far side drawn behind the hair */
+const SEATED={crown:1,tiara:1,flowers:1,horn:1},HAS_BACK={flowers:1,horn:1};
+function crownLayers(s){const k=DOLL_CROWN[s.crown];if(!k)return[[],[]];
+  if(!SEATED[k])return[[],['crown-'+k]];
+  return[HAS_BACK[k]?[`crown-${k}-${s.hair}-b`]:[],[`crown-${k}-${s.hair}`]];}
 function dollSrcs(s){
-  const n=['body-skin'+s.skin,`dress-${s.dress}-${s.dressColor}`,`hair-${s.hair}-${s.hairColor}-skin${s.skin}`];
-  if(DOLL_CROWN[s.crown])n.push('crown-'+DOLL_CROWN[s.crown]);
+  const [cb,cf]=crownLayers(s);
+  const n=['body-skin'+s.skin,`dress-${s.dress}-${s.dressColor}`,...cb,`hair-${s.hair}-${s.hairColor}-skin${s.skin}`,...cf];
   if(DOLL_MAGIC[s.magic])n.push('magic-'+DOLL_MAGIC[s.magic],'grip-skin'+s.skin); /* fingers drawn over the handle */
   return n.map(x=>'art/doll/'+x+'.webp');
 }
@@ -661,8 +796,8 @@ function render(s,p,vb,opt){
   o+=(opt&&opt.cut)?`<g filter="url(#${p}cut)">`:'<g>';
   if(!(opt&&opt.vec)){ // the painted, layered princess (same 300x400 frame)
     const im=n=>`<image href="art/doll/${n}.webp" width="300" height="400"/>`;
-    o+=im('body-skin'+s.skin)+im(`dress-${s.dress}-${dc}`)+im(`hair-${s.hair}-${hc}-skin${s.skin}`);
-    if(DOLL_CROWN[s.crown])o+=im('crown-'+DOLL_CROWN[s.crown]);
+    const [cb,cf]=crownLayers(s);
+    o+=im('body-skin'+s.skin)+im(`dress-${s.dress}-${dc}`)+cb.map(im).join('')+im(`hair-${s.hair}-${hc}-skin${s.skin}`)+cf.map(im).join('');
     if(DOLL_MAGIC[s.magic])o+=im('magic-'+DOLL_MAGIC[s.magic]);
     o+=L(FRIEND[s.friend]())+'</g>';
     if(!(opt&&opt.noSpk))o+=SPARKLE[s.sparkle]();
@@ -742,7 +877,7 @@ const pic=$('pic'),frame=$('frame'),tabsEl=$('tabs'),itemsEl=$('items'),colorsEl
 function bump(el,cls){el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);}
 const dressBg=$('dressBg');
 function drawStage(){pic.innerHTML=dollHTML(look);
-  const src='art/'+(BGIMG[look.place]||'scene-dress')+'.webp';if(dressBg.getAttribute('src')!==src)dressBg.setAttribute('src',src);
+  dressBg.dataset.bg=BGIMG[look.place]||'scene-dress';fitBgs();
   $('spkLayer').innerHTML=`<svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${SPARKLE[look.sparkle]()}</svg>`;store.set('look',look);}
 function drawTabs(){
   tabsEl.innerHTML=TABS.map(t=>`<button class="tab chip" role="tab" aria-selected="${t.id===curTab}" aria-label="${t.id}" data-t="${t.id}">${ink(ICON[t.id])}</button>`).join('');
@@ -751,7 +886,7 @@ function thumb(t,v,s){
   if(t.id==='crown'&&DOLL_CROWN[v])return `<img class="itemimg" src="art/doll/item-${DOLL_CROWN[v]}.webp" alt="">`;
   if(t.id==='magic'&&DOLL_MAGIC[v])return `<img class="itemimg" src="art/doll/item-${DOLL_MAGIC[v]}.webp" alt="">`;
   if(t.id==='friend')return FRIMG[v]?`<img class="itemimg" src="art/${FRIMG[v][0]}.webp" alt="">`:NONE_ICON;
-  if(t.id==='place')return `<img class="itemimg cover" src="art/${BGIMG[v]||'scene-dress'}.webp" alt="">`;
+  if(t.id==='place')return `<img class="itemimg cover" src="${bgFile(BGIMG[v]||'scene-dress',true)}" alt="">`;
   if(t.id==='sparkle')return v==='none'?NONE_ICON:`<svg viewBox="40 60 220 220" aria-hidden="true">${SPARKLE[v]()}</svg>`;
   if((t.id==='crown'||t.id==='magic')&&v==='none')return NONE_ICON;
   return dollHTML(s,{crop:t.crop,noFriend:true});
@@ -812,7 +947,7 @@ function openGallery(){
   const X=`<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5L15 15M15 5L5 15" stroke="#8B7FB0" stroke-width="3.2" stroke-linecap="round"/></svg>`;
   const BIN=`<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M10 13h20l-2 21a3 3 0 0 1-3 2.6H15a3 3 0 0 1-3-2.6Z" fill="#fff"/><rect x="7" y="8" width="26" height="5" rx="2.5" fill="#fff"/><rect x="16" y="4" width="8" height="5" rx="2" fill="#fff"/></svg>`;
   const BACK=`<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5L8.5 15L16 6" stroke="#3FB98F" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-  g.innerHTML=looks.length?looks.map((s,i)=>`<div class="look" data-i="${i}"><button class="chip pick" aria-label="Wear look ${i+1}"><img class="bgc" src="art/${BGIMG[s.place]||'scene-dress'}.webp" alt="">${dollHTML(s)}${SPARKLE[s.sparkle]?`<svg class="gspk" viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${SPARKLE[s.sparkle]()}</svg>`:''}</button><button class="del" aria-label="Remove look ${i+1}">${X}</button><div class="ask"><button class="yes" aria-label="Yes, remove it">${BIN}</button><button class="no" aria-label="No, keep it">${BACK}</button></div></div>`).join('')
+  g.innerHTML=looks.length?looks.map((s,i)=>`<div class="look" data-i="${i}"><button class="chip pick" aria-label="Wear look ${i+1}"><img class="bgc" src="${bgFile(BGIMG[s.place]||'scene-dress',true)}" alt="">${dollHTML(s)}${SPARKLE[s.sparkle]?`<svg class="gspk" viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${SPARKLE[s.sparkle]()}</svg>`:''}</button><button class="del" aria-label="Remove look ${i+1}">${X}</button><div class="ask"><button class="yes" aria-label="Yes, remove it">${BIN}</button><button class="no" aria-label="No, keep it">${BACK}</button></div></div>`).join('')
     :`<div class="empty" style="grid-column:1/-1"><svg viewBox="0 0 40 40"><path d="${heart(20,20,13)}" fill="#FFE1EE" stroke="#FF7EB6" stroke-width="2" stroke-dasharray="4 3"/></svg>Tap the heart to save a look</div>`;
   $('sheet').hidden=false;sfx.open();
 }
@@ -841,7 +976,7 @@ muteBtn.addEventListener('click',()=>{Snd.muted=!Snd.muted;store.set('muted',Snd
 const Wand=(function(){
   const cv=$('wandCanvas'),ctx=cv.getContext('2d');
   let W=0,H=0,dpr=1,on=false,raf=0,bg=null,night=!store.get('wandDay',false),brush='rainbow';
-  const SKY={};['scene-wand','scene-home'].forEach(f=>{const im=new Image();im.decoding='async';im.onload=()=>{if(on)resize();};im.src='art/'+f+'.webp';SKY[f]=im;});
+  const SKY={};['scene-wand','scene-home','scene-wand-tall','scene-home-tall'].forEach(f=>{const im=new Image();im.decoding='async';im.onload=()=>{if(on)resize();};im.src='art/'+f+'.webp';SKY[f]=im;});
   let segs=[],parts=[],pts={},hue=0,lastNote=0,noteIdx=0,touched=false;
   const bgStars=[];
   function resize(){
@@ -849,7 +984,7 @@ const Wand=(function(){
     cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);
     bg=document.createElement('canvas');bg.width=cv.width;bg.height=cv.height;
     const b=bg.getContext('2d');b.scale(dpr,dpr);
-    const im=SKY[night?'scene-wand':'scene-home'];
+    const im=SKY[(night?'scene-wand':'scene-home')+(H>W*1.15?'-tall':'')];
     b.fillStyle=night?'#6E62C9':'#BFE6F7';b.fillRect(0,0,W,H);
     if(im&&im.complete&&im.naturalWidth){const s=Math.max(W/im.naturalWidth,H/im.naturalHeight),iw=im.naturalWidth*s,ih=im.naturalHeight*s;b.drawImage(im,(W-iw)/2,(H-ih)/2,iw,ih);}
     const r=rng(11);
@@ -1057,27 +1192,280 @@ const Castle=(function(){
     add(t.k,best.x,best.y);sfx.tap();
   }
   tray.addEventListener('pointerup',endTray);tray.addEventListener('pointercancel',endTray);
-  $('castleClear').addEventListener('click',()=>{if(!placed.length)return;placed=[];draw();save();sfx.home();});
+  /* clear: a picture "are you sure?" so a stray tap can't wipe her work */
+  const ask=$('clearAsk');
+  $('castleClear').addEventListener('click',()=>{if(!placed.length){bump($('castleClear'),'wig');sfx.tap();return;}ask.hidden=false;sfx.tap();});
+  $('clearNo').addEventListener('click',()=>{ask.hidden=true;sfx.tab();});
+  ask.addEventListener('click',e=>{if(e.target===ask){ask.hidden=true;}});
+  $('clearYes').addEventListener('click',()=>{ask.hidden=true;
+    layer.querySelectorAll('.stk').forEach(el=>el.classList.add('poof'));poof();
+    setTimeout(()=>{placed=[];draw();save();},300);});
+  /* saved scenes: up to 12, kept on this device */
+  const sceneKey=a=>a.map(p=>p.k+':'+p.x.toFixed(2)+':'+p.y.toFixed(2)).sort().join('|');
+  let scenes=store.get('scenes',[]);if(!Array.isArray(scenes))scenes=[];
+  scenes=scenes.filter(s=>s&&Array.isArray(s.p)&&s.p.length).map(s=>({ar:+s.ar||1.6,p:s.p.filter(p=>p&&STK[p.k]&&isFinite(p.x)&&isFinite(p.y))})).filter(s=>s.p.length).slice(0,12);
+  const cnt=$('sceneCount');
+  function drawSceneCount(){cnt.textContent=scenes.length;cnt.hidden=!scenes.length;}
+  drawSceneCount();
+  $('sceneSave').addEventListener('click',e=>{
+    const btn=e.currentTarget;if(btn.classList.contains('busy'))return;
+    btn.classList.add('busy');setTimeout(()=>btn.classList.remove('busy'),900);
+    if(!placed.length){sayOn(btn,'Add stickers first!');sfx.tap();bump($('tray'),'pop');return;}
+    const key=sceneKey(placed);
+    if(scenes.some(s=>sceneKey(s.p)===key)){sayOn(btn,'Already saved!');sfx.tap();bump($('sceneGalBtn'),'pop');return;}
+    const r=box();
+    scenes.unshift({ar:+(r.width/r.height||1.6).toFixed(3),p:placed.map(p=>({k:p.k,x:+p.x.toFixed(4),y:+p.y.toFixed(4),z:p.z||1}))});
+    scenes=scenes.slice(0,12);store.set('scenes',scenes);drawSceneCount();bump(cnt,'pop');sayOn(btn,'Saved!');
+    sfx.save();bump($('flash'),'go');
+    const from=btn.getBoundingClientRect(),to=$('sceneGalBtn').getBoundingClientRect();
+    const h=document.createElement('div');h.className='flyheart';
+    h.innerHTML=`<svg viewBox="0 0 40 40"><path d="${heart(20,20,13)}" fill="#FF7EB6" stroke="#fff" stroke-width="2"/></svg>`;
+    h.style.left=from.left+'px';h.style.top=from.top+'px';document.body.appendChild(h);
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{h.style.transform=`translate(${to.left-from.left}px,${to.top-from.top}px) scale(.5)`;h.style.opacity='0.2';}));
+    setTimeout(()=>h.remove(),800);
+  });
+  function thumb(s){
+    const k=Math.min(1/s.ar,1)*1.15/400*100;
+    return `<div class="scn" style="aspect-ratio:${s.ar};background-image:url(${bgFile('scene-sea',false)})">`+
+      s.p.slice().sort((a,b)=>(a.z||1)-(b.z||1)).map(p=>`<div class="s" style="left:${p.x*100}%;top:${p.y*100}%;width:${STK[p.k].w*k}%">${STK_SVG[p.k]}</div>`).join('')+`</div>`;
+  }
+  const sheet=$('sceneSheet'),gal=$('sceneGal');
+  function openScenes(){
+    const X=`<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5L15 15M15 5L5 15" stroke="#8B7FB0" stroke-width="3.2" stroke-linecap="round"/></svg>`;
+    const BIN=`<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M10 13h20l-2 21a3 3 0 0 1-3 2.6H15a3 3 0 0 1-3-2.6Z" fill="#fff"/><rect x="7" y="8" width="26" height="5" rx="2.5" fill="#fff"/><rect x="16" y="4" width="8" height="5" rx="2" fill="#fff"/></svg>`;
+    const BACK=`<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5L8.5 15L16 6" stroke="#3FB98F" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    gal.innerHTML=scenes.length?scenes.map((s,i)=>`<div class="look" data-i="${i}"><button class="chip pick" aria-label="Open scene ${i+1}">${thumb(s)}</button><button class="del" aria-label="Remove scene ${i+1}">${X}</button><div class="ask"><button class="yes" aria-label="Yes, remove it">${BIN}</button><button class="no" aria-label="No, keep it">${BACK}</button></div></div>`).join('')
+      :`<div class="empty" style="grid-column:1/-1"><svg viewBox="0 0 40 40"><path d="${heart(20,20,13)}" fill="#FFE1EE" stroke="#FF7EB6" stroke-width="2" stroke-dasharray="4 3"/></svg>Tap the heart to save a scene</div>`;
+    sheet.hidden=false;sfx.open();
+  }
+  $('sceneGalBtn').addEventListener('click',openScenes);
+  $('closeScenes').addEventListener('click',()=>{sheet.hidden=true;sfx.tab();});
+  sheet.addEventListener('click',e=>{if(e.target===sheet){sheet.hidden=true;return;}
+    const lk=e.target.closest('.look');if(!lk)return;const i=+lk.dataset.i;
+    if(e.target.closest('.del')){gal.querySelectorAll('.look.asking').forEach(x=>x.classList.remove('asking'));lk.classList.add('asking');sfx.tap();return;}
+    if(e.target.closest('.ask .no')){lk.classList.remove('asking');sfx.tab();return;}
+    if(e.target.closest('.ask .yes')){lk.classList.add('poof');sfx.tab();setTimeout(()=>{scenes.splice(i,1);store.set('scenes',scenes);drawSceneCount();openScenes();},340);return;}
+    if(lk.classList.contains('asking')){lk.classList.remove('asking');return;}
+    if(!e.target.closest('.pick'))return;
+    placed=scenes[i].p.map(p=>Object.assign({},p));zTop=placed.reduce((m,p)=>Math.max(m,p.z||0),0);
+    sheet.hidden=true;sfx.save();draw();save();layer.querySelectorAll('.stk').forEach(el=>bump(el,'drop'));});
   let on=false;
   window.addEventListener('resize',()=>{if(on)draw();});
-  return{start(){on=true;draw();},stop(){on=false;}};
+  return{start(){on=true;draw();},stop(){on=false;$('clearAsk').hidden=true;sheet.hidden=true;}};
+})();
+
+/* ================= UNICORN STABLE ================= */
+const Stable=(function(){
+  /* spots on the unicorn picture, as fractions of its box */
+  const AR=.932,MOUTH=[.455,.47];
+  const DECO={'bow-pink':[.183,.314,.167],'bow-lav':[.815,.607,.156],'bow-aqua':[.124,.695,.151],'bow-gold':[.935,.85,.134],crown:[.358,.148,.247],flowers:[.366,.164,.317]};
+  const MANES=['','pink','lav','aqua','gold'];
+  const TREATS={apple:1,carrot:1,cupcake:1,cookie:1};
+  const ORDER=['brush','apple','carrot','cupcake','cookie','mane','bow-pink','bow-lav','bow-aqua','bow-gold','crown','flowers','glitter'];
+  const NAME={brush:'Brush',apple:'Apple',carrot:'Carrot',cupcake:'Cupcake',cookie:'Cookie',mane:'Mane color','bow-pink':'Pink bow','bow-lav':'Purple bow','bow-aqua':'Blue bow','bow-gold':'Gold bow',crown:'Crown',flowers:'Flower crown',glitter:'Glitter'};
+  const img=k=>'art/stable/it-'+k+'.webp';
+  const scn=$('stScene'),box=$('uniBox'),body=$('uniBody'),deco=$('uniDeco'),fxl=$('uniFx'),tray=$('stTray');
+  const mane=$('uniMane'),blinkI=$('uniBlink'),munchI=$('uniMunch'),gigI=$('uniGiggle'),shim=$('uniShim');
+  let st=store.get('stable',{});if(!st||typeof st!=='object')st={};
+  st={m:MANES[st.m]!==undefined?st.m:0,d:Array.isArray(st.d)?st.d.filter(k=>DECO[k]):[],g:!!st.g};
+  const save=()=>store.set('stable',st);
+  tray.innerHTML=ORDER.map(k=>`<button class="chip" data-k="${k}" aria-label="${NAME[k]}">${k==='mane'?'<span class="sw"></span>':`<img src="${img(k)}" alt="" draggable="false">`}</button>`).join('');
+  const chip=k=>tray.querySelector(`[data-k="${k}"]`);
+
+  /* ---- sounds ---- */
+  const S={
+    swish(){Snd.noise(0,.26,.07,'bandpass',800,3000,.8);},
+    crunch(w){w=w||0;[0,.07,.15].forEach(t=>Snd.noise(w+t,.06,.09,'highpass',2200+Math.random()*900,0,.7));},
+    giggle(){[0,1,2,3,4].forEach(i=>Snd.glide(1150-i*35,1400-i*40,i*.1,.08,.045,18));},
+    whinny(){Snd.glide(640,1080,0,.22,.04,20);Snd.glide(1080,560,.2,.55,.036,26);},
+    chime(){[0,2,4,7].forEach((n,i)=>Snd.bell(P[n+2]||P[9],i*.07,.05));},
+    sparkle(){[9,7,8,6].forEach((n,i)=>Snd.bell(P[n],i*.05,.035));},
+    happy(){['E6','G6','C7'].forEach((n,i)=>Snd.bell(NT[n],i*.09,.055));}
+  };
+  /* a gentle music box while she plays */
+  const TUNE=[0,2,4,2,5,4,2,null,4,5,7,5,4,2,0,null,0,2,4,5,7,null,5,4,2,4,2,0,null,null];
+  let tuneT=null,tuneI=0;
+  function music(onOff){clearInterval(tuneT);tuneT=null;if(!onOff)return;
+    tuneT=setInterval(()=>{if(document.hidden||Snd.muted)return;const n=TUNE[tuneI++%TUNE.length];if(n!=null)Snd.bell(P[n],0,.018);},430);}
+
+  /* ---- layout ---- */
+  function layout(){
+    const r=scn.getBoundingClientRect();if(!r.width)return;
+    const top=Math.min(74,r.height*.12),availH=r.height-top-12;
+    const w=Math.max(120,Math.min(r.width-24,availH*AR,640)),h=w/AR;
+    box.style.width=w+'px';box.style.height=h+'px';box.style.left=((r.width-w)/2)+'px';box.style.top=Math.max(top,r.height-h-10)+'px';
+  }
+  const B=()=>box.getBoundingClientRect();
+  const at=(fx,fy)=>{const r=B();return[r.left+fx*r.width,r.top+fy*r.height];};
+  const local=(x,y)=>{const r=B();return[(x-r.left)/r.width,(y-r.top)/r.height,x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom];};
+
+  /* ---- drawing ---- */
+  function drawMane(){const c=MANES[st.m];if(c){mane.src='art/stable/uni-mane-'+c+'.webp';mane.hidden=false;}else mane.hidden=true;
+    const sw=chip('mane').querySelector('.sw');const nx=MANES[(st.m+1)%MANES.length];
+    sw.style.background={'':'#fff',pink:'#FF9CC8',lav:'#C3A6F5',aqua:'#7FD8DE',gold:'#F2C14E'}[nx]||'conic-gradient(#FF9CC8,#C3A6F5,#7FD8DE,#F2C14E,#FF9CC8)';
+    if(!nx)sw.style.background='conic-gradient(#FF9CC8,#C3A6F5,#7FD8DE,#F2C14E,#FF9CC8)';}
+  function drawDeco(newK){
+    deco.querySelectorAll('img').forEach(i=>{if(!st.d.includes(i.dataset.k)){i.classList.add('out');setTimeout(()=>i.remove(),300);}});
+    st.d.forEach(k=>{if(deco.querySelector(`img[data-k="${k}"]:not(.out)`))return;const [x,y,w]=DECO[k];
+      const i=document.createElement('img');i.src=img(k);i.alt='';i.draggable=false;i.dataset.k=k;
+      i.style.left=x*100+'%';i.style.top=y*100+'%';i.style.width=w*100+'%';
+      if(k!==newK)i.style.animation='none';deco.appendChild(i);});
+    ORDER.forEach(k=>{if(DECO[k])chip(k).classList.toggle('on',st.d.includes(k));});
+  }
+  function drawShim(){
+    chip('glitter').classList.toggle('on',st.g);
+    if(!st.g){shim.innerHTML='';return;}
+    const R=rng(7),pts=[[.25,.35],[.42,.25],[.55,.4],[.33,.55],[.6,.62],[.48,.72],[.7,.48],[.82,.7],[.2,.62],[.38,.85],[.66,.86],[.52,.13],[.15,.45],[.75,.33]];
+    shim.innerHTML=pts.map(([x,y],i)=>`<path d="${spk(x*100,y*100,2.2+R()*2.2)}" fill="${i%3?'#fff':'#FFE58A'}" style="animation-delay:${(R()*1.8).toFixed(2)}s"/>`).join('');
+  }
+  function draw(){drawMane();drawDeco();drawShim();}
+
+  /* ---- reactions ---- */
+  function move(cls){['wig','toss','hop'].forEach(c=>body.classList.remove(c));void body.offsetWidth;body.classList.add(cls);}
+  function face(el,ms){el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),ms);}
+  const STAR=c=>`<svg viewBox="0 0 30 30"><path d="${spk(15,15,13)}" fill="${c}"/></svg>`;
+  const HEART=`<svg viewBox="0 0 30 30"><path d="${heart(15,15,10)}" fill="#FF7EB6" stroke="#fff" stroke-width="2"/></svg>`;
+  function fx(fxp,fyp,kind,n){
+    n=n||1;for(let i=0;i<n;i++){const d=document.createElement('div');d.className='fx';
+      d.innerHTML=kind==='heart'?HEART:STAR(['#fff','#FFE58A','#FFC2DA','#C9F2E6'][i%4]);
+      d.style.left=(fxp*100+(Math.random()-.5)*8)+'%';d.style.top=(fyp*100+(Math.random()-.5)*6)+'%';fxl.appendChild(d);
+      const dx=(Math.random()-.5)*90,dy=-40-Math.random()*70;
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{d.style.transform=`translate(${dx}px,${dy}px) scale(${kind==='heart'?1.3:.6})`;d.style.opacity='0';}));
+      setTimeout(()=>d.remove(),1000);}
+  }
+  let lastTap=0,tapN=0;
+  function pat(fxp,fyp){
+    const now=Date.now();if(now-lastTap<250)return;lastTap=now;
+    const k=tapN++%3;
+    if(k===0){face(gigI,900);move('wig');S.giggle();fx(fxp,fyp,'heart',2);}
+    else if(k===1){move('toss');S.whinny();fx(.3,.3,'star',4);}
+    else{face(gigI,700);move('hop');S.happy();fx(fxp,fyp,'heart',3);}
+  }
+  /* blink now and then */
+  let blinkT=null;
+  function blinks(onOff){clearTimeout(blinkT);if(!onOff)return;
+    const go=()=>{blinkT=setTimeout(()=>{if(!gigI.classList.contains('on')&&!munchI.classList.contains('on')){face(blinkI,150);if(Math.random()<.25)setTimeout(()=>face(blinkI,130),300);}go();},2600+Math.random()*2600);};go();}
+
+  /* ---- treats ---- */
+  let eating=false;
+  function feed(k,x,y){
+    if(eating){bump(chip(k),'wiggle');return;}eating=true;
+    const t=document.createElement('img');t.className='treat';t.src=img(k);t.alt='';const sz=64;
+    t.style.width=sz+'px';t.style.left=(x-sz/2)+'px';t.style.top=(y-sz/2)+'px';document.body.appendChild(t);
+    const [mx,my]=at(MOUTH[0],MOUTH[1]);sfx.tab();
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{t.style.transform=`translate(${mx-x}px,${my-y}px) scale(.35)`;t.style.opacity='0';}));
+    setTimeout(()=>{t.remove();
+      for(let i=0;i<3;i++){setTimeout(()=>{munchI.classList.add('on');S.crunch();setTimeout(()=>munchI.classList.remove('on'),150);},i*300);}
+      setTimeout(()=>{eating=false;face(gigI,800);move('hop');S.happy();fx(MOUTH[0],MOUTH[1]-.05,'heart',3);},950);
+    },560);
+  }
+
+  /* ---- brushing ---- */
+  let brush=null;
+  function brushStart(x,y){
+    const g=document.createElement('img');g.className='brushing';g.src=img('brush');g.alt='';g.style.width='84px';
+    g.style.left=x+'px';g.style.top=y+'px';document.body.appendChild(g);
+    brush={g,lx:x,ly:y,dist:0,strokes:0,last:0};
+  }
+  function brushMove(x,y){
+    if(!brush)return;brush.g.style.left=x+'px';brush.g.style.top=y+'px';
+    const [fxp,fyp,inside]=local(x,y);
+    if(inside){brush.dist+=Math.hypot(x-brush.lx,y-brush.ly);
+      if(brush.dist>46){brush.dist=0;const now=Date.now();if(now-brush.last>140){S.swish();brush.last=now;}
+        fx(fxp,fyp,'star',1);brush.strokes++;
+        if(brush.strokes%7===0){face(gigI,800);move('wig');S.giggle();}}}
+    brush.lx=x;brush.ly=y;
+  }
+  function brushEnd(){if(!brush)return;const b=brush;brush=null;b.g.remove();
+    if(b.strokes){setTimeout(()=>{move('toss');S.sparkle();fx(.3,.35,'heart',2);},120);}}
+  function autoBrush(){ /* a tap on the brush: it brushes the mane by itself */
+    if(brush)return;const path=[[.16,.42],[.3,.3],[.2,.55],[.34,.45],[.18,.7],[.3,.62],[.78,.62],[.86,.72]];
+    const [x0,y0]=at(...path[0]);brushStart(x0,y0);let i=0;const b=brush;
+    const step=()=>{if(brush!==b)return;if(i>=path.length){brushEnd();return;}const [x,y]=at(...path[i++]);
+      b.g.style.transition='left .2s ease, top .2s ease';brushMove(x,y);S.swish();fx(path[i-1][0],path[i-1][1],'star',2);b.strokes++;setTimeout(step,220);};
+    step();
+  }
+
+  /* ---- dress up ---- */
+  function toggleDeco(k,force){
+    const has=st.d.includes(k);if(has&&force)return;
+    if(has){st.d=st.d.filter(x=>x!==k);sfx.tab();}
+    else{if(k==='crown')st.d=st.d.filter(x=>x!=='flowers');if(k==='flowers')st.d=st.d.filter(x=>x!=='crown');
+      st.d.push(k);S.chime();const [x,y]=DECO[k];fx(x,y,'star',4);setTimeout(()=>{face(gigI,600);S.giggle();},250);}
+    save();drawDeco(has?null:k);
+  }
+  function nextMane(){st.m=(st.m+1)%MANES.length;save();drawMane();move('toss');S.sparkle();fx(.2,.45,'star',5);}
+  function glitter(force){if(force&&st.g)return;st.g=!st.g;save();drawShim();if(st.g){S.sparkle();fx(.5,.5,'star',6);}else sfx.tab();}
+  function act(k,x,y){
+    if(TREATS[k])return feed(k,x,y);
+    if(k==='brush')return autoBrush();
+    if(k==='mane')return nextMane();
+    if(k==='glitter')return glitter();
+    if(DECO[k])return toggleDeco(k);
+  }
+
+  /* ---- tray: tap does it, or drag it onto the unicorn ---- */
+  let td=null;
+  tray.addEventListener('pointerdown',e=>{const b=e.target.closest('button[data-k]');if(!b)return;
+    td={k:b.dataset.k,b,sx:e.clientX,sy:e.clientY,id:e.pointerId,ghost:null};try{b.setPointerCapture(e.pointerId);}catch(_){}});
+  tray.addEventListener('pointermove',e=>{
+    if(!td||e.pointerId!==td.id)return;
+    if(!td.ghost){if(Math.hypot(e.clientX-td.sx,e.clientY-td.sy)<10)return;
+      if(td.k==='brush'){brushStart(e.clientX,e.clientY);td.ghost='brush';}
+      else{const g=document.createElement('div');g.className='ghost';g.innerHTML=td.k==='mane'?'<span class="sw" style="display:block;width:56px;height:56px;border-radius:50%;background:conic-gradient(#FF9CC8,#C3A6F5,#7FD8DE,#F2C14E,#FF9CC8);border:4px solid #fff"></span>':`<img src="${img(td.k)}" alt="" style="width:72px;height:auto">`;
+        g.style.width='72px';document.body.appendChild(g);td.ghost=g;}
+      sfx.tab();}
+    if(td.ghost==='brush')brushMove(e.clientX,e.clientY);
+    else{td.ghost.style.left=e.clientX+'px';td.ghost.style.top=e.clientY+'px';}
+  });
+  function trayEnd(e){
+    if(!td||e.pointerId!==td.id)return;const t=td;td=null;
+    if(t.ghost==='brush'){brushEnd();return;}
+    if(t.ghost){t.ghost.remove();if(e.type!=='pointerup')return;const [,,inside]=local(e.clientX,e.clientY);
+      if(!inside){sfx.tab();return;}
+      if(TREATS[t.k])return feed(t.k,e.clientX,e.clientY);
+      if(DECO[t.k])return toggleDeco(t.k,true);
+      if(t.k==='glitter')return glitter(true);
+      return act(t.k,e.clientX,e.clientY);}
+    if(e.type!=='pointerup')return;
+    const r=t.b.getBoundingClientRect();bump(t.b,'pop');act(t.k,r.left+r.width/2,r.top+r.height/2);
+  }
+  tray.addEventListener('pointerup',trayEnd);tray.addEventListener('pointercancel',trayEnd);
+
+  /* ---- touching the unicorn: pat it, or rub to brush the mane ---- */
+  let rub=null;
+  box.addEventListener('pointerdown',e=>{e.preventDefault();try{box.setPointerCapture(e.pointerId);}catch(_){}rub={sx:e.clientX,sy:e.clientY,lx:e.clientX,ly:e.clientY,d:0,n:0,id:e.pointerId};});
+  box.addEventListener('pointermove',e=>{if(!rub||e.pointerId!==rub.id)return;rub.d+=Math.hypot(e.clientX-rub.lx,e.clientY-rub.ly);rub.lx=e.clientX;rub.ly=e.clientY;
+    if(rub.d>60){rub.d=0;rub.n++;const [x,y]=local(e.clientX,e.clientY);fx(x,y,'star',1);if(rub.n%2)S.swish();if(rub.n%6===0){face(gigI,700);move('wig');S.giggle();}}});
+  function rubEnd(e){if(!rub||e.pointerId!==rub.id)return;const r=rub;rub=null;if(e.type!=='pointerup')return;
+    if(r.n<1&&Math.hypot(e.clientX-r.sx,e.clientY-r.sy)<14){const [x,y]=local(e.clientX,e.clientY);pat(x,y);}}
+  box.addEventListener('pointerup',rubEnd);box.addEventListener('pointercancel',rubEnd);
+
+  draw();
+  let on=false;
+  window.addEventListener('resize',()=>{if(on)layout();});
+  return{
+    start(){on=true;layout();requestAnimationFrame(layout);blinks(true);music(true);setTimeout(()=>{if(on){S.whinny();fx(.3,.25,'star',4);}},350);},
+    stop(){on=false;blinks(false);music(false);brushEnd();eating=false;}
+  };
 })();
 
 /* ---------------- routing ---------------- */
-const ROUTES={'dress-up':'dressup','wand':'wand','castle':'castle'};
-const READY={'dress-up':true,'wand':true,'castle':true};
+const ROUTES={'dress-up':'dressup','wand':'wand','castle':'castle','stable':'stable'};
+const READY={'dress-up':true,'wand':true,'castle':true,'stable':true};
 let curView=null;
-const TITLE={dressup:['Royal Dress-Up','i-gown'],wand:['Sparkle Wand','i-wand'],castle:['Mermaid Castle','i-shell']};
-$('wandHint').innerHTML=`<svg viewBox="0 0 100 100" aria-hidden="true"><image href="art/doll/item-wand.webp" width="207" height="483" transform="translate(62 37) rotate(39) scale(.25) translate(-103 -95)"/><path d="${spk(88,14,9)}" fill="#fff"/><path d="${spk(30,22,7)}" fill="#fff"/></svg>`;
+const TITLE={dressup:['Royal Dress-Up','i-gown'],wand:['Sparkle Wand','i-wand'],castle:['Mermaid Castle','i-shell'],stable:['Unicorn Stable','i-uni']};
+$('wandHint').innerHTML=`<svg viewBox="-30 -10 140 150" aria-hidden="true"><image href="art/doll/item-wand.webp" width="207" height="483" transform="translate(62 37) rotate(39) scale(.25) translate(-103 -95)"/><path d="${spk(88,14,9)}" fill="#fff"/><path d="${spk(30,22,7)}" fill="#fff"/></svg>`;
 function show(){
   const r=location.hash.slice(1);const id=ROUTES[r];
   document.querySelectorAll('.view').forEach(v=>v.hidden=true);
-  Wand.stop();Castle.stop();$('sheet').hidden=true;const at=$('appTitle');
+  Wand.stop();Castle.stop();Stable.stop();$('sheet').hidden=true;const at=$('appTitle');
   document.body.classList.toggle('in-game',!!(id&&READY[r]));
   if(id&&READY[r]){$(id).hidden=false;$('homeBtn').hidden=false;at.innerHTML=`<svg aria-hidden="true"><use href="#${TITLE[id][1]}"/></svg><span>${TITLE[id][0]}</span>`;at.hidden=false;
     if(id==='dressup'){drawStage();drawTabs();drawPanel();}
     if(id==='wand')Wand.start();
     if(id==='castle')Castle.start();
+    if(id==='stable')Stable.start();
     curView=id;}
   else{$('home').hidden=false;$('homeBtn').hidden=true;at.hidden=true;curView='home';}
 }
@@ -1105,8 +1493,18 @@ function unlandscape(){try{if(document.fullscreenElement){screen.orientation&&sc
 $('homeBtn').addEventListener('click',()=>{sfx.home();unlandscape();history.replaceState(null,'',location.pathname+location.search);show();});
 window.addEventListener('hashchange',show);
 document.addEventListener('pointerdown',()=>Snd.ensure(),{once:true});
+['touchend','click','keydown'].forEach(n=>document.addEventListener(n,()=>Snd.unlock(),{capture:true,passive:true}));
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&Snd.keep)Snd.keep.pause();});
 
 drawMute();show();
+/* no page zoom: a quick double tap or a pinch on a sticker or the picture must never zoom the whole page */
+['gesturestart','gesturechange','gestureend'].forEach(n=>document.addEventListener(n,e=>e.preventDefault(),{passive:false}));
+document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
+document.addEventListener('touchmove',e=>{if(e.touches.length>1)e.preventDefault();},{passive:false});
+let lastTouch=0;
+document.addEventListener('touchend',e=>{const now=Date.now();
+  if(now-lastTouch<350&&!e.target.closest('button,a,input'))e.preventDefault();lastTouch=now;},{passive:false});
+(UPRIGHT.addEventListener?UPRIGHT.addEventListener('change',fitBgs):UPRIGHT.addListener(fitBgs));fitBgs();
 })();
 </script>
 </body>
