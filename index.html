@@ -280,10 +280,26 @@ body.in-game .tabbar{display:none}
 .turn-words{font-size:1.35rem;font-weight:600;text-align:center}
 @keyframes tilt{0%,30%{transform:rotate(0)}55%,85%{transform:rotate(-14deg)}100%{transform:rotate(0)}}
 @keyframes rot{0%,30%{transform:rotate(0)}55%,85%{transform:rotate(-90deg)}100%{transform:rotate(0)}}
+/* upright: every game plays tall, with its controls below the picture */
 @media (orientation:portrait){
-  body.in-game .turn{display:grid}
-  body.in-game .game{visibility:hidden}
-  body.in-game .pill{display:none}
+  #dressup{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;gap:10px}
+  #dressup .controls{align-self:end;justify-self:center;width:100%;max-width:640px;max-height:none;overflow:visible}
+  .item{width:80px;height:80px}
+  .host{display:none}
+  .wandbar{max-width:calc(100% - 16px);gap:2px;padding:5px}
+  .wandbar .chip{width:50px;height:50px}
+  .wandbar .chip svg{width:30px;height:30px}
+  .wandbar .sep{margin:0 2px}
+  #castle > .bgimg{object-position:60% 50%}
+  #scene{right:0;bottom:calc(var(--padB) + 102px)}
+  #scene .actions{bottom:10px}
+  .traywrap{top:auto;left:var(--padL);right:var(--padR);bottom:var(--padB);width:auto;height:94px;padding:6px 8px}
+  .tray{grid-auto-flow:column;grid-auto-columns:76px;grid-template-rows:76px;grid-auto-rows:76px;justify-content:start;align-content:center;overflow-x:auto;overflow-y:hidden;touch-action:pan-x;padding:2px}
+  .tray .chip{touch-action:pan-x}
+}
+@media (orientation:portrait) and (min-width:700px){
+  .host{display:block}
+  .item{width:92px;height:92px}
 }
 
 .tw{animation:tw 1.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
@@ -909,7 +925,7 @@ const Castle=(function(){
   tray.innerHTML=STK_ORDER.map((k,i)=>`<button data-k="${k}" data-i="${i}" class="chip${STK[k].tall?' t-tall':''}" aria-label="${k} sticker">${STK_SVG[k]}</button>`).join('');
   const save=()=>store.set('castle2',placed);
   const box=()=>scene.getBoundingClientRect();
-  const wpx=(k,r)=>STK[k].w/400*1.15*r.height; // sticker width in px
+  const wpx=(k,r)=>STK[k].w/400*1.15*Math.min(r.height,r.width); // sticker width in px
   const hpx=(k,r)=>wpx(k,r)*(STK[k].ar||(STK[k].tall?2.3:.9));
   function fit(p,r){r=r||box();if(!r.width)return p;const w=wpx(p.k,r)/2/r.width,hh=hpx(p.k,r)/2/r.height;
     p.x=Math.max(w+.01,Math.min(.99-w,p.x));p.y=Math.max(hh+.01,Math.min(.99-hh,p.y));return p;}
@@ -1010,7 +1026,7 @@ Array.prototype.forEach.call(document.images,function(i){i.draggable=false;});
 function landscape(){
   try{const so=screen.orientation,de=document.documentElement;
     if(!so||!so.lock||!de.requestFullscreen||!matchMedia('(pointer:coarse)').matches||document.fullscreenElement)return;
-    de.requestFullscreen({navigationUI:'hide'}).then(()=>so.lock('landscape')).catch(()=>{});
+    de.requestFullscreen({navigationUI:'hide'}).catch(()=>{});
   }catch(_){}
 }
 function unlandscape(){try{if(document.fullscreenElement){screen.orientation&&screen.orientation.unlock&&screen.orientation.unlock();document.exitFullscreen().catch(()=>{});}}catch(_){}}
