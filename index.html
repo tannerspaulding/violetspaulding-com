@@ -170,6 +170,17 @@ body.in-game .tabbar{display:none}
 .doll{position:relative;width:min(100%, 50vh);aspect-ratio:3/4;width:min(100cqw, 75cqh);height:min(100cqh, 133.333cqw)}
 .doll::before{content:'';position:absolute;left:14%;right:14%;bottom:-1%;height:7%;border-radius:50%;background:rgba(42,34,80,.18);filter:blur(4px)}
 .doll > .pic,.doll > .pic svg,.doll > .spk,.doll > .spk svg{width:100%;height:100%}
+.doll > .pic{position:relative}
+/* the painted doll: plain stacked pictures in a 3:4 box (no SVG filters, so phones draw it reliably) */
+.pd{position:absolute;inset:0}
+.pd .ly{position:absolute;left:0;top:0;width:100%;height:100%;display:block;pointer-events:none}
+.pdc{position:absolute;inset:0;overflow:hidden}
+.item .pdc{border-radius:inherit}
+.item .itemimg.cover{object-fit:cover;padding:0}
+.item .none{width:100%;height:100%;padding:20px}
+.gal .chip{position:relative}
+.gal .chip .bgc,.gal .chip .gspk{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
 .doll > .spk{position:absolute;inset:0;pointer-events:none}
 .pop{animation:pop .4s var(--ease-boing)}
 @keyframes pop{30%{transform:scale(.97,1.02)}}
@@ -178,7 +189,11 @@ body.in-game .tabbar{display:none}
 .flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:25}
 .flash.go{animation:flash .5s ease}
 @keyframes flash{0%{opacity:.8}100%{opacity:0}}
-.actions{position:absolute;left:0;bottom:0;display:grid;gap:10px;z-index:3}
+.actions{position:absolute;left:0;bottom:0;display:grid;gap:26px;padding-bottom:20px;z-index:3}
+.act{position:relative}
+.act .lbl{position:absolute;top:100%;left:50%;transform:translate(-50%,3px);font:800 12px/1.5 var(--font,inherit);white-space:nowrap;background:#fff;color:#2A2250;padding:0 8px;border-radius:999px;box-shadow:0 2px 6px rgba(42,34,80,.15);pointer-events:none}
+.act .badge{position:absolute;top:-4px;right:-4px;min-width:22px;height:22px;padding:0 5px;border-radius:11px;background:#FF7EB6;color:#fff;font:800 13px/22px var(--font,inherit);box-shadow:0 0 0 2px #fff}
+.act .badge[hidden]{display:none}
 .act{width:var(--tap);height:var(--tap);border-radius:50%;box-shadow:var(--shadow-lip),0 6px 14px rgba(42,34,80,.16)}
 .act svg{width:30px;height:30px}
 .controls{align-self:center;display:grid;gap:6px;padding:10px 8px 8px;max-height:100%;overflow-y:auto;align-content:start}
@@ -373,13 +388,13 @@ body.in-game .tabbar{display:none}
       <div class="spk" id="spkLayer" aria-hidden="true"></div>
     </div>
     <div class="actions">
-      <button class="act chip" id="surpriseBtn" aria-label="Surprise me">
+      <button class="act chip" id="surpriseBtn" aria-label="Surprise me"><span class="lbl">Surprise</span>
         <svg viewBox="0 0 40 40"><path d="M20 4 L24.2 15 L36 15.4 L26.8 22.8 L30 34.4 L20 27.8 L10 34.4 L13.2 22.8 L4 15.4 L15.8 15Z" fill="#FFD966" stroke="#F5B83D" stroke-width="2.4" stroke-linejoin="round"/><path d="M33 2 Q33 6 37 6 Q33 6 33 10 Q33 6 29 6 Q33 6 33 2Z" fill="#FF7EB6"/><path d="M6 28 Q6 31 9 31 Q6 31 6 34 Q6 31 3 31 Q6 31 6 28Z" fill="#8FD3FF"/></svg>
       </button>
-      <button class="act chip" id="saveBtn" aria-label="Save this look">
+      <button class="act chip" id="saveBtn" aria-label="Save this look"><span class="lbl">Save</span>
         <svg viewBox="0 0 40 40"><path d="M20 34 C8 26 3 19 3 13 C3 7 8 4 12.5 4 C16 4 18.5 6 20 9 C21.5 6 24 4 27.5 4 C32 4 37 7 37 13 C37 19 32 26 20 34Z" fill="#FF7EB6"/><path d="M10.5 11.5 Q11.5 8.5 14.5 8" stroke="#fff" stroke-width="2.8" fill="none" stroke-linecap="round"/></svg>
       </button>
-      <button class="act chip" id="galleryBtn" aria-label="My looks">
+      <button class="act chip" id="galleryBtn" aria-label="My looks"><span class="lbl">My looks</span><span class="badge" id="galCount" hidden></span>
         <svg viewBox="0 0 40 40"><rect x="4" y="6" width="32" height="28" rx="7" fill="#B79CFF"/><rect x="8.5" y="10.5" width="23" height="19" rx="4" fill="#ECE3FF"/><path d="M8.5 25.5 L16 18 L21 23 L25 19 L31.5 25.5 V29.5 H8.5Z" fill="#3FB59A"/><circle cx="26" cy="15" r="2.6" fill="#FFD966"/></svg>
       </button>
     </div>
@@ -403,7 +418,6 @@ body.in-game .tabbar{display:none}
     <button class="chip" data-b="unicorn" aria-label="Unicorn wand"><svg viewBox="0 0 40 40"><path d="M18 12L22 1L25.5 13Z" fill="#F5B83D"/><circle cx="12" cy="14" r="5.5" fill="#FFB3D9"/><circle cx="9" cy="22.5" r="5.5" fill="#C5A8FF"/><circle cx="10.5" cy="30.5" r="4.5" fill="#9FE8F0"/><circle cx="22" cy="22" r="12.5" fill="#fff" stroke="#E2D6F7" stroke-width="2"/><path d="M20 21Q23 24 26 21" stroke="#2A2250" stroke-width="2.2" fill="none" stroke-linecap="round"/><ellipse cx="29" cy="28" rx="6" ry="4.5" fill="#FFE0EF"/></svg></button>
     <span class="sep"></span>
     <button class="chip" id="wandSky" aria-label="Day or night sky"></button>
-    <button class="chip" id="wandClear" aria-label="Clear the sky"><svg viewBox="0 0 40 40"><g fill="#D6F5FF" stroke="#8FD3FF" stroke-width="1.6"><circle cx="13" cy="23" r="8"/><circle cx="22" cy="18" r="10"/><circle cx="29" cy="25" r="7"/><ellipse cx="20" cy="28" rx="14" ry="6"/></g><path d="M8 7 Q8 10 11 10 Q8 10 8 13 Q8 10 5 10 Q8 10 8 7Z M33 5 Q33 8 36 8 Q33 8 33 11 Q33 8 30 8 Q33 8 33 5Z" fill="#F5B83D"/></svg></button>
   </div>
 </section>
 
@@ -605,7 +619,7 @@ const FRIEND={
   none:()=>''
 };
 const FRIMG={unicorn:['friend-unicorn',228,344,118],kitty:['friend-kitty',234,316,108],dragon:['friend-dragon',272,318,108]};
-Object.keys(FRIMG).forEach(k=>{const [f,w,hh,H]=FRIMG[k];const W=Math.round(w/hh*H);FRIEND[k]=()=>`<image href="art/${f}.webp" x="${4}" y="${400-H}" width="${W}" height="${H}"/>`;});
+Object.keys(FRIMG).forEach(k=>{const [f,w,hh,H]=FRIMG[k];const W=Math.round(w/hh*H);FRIEND[k]=()=>`<image href="art/${f}.webp" x="${296-W}" y="${400-H}" width="${W}" height="${H}"/>`;});
 const SPOTS=[[40,58,9],[262,92,7],[66,150,6],[254,196,10],[28,232,7],[272,282,8],[230,36,6],[108,28,5],[204,118,5],[48,332,6],[268,350,7],[150,18,5]];
 const SPARKLE={
   stars:()=>SPOTS.map(([x,y,r],i)=>`<g class="tw" style="animation-delay:${(i*.27).toFixed(2)}s"><path d="${spk(x,y,r*1.4)}" fill="#FFF3C4" stroke="#E0A93A" stroke-width="1.4"/></g>`).join(''),
@@ -616,6 +630,23 @@ const SPARKLE={
 
 /* ---------------- render a look ---------------- */
 const DOLL_CROWN={crown:'crown',tiara:'tiara',flowers:'flowers',horn:'horn',star:'stars'},DOLL_MAGIC={wand:'wand',mirror:'mirror',flowers:'bouquet'};
+function dollSrcs(s){
+  const n=['body-skin'+s.skin,`dress-${s.dress}-${s.dressColor}`,`hair-${s.hair}-${s.hairColor}-skin${s.skin}`];
+  if(DOLL_CROWN[s.crown])n.push('crown-'+DOLL_CROWN[s.crown]);
+  if(DOLL_MAGIC[s.magic])n.push('magic-'+DOLL_MAGIC[s.magic]);
+  return n.map(x=>'art/doll/'+x+'.webp');
+}
+function dollHTML(s,opt){ /* stacked pictures; opt.crop 'x y w h' (in the 300x400 frame) shows that part in a square */
+  opt=opt||{};
+  let inner=dollSrcs(s).map(u=>`<img class="ly" src="${u}" alt="" draggable="false" onerror="this.remove()">`).join('');
+  const f=!opt.noFriend&&FRIMG[s.friend];
+  if(f){const [n,w,hh,H]=f,W=Math.round(w/hh*H);
+    inner+=`<img class="ly" src="art/${n}.webp" alt="" draggable="false" onerror="this.remove()" style="left:${(296-W)/3}%;top:${(400-H)/4}%;width:${W/3}%;height:${H/4}%">`;}
+  if(!opt.crop)return `<div class="pd">${inner}</div>`;
+  const [x,y,w,h]=opt.crop.split(' ').map(Number),m=Math.max(w,h),ox=x-(m-w)/2,oy=y-(m-h)/2;
+  return `<div class="pdc"><div class="pd" style="right:auto;bottom:auto;width:${300/m*100}%;height:${400/m*100}%;left:${-ox/m*100}%;top:${-oy/m*100}%">${inner}</div></div>`;
+}
+const NONE_ICON=`<svg class="none" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="14" fill="none" stroke="#C9BFE6" stroke-width="3" stroke-dasharray="5 4"/></svg>`;
 function render(s,p,vb,opt){
   const dc=s.dressColor,hc=s.hairColor,sk=SKIN[s.skin];
   const rbD=dc==='rainbow',rbH=hc==='rainbow';
@@ -711,17 +742,26 @@ const pic=$('pic'),frame=$('frame'),tabsEl=$('tabs'),itemsEl=$('items'),colorsEl
 
 function bump(el,cls){el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);}
 const dressBg=$('dressBg');
-function drawStage(){pic.innerHTML=render(look,'st',null,{noSpk:true,noBg:true,cut:true}).replace('xMidYMid slice','xMidYMid meet');
+function drawStage(){pic.innerHTML=dollHTML(look);
   const src='art/'+(BGIMG[look.place]||'scene-dress')+'.webp';if(dressBg.getAttribute('src')!==src)dressBg.setAttribute('src',src);
   $('spkLayer').innerHTML=`<svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${SPARKLE[look.sparkle]()}</svg>`;store.set('look',look);}
 function drawTabs(){
   tabsEl.innerHTML=TABS.map(t=>`<button class="tab chip" role="tab" aria-selected="${t.id===curTab}" aria-label="${t.id}" data-t="${t.id}">${ink(ICON[t.id])}</button>`).join('');
 }
+function thumb(t,v,s){
+  if(t.id==='crown'&&DOLL_CROWN[v])return `<img class="itemimg" src="art/doll/item-${DOLL_CROWN[v]}.webp" alt="">`;
+  if(t.id==='magic'&&DOLL_MAGIC[v])return `<img class="itemimg" src="art/doll/item-${DOLL_MAGIC[v]}.webp" alt="">`;
+  if(t.id==='friend')return FRIMG[v]?`<img class="itemimg" src="art/${FRIMG[v][0]}.webp" alt="">`:NONE_ICON;
+  if(t.id==='place')return `<img class="itemimg cover" src="art/${BGIMG[v]||'scene-dress'}.webp" alt="">`;
+  if(t.id==='sparkle')return v==='none'?NONE_ICON:`<svg viewBox="40 60 220 220" aria-hidden="true">${SPARKLE[v]()}</svg>`;
+  if((t.id==='crown'||t.id==='magic')&&v==='none')return NONE_ICON;
+  return dollHTML(s,{crop:t.crop,noFriend:true});
+}
 function drawPanel(){
   const t=TABS.find(t=>t.id===curTab);
   itemsEl.innerHTML=t.items.map((v,i)=>{const s=Object.assign({},look,{[t.id]:v});
     if(t.id!=='place')s.place='none';if(t.id!=='sparkle')s.sparkle='none';if(t.id!=='friend')s.friend='none';
-    return `<button class="item chip${look[t.id]===v?' on':''}" data-i="${i}" aria-label="${t.id} ${v}" aria-pressed="${look[t.id]===v}">${(t.id==='crown'&&DOLL_CROWN[v])?`<img class="itemimg" src="art/doll/item-${DOLL_CROWN[v]}.webp" alt="">`:(t.id==='magic'&&DOLL_MAGIC[v])?`<img class="itemimg" src="art/doll/item-${DOLL_MAGIC[v]}.webp" alt="">`:render(s,'th'+t.id+i,t.crop,{lite:true})}</button>`;}).join('');
+    return `<button class="item chip${look[t.id]===v?' on':''}" data-i="${i}" aria-label="${t.id} ${v}" aria-pressed="${look[t.id]===v}">${thumb(t,v,s)}</button>`;}).join('');
   if(t.colors){
     const [key,pal]=t.colors;
     colorsEl.innerHTML=Object.keys(pal).map((c,i)=>`<button class="dot${look[key]===c?' on':''}" data-c="${c}" data-i="${i}" aria-label="${c}" style="background:${SWATCH[c]||pal[c]}"></button>`).join('');
@@ -743,8 +783,13 @@ $('surpriseBtn').addEventListener('click',()=>{
 
 /* gallery */
 let looks=store.get('looks',[]);if(!Array.isArray(looks))looks=[];
+looks=looks.filter(x=>x&&typeof x==='object').map(x=>{const s=Object.assign({},DEF,x);
+  for(const k in DEF){const t=TABS.find(t=>t.id===k);if(t&&!t.items.includes(s[k]))s[k]=DEF[k];}
+  if(!DRESSC[s.dressColor])s.dressColor=DEF.dressColor;if(!HAIRC[s.hairColor])s.hairColor=DEF.hairColor;return s;});
+function drawCount(){const c=$('galCount');c.textContent=looks.length;c.hidden=!looks.length;}
+drawCount();
 $('saveBtn').addEventListener('click',e=>{
-  looks.unshift(Object.assign({},look));looks=looks.slice(0,12);store.set('looks',looks);
+  looks.unshift(Object.assign({},look));looks=looks.slice(0,12);store.set('looks',looks);drawCount();bump($('galCount'),'pop');
   sfx.save();bump($('flash'),'go');
   const from=e.currentTarget.getBoundingClientRect(),to=$('galleryBtn').getBoundingClientRect();
   const h=document.createElement('div');h.className='flyheart';
@@ -755,7 +800,7 @@ $('saveBtn').addEventListener('click',e=>{
 });
 function openGallery(){
   const g=$('gal');
-  g.innerHTML=looks.length?looks.map((s,i)=>`<button class="chip" data-i="${i}" aria-label="Look ${i+1}">${render(s,'g'+i,null,{lite:true})}</button>`).join('')
+  g.innerHTML=looks.length?looks.map((s,i)=>`<button class="chip" data-i="${i}" aria-label="Look ${i+1}"><img class="bgc" src="art/${BGIMG[s.place]||'scene-dress'}.webp" alt="">${dollHTML(s)}${SPARKLE[s.sparkle]?`<svg class="gspk" viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${SPARKLE[s.sparkle]()}</svg>`:''}</button>`).join('')
     :`<div class="empty" style="grid-column:1/-1"><svg viewBox="0 0 40 40"><path d="${heart(20,20,13)}" fill="#FFE1EE" stroke="#FF7EB6" stroke-width="2" stroke-dasharray="4 3"/></svg>Tap the heart to save a look</div>`;
   $('sheet').hidden=false;sfx.open();
 }
@@ -891,7 +936,6 @@ const Wand=(function(){
     $('wandbar').querySelectorAll('[data-b]').forEach(x=>x.classList.toggle('on',x===b));sfx.tap();
     const r=b.getBoundingClientRect(),c=cv.getBoundingClientRect();spawn(r.left+r.width/2-c.left,r.top-c.top,12,true);});
   $('wandSky').addEventListener('click',()=>{night=!night;store.set('wandDay',!night);resize();drawSkyBtn();sfx.open();});
-  $('wandClear').addEventListener('click',()=>{for(const s of segs)if(Math.random()<.12)spawn(s.x2,s.y2,1,true);segs=[];sfx.home();});
   window.addEventListener('resize',()=>{if(on)resize();});
   drawSkyBtn();
   return{
@@ -904,9 +948,9 @@ const Wand=(function(){
 BG.none=()=>'';
 function stk(vb,inner,cls){return {vb,inner,cls:cls||''};}
 const STK={
-  mer1:{w:62,tall:true,svg:()=>render(Object.assign({},DEF,{dress:'mermaid',dressColor:'aqua',hair:'long',hairColor:'gold',crown:'tiara',magic:'none',friend:'none',sparkle:'none',place:'none',skin:0}),'sm1','72 32 166 360',{lite:true})},
-  mer2:{w:62,tall:true,svg:()=>render(Object.assign({},DEF,{dress:'mermaid',dressColor:'pink',hair:'curly',hairColor:'brown',crown:'crown',magic:'wand',friend:'none',sparkle:'none',place:'none',skin:2}),'sm2','72 32 166 360',{lite:true})},
-  mer3:{w:62,tall:true,svg:()=>render(Object.assign({},DEF,{dress:'mermaid',dressColor:'lav',hair:'pigtails',hairColor:'rainbow',crown:'flowers',magic:'none',friend:'none',sparkle:'none',place:'none',skin:3}),'sm3','72 32 166 360',{lite:true})},
+  mer1:{w:62,tall:true,ar:730/344,svg:()=>`<svg viewBox="0 0 344 730" xmlns="http://www.w3.org/2000/svg"><image href="art/stk-mer1.webp" width="344" height="730"/></svg>`},
+  mer2:{w:62,tall:true,ar:724/344,svg:()=>`<svg viewBox="0 0 344 724" xmlns="http://www.w3.org/2000/svg"><image href="art/stk-mer2.webp" width="344" height="724"/></svg>`},
+  mer3:{w:62,tall:true,ar:729/344,svg:()=>`<svg viewBox="0 0 344 729" xmlns="http://www.w3.org/2000/svg"><image href="art/stk-mer3.webp" width="344" height="729"/></svg>`},
   unicorn:{w:64,svg:()=>`<svg viewBox="0 0 228 344" xmlns="http://www.w3.org/2000/svg"><image href="art/friend-unicorn.webp" width="228" height="344"/></svg>`,tall:true,ar:344/228},
   kitty:{w:64,svg:()=>`<svg viewBox="0 0 234 316" xmlns="http://www.w3.org/2000/svg"><image href="art/friend-kitty.webp" width="234" height="316"/></svg>`,tall:true,ar:316/234},
   dragon:{w:66,svg:()=>`<svg viewBox="0 0 272 318" xmlns="http://www.w3.org/2000/svg"><image href="art/friend-dragon.webp" width="272" height="318"/></svg>`,tall:true,ar:318/272},
@@ -1007,7 +1051,7 @@ const ROUTES={'dress-up':'dressup','wand':'wand','castle':'castle'};
 const READY={'dress-up':true,'wand':true,'castle':true};
 let curView=null;
 const TITLE={dressup:['Royal Dress-Up','i-gown'],wand:['Sparkle Wand','i-wand'],castle:['Mermaid Castle','i-shell']};
-$('wandHint').innerHTML=`<svg viewBox="0 0 100 100" aria-hidden="true"><line x1="22" y1="86" x2="58" y2="42" stroke="#F5B83D" stroke-width="9" stroke-linecap="round"/><path d="${star5(62,36,22)}" fill="#FFD966" stroke="#F5B83D" stroke-width="4" stroke-linejoin="round"/><circle cx="62" cy="37" r="6" fill="#FF7EB6"/><path d="${spk(88,14,9)}" fill="#fff"/><path d="${spk(30,22,7)}" fill="#fff"/></svg>`;
+$('wandHint').innerHTML=`<svg viewBox="0 0 100 100" aria-hidden="true"><image href="art/doll/item-wand.webp" width="207" height="483" transform="translate(62 37) rotate(39) scale(.19) translate(-103 -95)"/><path d="${spk(88,14,9)}" fill="#fff"/><path d="${spk(30,22,7)}" fill="#fff"/></svg>`;
 function show(){
   const r=location.hash.slice(1);const id=ROUTES[r];
   document.querySelectorAll('.view').forEach(v=>v.hidden=true);
