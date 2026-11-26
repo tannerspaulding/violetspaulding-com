@@ -108,12 +108,11 @@ img{pointer-events:none}
 .gcard .pic picture{display:block;width:100%;height:100%}
 .gcard.wide{grid-column:1 / -1}
 .gcard.wide .pic{aspect-ratio:16/8}
-.gcard .nm{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:10px 12px 12px 14px;font-size:1.15rem;font-weight:600}
+.gcard .nm{display:flex;align-items:center;gap:6px;padding:10px 10px 12px 12px;font-size:1.05rem;font-weight:600}
 .gcard .nm svg{width:22px;height:22px;color:var(--mint-deep);flex:none}
 .gcard .nm b{display:flex;align-items:center;gap:8px;font-weight:600;white-space:nowrap;min-width:0}
 .gcard .nm b i{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;flex:none}
 .gcard .nm b i svg{width:18px;height:18px;color:#fff}
-@media (max-width:430px){.gcard .nm b i{display:none}.gcard .nm{font-size:1.05rem;padding:9px 8px 11px 12px}.gcard .nm svg{width:18px;height:18px}}
 .c1 .nm b i{background:var(--pink)}.c2 .nm b i{background:var(--lavender)}.c3 .nm b i{background:var(--sky)}.c4 .nm b i{background:#FFB547}
 @media (min-width:640px){
   .cards{grid-template-columns:repeat(4,minmax(0,1fr))}
@@ -129,6 +128,14 @@ img{pointer-events:none}
   .home-friend{height:92px;top:-50px}
   .gcard .pic,.gcard.wide .pic{aspect-ratio:16/10}
   .gcard .nm{padding:8px 10px 10px 12px;font-size:1.05rem}
+}
+/* each game name fits on one line beside its icon, whatever the card width (sized from the card itself) */
+@supports (font-size:1cqi){
+  .gcard{container-type:inline-size}
+  .gcard .nm{font-size:clamp(.72rem,8.6cqi,1.15rem)}
+  .gcard .nm b{gap:min(8px,4cqi)}
+  .gcard .nm b i{width:clamp(20px,14cqi,30px);height:clamp(20px,14cqi,30px)}
+  .gcard .nm b i svg{width:60%;height:60%}
 }
 /* big screens: keep the small painting from being stretched edge to edge */
 @media (min-width:1100px){
@@ -417,19 +424,19 @@ img{pointer-events:none}
       <div class="cards">
         <button class="gcard c1 tile" data-go="dress-up" aria-label="Royal Dress-Up">
           <span class="pic"><img src="art/card-dress.webp" alt="" width="350" height="350"></span>
-          <span class="nm"><b><i><svg aria-hidden="true"><use href="#i-gown"/></svg></i>Dress-Up</b><svg aria-hidden="true"><use href="#i-chev"/></svg></span>
+          <span class="nm"><b><i><svg aria-hidden="true"><use href="#i-gown"/></svg></i>Dress-Up</b></span>
         </button>
         <button class="gcard c2 tile" data-go="wand" aria-label="Sparkle Wand">
           <span class="pic"><img src="art/card-wand.webp" alt="" width="350" height="350"></span>
-          <span class="nm"><b><i><svg aria-hidden="true"><use href="#i-wand"/></svg></i>Sparkle Wand</b><svg aria-hidden="true"><use href="#i-chev"/></svg></span>
+          <span class="nm"><b><i><svg aria-hidden="true"><use href="#i-wand"/></svg></i>Sparkle Wand</b></span>
         </button>
         <button class="gcard c3 tile" data-go="castle" aria-label="Mermaid Castle">
           <span class="pic"><img src="art/card-mermaid.webp" alt="" width="350" height="350"></span>
-          <span class="nm"><b><i><svg aria-hidden="true"><use href="#i-shell"/></svg></i>Mermaid Castle</b><svg aria-hidden="true"><use href="#i-chev"/></svg></span>
+          <span class="nm"><b><i><svg aria-hidden="true"><use href="#i-shell"/></svg></i>Mermaid Castle</b></span>
         </button>
         <button class="gcard c4 tile" data-go="stable" aria-label="Unicorn Stable">
           <span class="pic"><img src="art/card-stable.webp" alt="" width="350" height="350"></span>
-          <span class="nm"><b><i><svg aria-hidden="true"><use href="#i-uni"/></svg></i>Unicorn Stable</b><svg aria-hidden="true"><use href="#i-chev"/></svg></span>
+          <span class="nm"><b><i><svg aria-hidden="true"><use href="#i-uni"/></svg></i>Unicorn Stable</b></span>
         </button>
       </div>
     </div>
