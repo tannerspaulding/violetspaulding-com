@@ -179,6 +179,23 @@ body.in-game .tabbar{display:none}
 .item .itemimg.cover{object-fit:cover;padding:0}
 .item .none{width:100%;height:100%;padding:20px}
 .gal .chip{position:relative}
+.gal .look{position:relative}
+.gal .look > .chip{width:100%;display:block}
+.gal .del{position:absolute;top:-8px;right:-8px;width:40px;height:40px;border-radius:50%;padding:0;background:#fff;box-shadow:0 3px 0 #E4DBF5,0 4px 10px rgba(42,34,80,.18);z-index:2;display:grid;place-items:center}
+.gal .del svg{width:18px;height:18px}
+.gal .ask{position:absolute;inset:0;border-radius:18px;background:rgba(42,34,80,.55);display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:3}
+.gal .look.asking .ask{display:flex}
+.gal .look.asking .del{display:none}
+.gal .ask button{width:62px;height:62px;border-radius:50%;padding:0;display:grid;place-items:center;background:#fff}
+.gal .ask .yes{background:#FF7EB6;box-shadow:0 4px 0 #E35E98}
+.gal .ask .no{width:46px;height:46px}
+.gal .ask svg{width:30px;height:30px}
+.gal .ask .no svg{width:22px;height:22px}
+.gal .look.poof{animation:poof .35s ease forwards}
+@keyframes poof{to{transform:scale(.3) rotate(-8deg);opacity:0}}
+.saybub{position:absolute;left:calc(100% + 8px);top:50%;transform:translateY(-50%);white-space:nowrap;background:#fff;color:#2A2250;font:800 14px/1.2 var(--font,inherit);padding:8px 12px;border-radius:999px;box-shadow:0 4px 12px rgba(42,34,80,.2);pointer-events:none;animation:saybub 1.4s ease forwards}
+@keyframes saybub{0%{opacity:0;transform:translate(-6px,-50%) scale(.8)}12%{opacity:1;transform:translate(0,-50%) scale(1.05)}20%{transform:translate(0,-50%) scale(1)}80%{opacity:1}100%{opacity:0}}
+.act.busy{pointer-events:none;opacity:.6}
 .gal .chip .bgc,.gal .chip .gspk{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 
 .doll > .spk{position:absolute;inset:0;pointer-events:none}
@@ -786,10 +803,20 @@ let looks=store.get('looks',[]);if(!Array.isArray(looks))looks=[];
 looks=looks.filter(x=>x&&typeof x==='object').map(x=>{const s=Object.assign({},DEF,x);
   for(const k in DEF){const t=TABS.find(t=>t.id===k);if(t&&!t.items.includes(s[k]))s[k]=DEF[k];}
   if(!DRESSC[s.dressColor])s.dressColor=DEF.dressColor;if(!HAIRC[s.hairColor])s.hairColor=DEF.hairColor;return s;});
+const lookKey=s=>Object.keys(DEF).map(k=>s[k]).join('|');
+looks=looks.filter((s,i)=>looks.findIndex(o=>lookKey(o)===lookKey(s))===i).slice(0,12);store.set('looks',looks);
 function drawCount(){const c=$('galCount');c.textContent=looks.length;c.hidden=!looks.length;}
 drawCount();
+function sayOn(btn,txt){btn.querySelectorAll('.saybub').forEach(x=>x.remove());const b=document.createElement('span');b.className='saybub';b.textContent=txt;btn.appendChild(b);setTimeout(()=>b.remove(),1500);}
 $('saveBtn').addEventListener('click',e=>{
-  looks.unshift(Object.assign({},look));looks=looks.slice(0,12);store.set('looks',looks);drawCount();bump($('galCount'),'pop');
+  const btn=e.currentTarget;if(btn.classList.contains('busy'))return;
+  btn.classList.add('busy');setTimeout(()=>btn.classList.remove('busy'),900);
+  if(looks.some(o=>lookKey(o)===lookKey(look))){sayOn(btn,'Already saved!');sfx.tap();bump($('galleryBtn'),'pop');
+    const r=btn.getBoundingClientRect();for(let i=0;i<6;i++){const sp=document.createElement('div');sp.className='flyheart';sp.innerHTML=`<svg viewBox="0 0 40 40"><path d="${spk(20,20,12)}" fill="#FFD966" stroke="#fff" stroke-width="2"/></svg>`;
+      sp.style.left=(r.left+r.width/2-14)+'px';sp.style.top=(r.top+r.height/2-14)+'px';document.body.appendChild(sp);const a=i/6*Math.PI*2;
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{sp.style.transform=`translate(${Math.cos(a)*40}px,${Math.sin(a)*40}px) scale(.4)`;sp.style.opacity='0';}));setTimeout(()=>sp.remove(),800);}
+    return;}
+  looks.unshift(Object.assign({},look));looks=looks.slice(0,12);store.set('looks',looks);drawCount();bump($('galCount'),'pop');sayOn(btn,'Saved!');
   sfx.save();bump($('flash'),'go');
   const from=e.currentTarget.getBoundingClientRect(),to=$('galleryBtn').getBoundingClientRect();
   const h=document.createElement('div');h.className='flyheart';
@@ -800,14 +827,22 @@ $('saveBtn').addEventListener('click',e=>{
 });
 function openGallery(){
   const g=$('gal');
-  g.innerHTML=looks.length?looks.map((s,i)=>`<button class="chip" data-i="${i}" aria-label="Look ${i+1}"><img class="bgc" src="art/${BGIMG[s.place]||'scene-dress'}.webp" alt="">${dollHTML(s)}${SPARKLE[s.sparkle]?`<svg class="gspk" viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${SPARKLE[s.sparkle]()}</svg>`:''}</button>`).join('')
+  const X=`<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5L15 15M15 5L5 15" stroke="#8B7FB0" stroke-width="3.2" stroke-linecap="round"/></svg>`;
+  const BIN=`<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M10 13h20l-2 21a3 3 0 0 1-3 2.6H15a3 3 0 0 1-3-2.6Z" fill="#fff"/><rect x="7" y="8" width="26" height="5" rx="2.5" fill="#fff"/><rect x="16" y="4" width="8" height="5" rx="2" fill="#fff"/></svg>`;
+  const BACK=`<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5L8.5 15L16 6" stroke="#3FB98F" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  g.innerHTML=looks.length?looks.map((s,i)=>`<div class="look" data-i="${i}"><button class="chip pick" aria-label="Wear look ${i+1}"><img class="bgc" src="art/${BGIMG[s.place]||'scene-dress'}.webp" alt="">${dollHTML(s)}${SPARKLE[s.sparkle]?`<svg class="gspk" viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${SPARKLE[s.sparkle]()}</svg>`:''}</button><button class="del" aria-label="Remove look ${i+1}">${X}</button><div class="ask"><button class="yes" aria-label="Yes, remove it">${BIN}</button><button class="no" aria-label="No, keep it">${BACK}</button></div></div>`).join('')
     :`<div class="empty" style="grid-column:1/-1"><svg viewBox="0 0 40 40"><path d="${heart(20,20,13)}" fill="#FFE1EE" stroke="#FF7EB6" stroke-width="2" stroke-dasharray="4 3"/></svg>Tap the heart to save a look</div>`;
   $('sheet').hidden=false;sfx.open();
 }
 $('galleryBtn').addEventListener('click',openGallery);
 $('closeSheet').addEventListener('click',()=>{$('sheet').hidden=true;sfx.tab();});
 $('sheet').addEventListener('click',e=>{if(e.target.id==='sheet'){$('sheet').hidden=true;return;}
-  const b=e.target.closest('.gal button');if(!b)return;look=Object.assign({},DEF,looks[+b.dataset.i]);if(!FRIEND[look.friend])look.friend=DEF.friend;if(!BG[look.place])look.place=DEF.place;
+  const lk=e.target.closest('.gal .look');if(!lk)return;const i=+lk.dataset.i;
+  if(e.target.closest('.del')){$('gal').querySelectorAll('.look.asking').forEach(x=>x.classList.remove('asking'));lk.classList.add('asking');sfx.tap();return;}
+  if(e.target.closest('.ask .no')){lk.classList.remove('asking');sfx.tab();return;}
+  if(e.target.closest('.ask .yes')){lk.classList.add('poof');sfx.tab();setTimeout(()=>{looks.splice(i,1);store.set('looks',looks);drawCount();openGallery();},340);return;}
+  if(lk.classList.contains('asking')){lk.classList.remove('asking');return;}
+  if(!e.target.closest('.pick'))return;look=Object.assign({},DEF,looks[i]);if(!FRIEND[look.friend])look.friend=DEF.friend;if(!BG[look.place])look.place=DEF.place;
   $('sheet').hidden=true;sfx.save();drawStage();drawPanel();bump(frame,'spin');});
 
 /* ---------------- mute button ---------------- */
