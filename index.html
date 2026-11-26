@@ -767,10 +767,10 @@ const SPARKLE={
 /* ---------------- render a look ---------------- */
 const DOLL_CROWN={crown:'crown',tiara:'tiara',flowers:'flowers',horn:'horn',star:'stars'},DOLL_MAGIC={wand:'wand',mirror:'mirror',flowers:'bouquet'};
 /* headpieces are seated per hairstyle; flowers and the headband have a far side drawn behind the hair */
-const SEATED={crown:1,tiara:1,flowers:1,horn:1},HAS_BACK={flowers:1,horn:1};
+const SEATED={crown:1,tiara:1,flowers:1,horn:1},HAS_BACK={crown:1,tiara:1,flowers:1,horn:1},V2={crown:1,tiara:1};
 function crownLayers(s){const k=DOLL_CROWN[s.crown];if(!k)return[[],[]];
   if(!SEATED[k])return[[],['crown-'+k]];
-  return[HAS_BACK[k]?[`crown-${k}-${s.hair}-b`]:[],[`crown-${k}-${s.hair}`]];}
+  const v=V2[k]?'-2':'';return[HAS_BACK[k]?[`crown-${k}-${s.hair}${v}${v?'b':'-b'}`]:[],[`crown-${k}-${s.hair}${v}`]];}
 function dollSrcs(s){
   const [cb,cf]=crownLayers(s);
   const n=['body-skin'+s.skin,`dress-${s.dress}-${s.dressColor}`,...cb,`hair-${s.hair}-${s.hairColor}-skin${s.skin}`,...cf];
