@@ -798,19 +798,33 @@ const Wand=(function(){
   function chime(y){const now=performance.now();if(now-lastNote<110)return;lastNote=now;
     const i=Math.max(0,Math.min(P.length-1,Math.floor((1-y/H)*P.length)));Snd.bell(P[i],0,.06);}
   /* the wand stays in her hand: its star sits under her finger and follows every move */
-  const wandEl=$('wandHint');let tilt=0;
+  /* the wand is held by its handle: the finger grabs it where it touches and the star tip, which makes the sparkles, stays visible ahead of the finger */
+  const wandEl=$('wandHint');let tilt=0,held=false,tip={x:0,y:0};
+  const WK=1.3,DEF_OFF={x:46,y:-56};
   function holdWand(x,y,dx){
-    wandEl.classList.add('held');
-    tilt=Math.max(-18,Math.min(18,tilt*.8+dx*.6));
-    wandEl.style.transform=`translate(${x-68}px,${y-41}px) rotate(${tilt}deg)`;
+    held=true;tip.x=x;tip.y=y;wandEl.classList.add('held');
+    tilt=Math.max(-12,Math.min(12,tilt*.8+dx*.4));
+    wandEl.style.transform=`translate(${x-68}px,${y-41}px) rotate(${tilt}deg) scale(${WK})`;
+  }
+  function wandNow(){ /* where the star tip is now and how big the wand is */
+    if(held)return{x:tip.x,y:tip.y,k:WK};
+    const r=wandEl.getBoundingClientRect(),c=cv.getBoundingClientRect();
+    return{x:r.left-c.left+r.width*.62,y:r.top-c.top+r.height*.37,k:r.width/110};
+  }
+  function grabOffset(fx,fy){ /* touch on the wand: keep where she grabbed it; touch anywhere else: hold it near the end of the handle */
+    const w=wandNow(),ex=-44*w.k,ey=54*w.k,px=fx-w.x,py=fy-w.y;
+    const t=Math.max(0,Math.min(1,(px*ex+py*ey)/(ex*ex+ey*ey)));
+    if(Math.hypot(px-t*ex,py-t*ey)<40*w.k&&t>.15)return{x:w.x-fx,y:w.y-fy};
+    return DEF_OFF;
   }
   function down(e){
-    touched=true;holdWand(e.offsetX,e.offsetY,0);
-    cv.setPointerCapture?.(e.pointerId);
-    pts[e.pointerId]={x:e.offsetX,y:e.offsetY,d:0};spawn(e.offsetX,e.offsetY,14,true);lastNote=0;chime(e.offsetY);
+    touched=true;cv.setPointerCapture?.(e.pointerId);
+    const o=grabOffset(e.offsetX,e.offsetY),x=e.offsetX+o.x,y=e.offsetY+o.y;
+    holdWand(x,y,0);
+    pts[e.pointerId]={x,y,ox:o.x,oy:o.y,d:0};spawn(x,y,14,true);lastNote=0;chime(y);
   }
   function move(e){
-    const p=pts[e.pointerId];if(!p)return;const x=e.offsetX,y=e.offsetY,dx=x-p.x,dy=y-p.y,d=Math.hypot(dx,dy);if(d<2)return;
+    const p=pts[e.pointerId];if(!p)return;const x=e.offsetX+p.ox,y=e.offsetY+p.oy,dx=x-p.x,dy=y-p.y,d=Math.hypot(dx,dy);if(d<2)return;
     hue+=d*.9;segs.push({x1:p.x,y1:p.y,x2:x,y2:y,c:BR[brush].trail(),w:14,t:performance.now()});
     p.d+=d;while(p.d>16){p.d-=16;spawn(x,y,2,false);}
     p.x=x;p.y=y;chime(y);holdWand(x,y,dx);
@@ -854,7 +868,7 @@ const Wand=(function(){
   window.addEventListener('resize',()=>{if(on)resize();});
   drawSkyBtn();
   return{
-    start(){on=true;wandEl.classList.remove('held');wandEl.style.transform='';tilt=0;resize();cancelAnimationFrame(raf);raf=requestAnimationFrame(frame);},
+    start(){on=true;wandEl.classList.remove('held');wandEl.style.transform='';tilt=0;held=false;resize();cancelAnimationFrame(raf);raf=requestAnimationFrame(frame);},
     stop(){on=false;cancelAnimationFrame(raf);segs=[];parts=[];pts={};}
   };
 })();
