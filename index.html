@@ -577,7 +577,7 @@ img{pointer-events:none}
    Skipped when Do Not Track is on, or when this device was switched off on the stats page.
    It never gets in the way: every call gives up after 6 seconds, and after a failure it waits (1, 2, 4... up to 60 minutes). */
 (function(){
-  var API='https://violet-stats.tannerspaulding81.workers.dev';
+  var API='https://violet-apps.tannerspaulding81.workers.dev';
   var DK='vsp-stats-did',OFF='vsp-stats-off',WK='vsp-stats-wait';
   var noop=function(){};window.VS={app:noop,hit:noop};
   function get(k){try{return localStorage.getItem(k);}catch(e){return null;}}
