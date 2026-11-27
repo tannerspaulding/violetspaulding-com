@@ -387,7 +387,7 @@ $("refresh").addEventListener("click",()=>{lastAct=Date.now();load();});
 $("logout").addEventListener("click",()=>{put(sessionStorage,TK,null);S=null;lastLoad=0;show(false);loginMsg("");});
 $("loginForm").addEventListener("submit",async e=>{e.preventDefault();const pw=$("pw").value;if(!pw){loginMsg("Type the password first.");return;}
   loginMsg("");
-  if(SAMPLE){put(sessionStorage,TK,"sample");$("pw").value="";load();return;}
+  if(SAMPLE){$("pw").value="";load();return;}
   let j;try{j=await api("/v1/admin/login",{method:"POST",body:JSON.stringify({password:pw})});}catch(_){loginMsg("Can't reach the stats server. Check your connection and try again.");return;}
   if(!j.ok){loginMsg(j.status===500?"The stats server hit an error. If the database step in Cloudflare hasn't been done yet, do it, then try again.":(j.msg||"That password didn't work."));return;}
   put(sessionStorage,TK,j.token);$("pw").value="";lastAct=Date.now();load();});
@@ -395,7 +395,7 @@ $("loginForm").addEventListener("submit",async e=>{e.preventDefault();const pw=$
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&live()&&Date.now()-lastTry>30000){lastAct=Date.now();load();}});
 setInterval(()=>{if(live()&&document.visibilityState==="visible"&&Date.now()-lastAct<600000&&Date.now()-lastTry>=60000)load();},10000);
 if(SAMPLE){$("sampleTag").hidden=false;$("loginNote").textContent="Sample page: any password opens made-up numbers.";}
-if(tok())load();
+if(SAMPLE||tok())load();
 
 /* ---------- made-up numbers for the sample page (?sample) ---------- */
 function sample(n){
