@@ -569,6 +569,62 @@ img{pointer-events:none}
 </div>
 
 <script>
+/* Sparkle Stats: a private, anonymous play counter for Tanner (violetspaulding.com/stats).
+   Sends only: a random device code, a random code for this visit, phone/tablet/computer, app or browser,
+   the hour and weekday, seconds played, which games were opened and for how long, what got picked or placed
+   (gowns, colors, wands, stickers, treats), how many real taps there were (a number only), whether the browser says
+   it is remote-controlled, and the name of a website that linked here (never the full address). No names, no location.
+   Skipped when Do Not Track is on, or when this device was switched off on the stats page.
+   It never gets in the way: every call gives up after 6 seconds, and after a failure it waits (1, 2, 4... up to 60 minutes). */
+(function(){
+  var API='https://violet-stats.tannerspaulding81.workers.dev';
+  var DK='vsp-stats-did',OFF='vsp-stats-off',WK='vsp-stats-wait';
+  var noop=function(){};window.VS={app:noop,hit:noop};
+  function get(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+  function put(k,v){try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v);}catch(e){}}
+  try{
+    if(navigator.doNotTrack==='1'||window.doNotTrack==='1'||get(OFF)==='1'||!window.fetch||!window.crypto||!crypto.getRandomValues)return;
+    var rid=function(n){var a=new Uint8Array(n),s='';crypto.getRandomValues(a);for(var i=0;i<n;i++)s+=(a[i]%36).toString(36);return s;};
+    var did=get(DK);if(!did||!/^[a-z0-9]{16,40}$/.test(did)){did=rid(24);put(DK,did);if(get(DK)!==did)did=null;}
+    if(!did)return;
+    var d=new Date(),sid=rid(16),inputs=0,app=null,appAt=0,active=0,last=Date.now(),busy=false,sent='',sentAt=0;
+    var apps={},ev={},nev=0;
+    var ref='';try{if(document.referrer){var h=new URL(document.referrer).hostname.toLowerCase();if(h&&h!==location.hostname)ref=h.slice(0,100);}}catch(e){}
+    var tap=function(e){if(e&&e.isTrusted&&inputs<9999)inputs++;};
+    addEventListener('pointerdown',tap,{capture:true,passive:true});addEventListener('keydown',tap,{capture:true,passive:true});
+    var vis=function(){return document.visibilityState==='visible';};
+    function tick(){var n=Date.now(),dt=vis()?Math.min(n-last,5000):0;active+=dt;if(app&&apps[app])apps[app][1]+=dt;last=n;}
+    function device(){var w=Math.min(screen.width,screen.height),ua=navigator.userAgent;return /Mobi|Android|iPhone/i.test(ua)?(w>=600?'tablet':'phone'):(navigator.maxTouchPoints>1&&w>=600?'tablet':'computer');}
+    function mode(){return (window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone?'app':'browser';}
+    function resting(){var w=+get(WK)||0;return Date.now()<w;}
+    function failed(){var n=Math.min((+get(WK+'n')||0)+1,7);put(WK+'n',String(n));put(WK,String(Date.now()+Math.min(60000*Math.pow(2,n-1),3600000)));}
+    function send(){
+      if(busy||resting())return;tick();
+      var a={};for(var k in apps)a[k]=[apps[k][0],Math.round(apps[k][1]/1000)];
+      var secs=Math.round(active/1000),sig=JSON.stringify([a,ev,inputs>=3]);
+      if(sig===sent&&secs-sentAt<120)return;
+      if(!inputs&&!nev&&secs<5)return;
+      busy=true;
+      var ctl=window.AbortController?new AbortController():null,tm=ctl?setTimeout(function(){ctl.abort();},6000):0;
+      var opt={method:'POST',headers:{'Content-Type':'text/plain'},keepalive:true,
+        body:JSON.stringify({did:did,sid:sid,device:device(),mode:mode(),ref:ref,'in':inputs,wd:navigator.webdriver?1:0,hour:d.getHours(),dow:d.getDay(),secs:secs,apps:a,ev:ev})};
+      if(ctl)opt.signal=ctl.signal;
+      fetch(API+'/v1/ping',opt).then(function(r){if(!r||r.status===429||r.status>=500)throw 0;sent=sig;sentAt=secs;put(WK,null);put(WK+'n',null);})
+        .catch(function(){failed();}).then(function(){busy=false;if(tm)clearTimeout(tm);});
+    }
+    var soon=0;function later(ms){clearTimeout(soon);soon=setTimeout(send,ms);}
+    window.VS={
+      app:function(id){try{tick();id=String(id||'home');if(id===app)return;app=id;apps[id]=apps[id]||[0,0];apps[id][0]++;later(4000);}catch(e){}},
+      hit:function(a,k,item){try{var key=a+'|'+k+'|'+String(item==null?'':item).toLowerCase().slice(0,30);if(!(key in ev)){if(nev>=280)return;nev++;ev[key]=0;}ev[key]++;later(20000);}catch(e){}}
+    };
+    setInterval(tick,1000);
+    setInterval(function(){if(vis())send();},60000);
+    document.addEventListener('visibilitychange',function(){tick();if(!vis())send();});
+    addEventListener('pagehide',function(){send();});
+  }catch(e){window.VS={app:noop,hit:noop};}
+})();
+</script>
+<script>
 (function(){
 "use strict";
 /* ---------------- storage (optional; page works without it) ---------------- */
@@ -917,15 +973,15 @@ function drawPanel(){
 }
 tabsEl.addEventListener('click',e=>{const b=e.target.closest('.tab');if(!b)return;curTab=b.dataset.t;sfx.tab();drawTabs();drawPanel();itemsEl.scrollLeft=0;});
 itemsEl.addEventListener('click',e=>{const b=e.target.closest('.item');if(!b)return;const t=TABS.find(t=>t.id===curTab);const i=+b.dataset.i;
-  look[t.id]=t.items[i];sfx.tap();drawStage();drawPanel();bump(frame,'pop');});
+  look[t.id]=t.items[i];VS.hit('dressup','pick',t.id+':'+t.items[i]);sfx.tap();drawStage();drawPanel();bump(frame,'pop');});
 colorsEl.addEventListener('click',e=>{const b=e.target.closest('.dot');if(!b)return;const t=TABS.find(t=>t.id===curTab);
-  look[t.colors[0]]=b.dataset.c;sfx.color(+b.dataset.i);drawStage();drawPanel();bump(frame,'pop');});
+  look[t.colors[0]]=b.dataset.c;VS.hit('dressup','color',t.id+':'+b.dataset.c);sfx.color(+b.dataset.i);drawStage();drawPanel();bump(frame,'pop');});
 
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 $('surpriseBtn').addEventListener('click',()=>{
   TABS.forEach(t=>{let v=pick(t.items);if(t.id==='crown'||t.id==='magic'||t.id==='friend'){ if(v==='none')v=t.items[0]; }look[t.id]=v;});
   look.dressColor=pick(Object.keys(DRESSC));look.hairColor=pick(Object.keys(HAIRC));
-  sfx.surprise();drawStage();drawPanel();bump(frame,'spin');
+  VS.hit('dressup','surprise','');sfx.surprise();drawStage();drawPanel();bump(frame,'spin');
 });
 
 /* gallery */
@@ -946,7 +1002,7 @@ $('saveBtn').addEventListener('click',e=>{
       sp.style.left=(r.left+r.width/2-14)+'px';sp.style.top=(r.top+r.height/2-14)+'px';document.body.appendChild(sp);const a=i/6*Math.PI*2;
       requestAnimationFrame(()=>requestAnimationFrame(()=>{sp.style.transform=`translate(${Math.cos(a)*40}px,${Math.sin(a)*40}px) scale(.4)`;sp.style.opacity='0';}));setTimeout(()=>sp.remove(),800);}
     return;}
-  looks.unshift(Object.assign({},look));looks=looks.slice(0,12);store.set('looks',looks);drawCount();bump($('galCount'),'pop');sayOn(btn,'Saved!');
+  looks.unshift(Object.assign({},look));VS.hit('dressup','save',look.dress+':'+look.dressColor);looks=looks.slice(0,12);store.set('looks',looks);drawCount();bump($('galCount'),'pop');sayOn(btn,'Saved!');
   sfx.save();bump($('flash'),'go');
   const from=e.currentTarget.getBoundingClientRect(),to=$('galleryBtn').getBoundingClientRect();
   const h=document.createElement('div');h.className='flyheart';
@@ -1058,7 +1114,7 @@ const Wand=(function(){
     touched=true;cv.setPointerCapture?.(e.pointerId);
     const o=grabOffset(e.offsetX,e.offsetY),x=e.offsetX+o.x,y=e.offsetY+o.y;
     holdWand(x,y,0);
-    pts[e.pointerId]={x,y,ox:o.x,oy:o.y,d:0};spawn(x,y,14,true);lastNote=0;chime(y);
+    pts[e.pointerId]={x,y,ox:o.x,oy:o.y,d:0};VS.hit('wand','draw',brush);spawn(x,y,14,true);lastNote=0;chime(y);
   }
   function move(e){
     const p=pts[e.pointerId];if(!p)return;const x=e.offsetX+p.ox,y=e.offsetY+p.oy,dx=x-p.x,dy=y-p.y,d=Math.hypot(dx,dy);if(d<2)return;
@@ -1097,10 +1153,10 @@ const Wand=(function(){
     ?`<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="9" fill="#FFD966"/><g stroke="#F5B83D" stroke-width="3" stroke-linecap="round"><path d="M20 4v4M20 32v4M4 20h4M32 20h4M8.7 8.7l2.8 2.8M28.5 28.5l2.8 2.8M8.7 31.3l2.8-2.8M28.5 11.5l2.8-2.8"/></g></svg>`
     :`<svg viewBox="0 0 40 40"><path d="M26 6A15 15 0 1 0 34 28A12 12 0 1 1 26 6Z" fill="#B79CFF"/><path d="M30 10 Q30 13 33 13 Q30 13 30 16 Q30 13 27 13 Q30 13 30 10Z" fill="#F5B83D"/></svg>`);
     $('wandSky').setAttribute('aria-label',night?'Day sky':'Night sky');}
-  $('wandbar').addEventListener('click',e=>{const b=e.target.closest('[data-b]');if(!b)return;brush=b.dataset.b;
+  $('wandbar').addEventListener('click',e=>{const b=e.target.closest('[data-b]');if(!b)return;brush=b.dataset.b;VS.hit('wand','brush',brush);
     $('wandbar').querySelectorAll('[data-b]').forEach(x=>x.classList.toggle('on',x===b));sfx.tap();
     const r=b.getBoundingClientRect(),c=cv.getBoundingClientRect();spawn(r.left+r.width/2-c.left,r.top-c.top,12,true);});
-  $('wandSky').addEventListener('click',()=>{night=!night;store.set('wandDay',!night);resize();drawSkyBtn();sfx.open();});
+  $('wandSky').addEventListener('click',()=>{night=!night;VS.hit('wand','sky',night?'night':'day');store.set('wandDay',!night);resize();drawSkyBtn();sfx.open();});
   window.addEventListener('resize',()=>{if(on)resize();});
   drawSkyBtn();
   return{
@@ -1191,7 +1247,7 @@ const Castle=(function(){
   });
   function add(k,x,y){
     if(placed.length>=40)placed.shift();
-    const p=fit({k,x,y,z:++zTop});placed.push(p);draw();save();
+    const p=fit({k,x,y,z:++zTop});placed.push(p);VS.hit('castle','sticker',k);draw();save();
     const el=layer.lastElementChild;if(el)bump(el,'drop');
   }
   function endTray(e){
@@ -1210,7 +1266,7 @@ const Castle=(function(){
   $('castleClear').addEventListener('click',()=>{if(!placed.length){bump($('castleClear'),'wig');sfx.tap();return;}ask.hidden=false;sfx.tap();});
   $('clearNo').addEventListener('click',()=>{ask.hidden=true;sfx.tab();});
   ask.addEventListener('click',e=>{if(e.target===ask){ask.hidden=true;}});
-  $('clearYes').addEventListener('click',()=>{ask.hidden=true;
+  $('clearYes').addEventListener('click',()=>{ask.hidden=true;VS.hit('castle','clear','');
     layer.querySelectorAll('.stk').forEach(el=>el.classList.add('poof'));poof();
     setTimeout(()=>{placed=[];draw();save();},300);});
   /* saved scenes: up to 12, kept on this device */
@@ -1228,7 +1284,7 @@ const Castle=(function(){
     if(scenes.some(s=>sceneKey(s.p)===key)){sayOn(btn,'Already saved!');sfx.tap();bump($('sceneGalBtn'),'pop');return;}
     const r=box();
     scenes.unshift({ar:+(r.width/r.height||1.6).toFixed(3),p:placed.map(p=>({k:p.k,x:+p.x.toFixed(4),y:+p.y.toFixed(4),z:p.z||1}))});
-    scenes=scenes.slice(0,12);store.set('scenes',scenes);drawSceneCount();bump(cnt,'pop');sayOn(btn,'Saved!');
+    scenes=scenes.slice(0,12);store.set('scenes',scenes);VS.hit('castle','save','');drawSceneCount();bump(cnt,'pop');sayOn(btn,'Saved!');
     sfx.save();bump($('flash'),'go');
     const from=btn.getBoundingClientRect(),to=$('sceneGalBtn').getBoundingClientRect();
     const h=document.createElement('div');h.className='flyheart';
@@ -1348,7 +1404,7 @@ const Stable=(function(){
   }
   let lastTap=0,tapN=0;
   function pat(fxp,fyp){
-    const now=Date.now();if(now-lastTap<250)return;lastTap=now;
+    const now=Date.now();if(now-lastTap<250)return;lastTap=now;VS.hit('stable','pat','');
     const k=tapN++%3;
     if(k===0){face(gigI,900);move('wig');S.giggle();fx(fxp,fyp,'heart',2);}
     else if(k===1){move('toss');S.whinny();fx(.3,.3,'star',4);}
@@ -1362,7 +1418,7 @@ const Stable=(function(){
   /* ---- treats ---- */
   let eating=false;
   function feed(k,x,y){
-    if(eating){bump(chip(k),'wiggle');return;}eating=true;
+    if(eating){bump(chip(k),'wiggle');return;}eating=true;VS.hit('stable','feed',k);
     const t=document.createElement('img');t.className='treat';t.src=img(k);t.alt='';const sz=64;
     t.style.width=sz+'px';t.style.left=(x-sz/2)+'px';t.style.top=(y-sz/2)+'px';document.body.appendChild(t);
     const [mx,my]=at(MOUTH[0],MOUTH[1]);sfx.tab();
@@ -1390,7 +1446,7 @@ const Stable=(function(){
     brush.lx=x;brush.ly=y;
   }
   function brushEnd(){if(!brush)return;const b=brush;brush=null;b.g.remove();
-    if(b.strokes){setTimeout(()=>{move('toss');S.sparkle();fx(.3,.35,'heart',2);},120);}}
+    if(b.strokes){VS.hit('stable','brush','');setTimeout(()=>{move('toss');S.sparkle();fx(.3,.35,'heart',2);},120);}}
   function autoBrush(){ /* a tap on the brush: it brushes the mane by itself */
     if(brush)return;const path=[[.16,.42],[.3,.3],[.2,.55],[.34,.45],[.18,.7],[.3,.62],[.78,.62],[.86,.72]];
     const [x0,y0]=at(...path[0]);brushStart(x0,y0);let i=0;const b=brush;
@@ -1404,11 +1460,11 @@ const Stable=(function(){
     const has=st.d.includes(k);if(has&&force)return;
     if(has){st.d=st.d.filter(x=>x!==k);sfx.tab();}
     else{if(k==='crown')st.d=st.d.filter(x=>x!=='flowers');if(k==='flowers')st.d=st.d.filter(x=>x!=='crown');
-      st.d.push(k);S.chime();const [x,y]=DECO[k];fx(x,y,'star',4);setTimeout(()=>{face(gigI,600);S.giggle();},250);}
+      st.d.push(k);VS.hit('stable','dress',k);S.chime();const [x,y]=DECO[k];fx(x,y,'star',4);setTimeout(()=>{face(gigI,600);S.giggle();},250);}
     save();drawDeco(has?null:k);
   }
-  function nextMane(){st.m=(st.m+1)%MANES.length;save();drawMane();move('toss');S.sparkle();fx(.2,.45,'star',5);}
-  function glitter(force){if(force&&st.g)return;st.g=!st.g;save();drawShim();if(st.g){S.sparkle();fx(.5,.5,'star',6);}else sfx.tab();}
+  function nextMane(){st.m=(st.m+1)%MANES.length;VS.hit('stable','mane',MANES[st.m]||'plain');save();drawMane();move('toss');S.sparkle();fx(.2,.45,'star',5);}
+  function glitter(force){if(force&&st.g)return;st.g=!st.g;save();drawShim();if(st.g){VS.hit('stable','glitter','');S.sparkle();fx(.5,.5,'star',6);}else sfx.tab();}
   function act(k,x,y){
     if(TREATS[k])return feed(k,x,y);
     if(k==='brush')return autoBrush();
@@ -1479,8 +1535,8 @@ function show(){
     if(id==='wand')Wand.start();
     if(id==='castle')Castle.start();
     if(id==='stable')Stable.start();
-    curView=id;}
-  else{$('home').hidden=false;$('homeBtn').hidden=true;at.hidden=true;curView='home';}
+    curView=id;VS.app(id);}
+  else{$('home').hidden=false;$('homeBtn').hidden=true;at.hidden=true;curView='home';VS.app('home');}
 }
 document.querySelectorAll('.tile').forEach(t=>{
   const r=t.dataset.go;if(READY[r])t.querySelector('[data-soon]')?.remove();else t.classList.add('soon');

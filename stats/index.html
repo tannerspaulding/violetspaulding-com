@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Sparkle Stats</title>
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#E6F8F2">
+<meta name="apple-mobile-web-app-title" content="Sparkle Stats">
+<link rel="apple-touch-icon" sizes="180x180" href="/icon-violet-180.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap">
+<style>
+/* Sparkle Stats: Tanner's private page for how Violet's Sparkle Palace gets played. Same look as the site:
+   mint background, white rounded cards with a mint lip, chunky Fredoka, pastel accents. Not linked from the site. */
+:root{
+  --bg:#E6F8F2;--mint:#C3EEDF;--mint-deep:#3FB59A;--ink:#2A2250;--soft:#6A6390;--card:#fff;--line:#E4F3EE;
+  --pink:#FF7EB6;--lav:#B79CFF;--butter:#FFD966;--sky:#8FD3FF;--gold:#F5B83D;--rose:#FFE1EE;--lilac:#ECE3FF;
+  --bad:#C2416F;--font:'Fredoka',ui-rounded,'SF Pro Rounded','Arial Rounded MT Bold',system-ui,sans-serif;
+  --lip:0 5px 0 var(--mint),0 12px 26px rgba(42,34,80,.08);
+}
+*{box-sizing:border-box}
+html{background:var(--bg);-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.45;
+  background:radial-gradient(1200px 500px at 50% -120px,#fff 0,rgba(255,255,255,0) 70%),var(--bg);
+  padding:calc(env(safe-area-inset-top,0px) + 14px) max(16px,env(safe-area-inset-right,0px)) 56px max(16px,env(safe-area-inset-left,0px))}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+[hidden]{display:none!important}
+.wrap{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+h1,h2,h3,p{margin:0}
+h1{font-weight:700;font-size:1.5rem;line-height:1.1}
+h2{font-weight:700;font-size:1.12rem;line-height:1.2}
+.top{display:flex;align-items:center;gap:10px}
+.top .logo{width:74px;height:auto;flex:none}
+.top .name{flex:1;min-width:0}
+.top .name small{display:block;color:var(--soft);font-size:.82rem;font-weight:500}
+.pill{border:0;background:var(--card);border-radius:999px;padding:9px 14px;font-weight:600;font-size:.88rem;box-shadow:0 3px 0 var(--mint);min-height:40px}
+.pill:active{transform:translateY(2px);box-shadow:0 1px 0 var(--mint)}
+.pill.spin svg{animation:spin 1s linear infinite}
+.pill svg{width:16px;height:16px;vertical-align:-3px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.card{background:var(--card);border-radius:26px;box-shadow:var(--lip);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.card .sub{color:var(--soft);font-size:.9rem}
+.note{color:var(--soft);font-size:.86rem}
+.warn{color:var(--bad)}
+/* login */
+.login{max-width:420px;width:100%;margin:5vh auto 0;align-items:stretch;text-align:center;gap:16px;padding:26px 22px}
+.login img{width:180px;max-width:70%;margin:0 auto}
+.login h1{font-size:1.9rem}
+.login form{display:flex;flex-direction:column;gap:10px;text-align:left}
+.login label{font-weight:600;font-size:.9rem;color:var(--soft)}
+.login input{border:3px solid var(--mint);border-radius:16px;background:#F7FDFB;padding:12px 14px;font-size:1.05rem;width:100%}
+.login input:focus{border-color:var(--lav);outline:none}
+.go{border:0;border-radius:18px;background:linear-gradient(180deg,#FF9CC8,var(--pink));color:#fff;font-weight:700;font-size:1.1rem;padding:13px 18px;box-shadow:0 5px 0 #E2609C;min-height:52px}
+.go:active{transform:translateY(3px);box-shadow:0 2px 0 #E2609C}
+.err{color:var(--bad);font-weight:600;font-size:.92rem}
+/* filters and tabs */
+.bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.seg{display:inline-flex;background:var(--card);border-radius:999px;padding:4px;box-shadow:0 3px 0 var(--mint)}
+.seg button{border:0;background:none;border-radius:999px;padding:7px 13px;font-weight:600;font-size:.88rem;color:var(--soft);min-height:36px}
+.seg button[aria-pressed=true]{background:var(--lilac);color:var(--ink)}
+.updated{color:var(--soft);font-size:.82rem;flex:1;min-width:140px;text-align:right}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 8px;margin:0 -2px;scrollbar-width:none;position:sticky;top:0;z-index:5;
+  background:linear-gradient(var(--bg) 80%,rgba(230,248,242,0))}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:none;border:0;border-radius:999px;background:var(--card);padding:9px 14px;font-weight:600;font-size:.92rem;box-shadow:0 3px 0 var(--mint);min-height:42px;display:flex;align-items:center;gap:7px}
+.tabs button img{width:24px;height:24px;border-radius:8px;object-fit:cover}
+.tabs button[aria-selected=true]{background:var(--ink);color:#fff;box-shadow:0 3px 0 #17123A}
+.sample{background:var(--butter);border-radius:14px;padding:8px 12px;font-weight:600;font-size:.88rem;text-align:center}
+/* headline numbers */
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (min-width:640px){.tiles{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.tile{background:var(--card);border-radius:22px;box-shadow:var(--lip);padding:14px 14px 12px;min-width:0}
+.tile b{display:block;font-size:1.85rem;font-weight:700;line-height:1.05;font-variant-numeric:tabular-nums}
+.tile span{display:block;color:var(--soft);font-size:.86rem;font-weight:500;line-height:1.25;margin-top:4px}
+.tile:nth-child(4n+1){background:linear-gradient(160deg,#FFF0F6,#fff 60%)}
+.tile:nth-child(4n+2){background:linear-gradient(160deg,#F3EEFF,#fff 60%)}
+.tile:nth-child(4n+3){background:linear-gradient(160deg,#E9FAF4,#fff 60%)}
+.tile:nth-child(4n+4){background:linear-gradient(160deg,#FFF8E1,#fff 60%)}
+.grid2{display:grid;gap:18px}
+@media (min-width:700px){.grid2{grid-template-columns:1fr 1fr}}
+/* charts */
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart .ax text{font-size:11px;fill:var(--soft);font-family:var(--font)}
+.chart .ax line{stroke:var(--line);stroke-width:1}
+.chart .b{fill:var(--lav)}
+.chart .b.now{fill:var(--pink)}
+.chart .hit{fill:transparent}
+.chart .hit:hover+.b{opacity:.75}
+.tip{min-height:1.3em;color:var(--soft);font-size:.86rem;font-weight:500}
+/* ranked lists */
+.rank{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+.rank li{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;min-width:0}
+.rank .pic{width:44px;height:44px;border-radius:14px;background:#F4FBF8;display:grid;place-items:center;overflow:hidden;flex:none}
+.rank .pic img{width:100%;height:100%;object-fit:contain}
+.rank .pic img.cover{object-fit:cover}
+.rank .pic i{display:block;width:28px;height:28px;border-radius:50%;box-shadow:inset 0 0 0 3px rgba(255,255,255,.7)}
+.rank .pic.none{background:none;width:0;margin-right:-10px}
+.rank .mid{min-width:0}
+.rank .lbl{font-weight:600;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rank .lbl small{font-weight:500;color:var(--soft)}
+.rank .track{height:10px;border-radius:99px;background:#F1F7F5;margin-top:4px;overflow:hidden}
+.rank .fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--lav),var(--pink))}
+.rank .num{font-weight:700;font-variant-numeric:tabular-nums;font-size:1rem;text-align:right;min-width:2ch}
+.rank li:first-child .fill{background:linear-gradient(90deg,var(--gold),var(--pink))}
+.empty{color:var(--soft);font-size:.92rem;background:#F7FDFB;border-radius:16px;padding:14px;text-align:center}
+.minis{display:flex;flex-wrap:wrap;gap:10px}
+.mini{flex:1 1 120px;background:#F7FDFB;border-radius:18px;padding:10px 12px}
+.mini b{display:block;font-size:1.35rem;line-height:1.1}
+.mini span{color:var(--soft);font-size:.84rem}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:.86rem;color:var(--soft)}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:4px;margin-right:5px;vertical-align:-1px}
+.stack{display:flex;height:18px;border-radius:99px;overflow:hidden;background:#F1F7F5}
+.stack span{display:block;height:100%}
+.switch{display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap}
+.foot{color:var(--soft);font-size:.82rem;text-align:center;padding:4px 10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top" id="topbar" hidden>
+    <img class="logo" src="/art/logo-palace.svg" alt="">
+    <div class="name"><h1>Sparkle Stats</h1><small>How Violet's Sparkle Palace gets played</small></div>
+    <button class="pill" id="refresh" aria-label="Refresh"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16 10a6 6 0 1 1-1.8-4.3M16 3.5V7h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button class="pill" id="logout">Log out</button>
+  </div>
+
+  <div class="card login" id="loginView">
+    <img src="/art/logo-palace.svg" alt="Violet's Sparkle Palace">
+    <h1>Sparkle Stats</h1>
+    <p class="note">For grown-ups. See which games get played and what she loves most.</p>
+    <form id="loginForm" autocomplete="on">
+      <label for="pw">Password</label>
+      <input id="pw" type="password" autocomplete="current-password" required>
+      <button class="go" type="submit">Open stats</button>
+      <p class="err" id="loginErr" role="alert" hidden></p>
+    </form>
+    <p class="note" id="loginNote">Locks for an hour after 10 wrong tries.</p>
+  </div>
+
+  <div id="dash" hidden>
+    <div class="wrap">
+      <p class="sample" id="sampleTag" hidden>Sample numbers, made up to show the layout</p>
+      <div class="bar">
+        <div class="seg" role="group" aria-label="Time range">
+          <button data-days="7" aria-pressed="false">7 days</button>
+          <button data-days="30" aria-pressed="true">30 days</button>
+          <button data-days="90" aria-pressed="false">90 days</button>
+        </div>
+        <span class="updated" id="updated" aria-live="polite"></span>
+      </div>
+      <div class="tabs" role="tablist" id="tabs" aria-label="Sections">
+        <button role="tab" data-v="overview" aria-selected="true">Overview</button>
+        <button role="tab" data-v="dressup" aria-selected="false"><img src="/art/card-dress.webp" alt="">Dress-Up</button>
+        <button role="tab" data-v="wand" aria-selected="false"><img src="/art/card-wand.webp" alt="">Wand</button>
+        <button role="tab" data-v="castle" aria-selected="false"><img src="/art/card-mermaid.webp" alt="">Castle</button>
+        <button role="tab" data-v="stable" aria-selected="false"><img src="/art/card-stable.webp" alt="">Stable</button>
+        <button role="tab" data-v="visits" aria-selected="false">Visits</button>
+      </div>
+      <section id="v-overview" class="wrap"></section>
+      <section id="v-dressup" class="wrap" hidden></section>
+      <section id="v-wand" class="wrap" hidden></section>
+      <section id="v-castle" class="wrap" hidden></section>
+      <section id="v-stable" class="wrap" hidden></section>
+      <section id="v-visits" class="wrap" hidden></section>
+      <p class="foot">Counted with a random code per device and a separate random code per visit. No names, no IP addresses, no location. Per-visit detail is wiped after 2 days, and everything goes after 400 days.</p>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+const API="https://violet-stats.tannerspaulding81.workers.dev";
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt=n=>Number(n||0).toLocaleString("en-US");
+const plural=(n,w,ws)=>`${fmt(n)} ${n===1?w:(ws||w+"s")}`;
+const mins=s=>{s=Math.round(s||0);if(s<60)return s+" sec";const m=Math.round(s/60);if(m<60)return m+" min";const h=Math.floor(m/60),r=m%60;return h+" hr"+(r?" "+r+" min":"");};
+const SAMPLE=/[?&]sample\b/.test(location.search), TK="vss-token", RK="vss-days", VK="vss-view", OFF="vsp-stats-off";
+const get=(s,k)=>{try{return s.getItem(k)}catch(_){return null}}, put=(s,k,v)=>{try{v==null?s.removeItem(k):s.setItem(k,v)}catch(_){}};
+let days=+get(localStorage,RK)||30; if(![7,30,90].includes(days)) days=30;
+let view=get(localStorage,VK)||"overview", S=null, busy=false, lastLoad=0, lastTry=0, lastAct=Date.now(), failed=false;
+
+/* ---------- names and pictures for what gets counted ---------- */
+const A="/art/", D="/art/doll/", ST="/art/stable/";
+const APPS={dressup:["Royal Dress-Up",A+"card-dress.webp"],wand:["Sparkle Wand",A+"card-wand.webp"],castle:["Mermaid Castle",A+"card-mermaid.webp"],stable:["Unicorn Stable",A+"card-stable.webp"]};
+const DRESSC={pink:["Pink","#FF9EC4"],lav:["Lavender","#BFA3F2"],aqua:["Aqua","#8ED6EC"],sun:["Sunshine","#FFDC7A"],rose:["Rose","#FF8FA6"],mint:["Mint","#94DFC4"],rainbow:["Rainbow","conic-gradient(#ffa9a9,#ffcc96,#ffe68a,#b2e8a8,#a6d6ff,#cdb6fb,#ffa9a9)"]};
+const HAIRC={gold:["Golden","#F6CF6A"],brown:["Brown","#9A6440"],black:["Black","#3E2C34"],pink:["Pink","#FFB0D2"],lav:["Lavender","#C3AAF6"],rainbow:["Rainbow",DRESSC.rainbow[1]]};
+const SKIN=["#fde3d3","#f3c29d","#cf9467","#93603f"];
+const DRESS={ball:"Ball gown",tiers:"Tiered gown",mermaid:"Mermaid gown",starry:"Starry gown"};
+const HAIR={long:"Long hair",curly:"Curly hair",pigtails:"Pigtails",bun:"Bun"};
+const CROWN={crown:["Crown","item-crown"],tiara:["Tiara","item-tiara"],flowers:["Flower crown","item-flowers"],horn:["Unicorn horn","item-horn"],star:["Star clips","item-stars"],none:["Nothing on top",""]};
+const MAGIC={wand:["Wand","item-wand"],mirror:["Mirror","item-mirror"],flowers:["Bouquet","item-bouquet"],none:["Empty hands",""]};
+const FRIEND={unicorn:["Unicorn","friend-unicorn"],kitty:["Kitty","friend-kitty"],dragon:["Dragon","friend-dragon"],none:["No friend",""]};
+const PLACE={room:["Palace room","scene-dress"],garden:["Garden","scene-home"],sea:["Under the sea","scene-sea"],night:["Starry night","scene-wand"]};
+const SPARK={stars:"Stars",hearts:"Hearts",bubbles:"Bubbles",none:"No sparkles"};
+const WANDS={rainbow:["Rainbow wand","linear-gradient(135deg,#FF8F8F,#FFD966,#8FD3FF)"],gold:["Star wand","#FFD966"],hearts:["Heart wand","#FF7EB6"],unicorn:["Unicorn wand","linear-gradient(135deg,#FFB3D9,#C5A8FF,#9FE8F0)"]};
+const STK={mer1:["Mermaid (pink)",A+"stk-mer1.webp"],mer2:["Mermaid (lavender)",A+"stk-mer2.webp"],mer3:["Mermaid (aqua)",A+"stk-mer3.webp"],unicorn:["Unicorn",A+"friend-unicorn.webp"],kitty:["Kitty",A+"friend-kitty.webp"],dragon:["Dragon",A+"friend-dragon.webp"],girl:["Princess friend",A+"friend-girl.webp"],
+  crown:["Crown"],shell:["Shell"],star:["Starfish"],fish:["Fish"],octo:["Octopus"],pearl:["Pearl"],heart:["Heart"],rainbow:["Rainbow"],coral:["Coral"],sparkle:["Sparkle"],bubbles:["Bubbles"]};
+const TREAT={apple:"Apple",carrot:"Carrot",cupcake:"Cupcake",cookie:"Heart cookie"};
+const DECO={"bow-pink":"Pink bow","bow-lav":"Lavender bow","bow-aqua":"Aqua bow","bow-gold":"Gold bow",crown:"Crown",flowers:"Flower crown"};
+const MANE={plain:["White mane","#F4F1FA"],pink:["Pink mane","#FF9CC8"],lav:["Lavender mane","#C3A6F5"],aqua:["Aqua mane","#7FD8DE"],gold:["Gold mane","#F2C14E"]};
+const cap=s=>s?s[0].toUpperCase()+s.slice(1):s;
+
+/* ---------- numbers from the summary ---------- */
+function C(app,k){ // {item:n} for one kind of count, in the range
+  const o={};(S.counts||[]).forEach(r=>{if(r.app===app&&r.k===k)o[r.item]=(o[r.item]||0)+r.n;});return o;
+}
+const total=o=>Object.values(o).reduce((a,b)=>a+b,0);
+function split(o){ // "dress:ball" style keys into {dress:{ball:n}}
+  const r={};for(const [k,n] of Object.entries(o)){const [g,v]=k.split(":");(r[g]=r[g]||{})[v]=(r[g][v]||0)+n;}return r;
+}
+
+/* ---------- drawing ---------- */
+function rank(rows,{empty="Nothing yet in this range."}={}){
+  rows=rows.filter(r=>r.n>0).sort((a,b)=>b.n-a.n);
+  if(!rows.length) return `<p class="empty">${esc(empty)}</p>`;
+  const max=rows[0].n, anyPic=rows.some(r=>r.img||r.sw);
+  return `<ul class="rank">`+rows.map(r=>{
+    const pic=r.img?`<span class="pic"><img src="${esc(r.img)}" alt=""${r.cover?' class="cover"':''} loading="lazy"></span>`:r.sw?`<span class="pic"><i style="background:${esc(r.sw)}"></i></span>`:`<span class="pic${anyPic?"":" none"}"></span>`;
+    return `<li>${pic}<div class="mid"><div class="lbl">${esc(r.label)}${r.sub?` <small>${esc(r.sub)}</small>`:""}</div><div class="track"><div class="fill" style="width:${Math.max(3,r.n/max*100).toFixed(1)}%"></div></div></div><span class="num">${esc(r.show||fmt(r.n))}</span></li>`;}).join("")+`</ul>`;
+}
+let tipFns={};
+function bars(id,data,{label,value,tip,now}){
+  const W=560,H=170,L=26,R=4,T=10,B=24,iw=W-L-R,ih=H-T-B;
+  const max=Math.max(1,...data.map(value)),nice=max<=4?4:max<=10?10:Math.ceil(max/4)*4,step=iw/data.length,bw=Math.max(2,Math.min(30,step*.66));
+  const y=v=>T+ih-v/nice*ih;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(id)}"><g class="ax">`;
+  [0,nice/2,nice].forEach(t=>{s+=`<line x1="${L}" x2="${W-R}" y1="${y(t)}" y2="${y(t)}"/><text x="${L-6}" y="${y(t)+4}" text-anchor="end">${Math.round(t)}</text>`;});
+  s+=`</g>`;
+  data.forEach((d,i)=>{const v=value(d),x=L+i*step+(step-bw)/2,h=v?Math.max(3,v/nice*ih):0,top=T+ih-h,r=Math.min(6,bw/2,h);
+    s+=`<rect class="hit" data-c="${id}" data-i="${i}" x="${L+i*step}" y="${T}" width="${step}" height="${ih+B}"/>`;
+    if(h) s+=`<path class="b${now&&now(d,i)?" now":""}" d="M${x},${T+ih}V${top+r}Q${x},${top} ${x+r},${top}H${x+bw-r}Q${x+bw},${top} ${x+bw},${top+r}V${T+ih}Z"/>`;
+    const lb=label(d,i);if(lb)s+=`<g class="ax"><text x="${L+i*step+step/2}" y="${H-6}" text-anchor="middle">${esc(lb)}</text></g>`;});
+  tipFns[id]=i=>tip(data[i]);
+  return `<div class="chart">${s}</svg></div><p class="tip" id="tip-${id}">${esc(tip(data[data.length-1]===undefined?{}:defaultTip(data,value)))}</p>`;
+}
+const defaultTip=(data,value)=>data.reduce((a,b)=>value(b)>value(a)?b:a,data[0]);
+document.addEventListener("pointerover",e=>{const h=e.target.closest&&e.target.closest(".hit");if(!h)return;const f=tipFns[h.dataset.c];if(f)$("tip-"+h.dataset.c).textContent=f(+h.dataset.i);});
+document.addEventListener("click",e=>{const h=e.target.closest&&e.target.closest(".hit");if(!h)return;const f=tipFns[h.dataset.c];if(f)$("tip-"+h.dataset.c).textContent=f(+h.dataset.i);});
+const card=(title,body,sub)=>`<div class="card"><div><h2>${esc(title)}</h2>${sub?`<p class="sub">${esc(sub)}</p>`:""}</div>${body}</div>`;
+const tiles=list=>`<div class="tiles">${list.map(([n,l])=>`<div class="tile"><b>${esc(n)}</b><span>${esc(l)}</span></div>`).join("")}</div>`;
+const minis=list=>`<div class="minis">${list.map(([n,l])=>`<div class="mini"><b>${esc(n)}</b><span>${esc(l)}</span></div>`).join("")}</div>`;
+const RANGE=()=>days===7?"the last 7 days":days===30?"the last 30 days":"the last 90 days";
+const dayName=d=>new Date(d+"T12:00:00").toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"});
+const WD=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+
+function drawOverview(){
+  const v=S.visits||[], play=v.find(x=>x.kind==="play")||{n:0,secs:0};
+  const opens=Object.keys(APPS).map(a=>({a,n:(C(a,"open")[""]||0),s:(C(a,"secs")[""]||0)}));
+  const fav=opens.slice().sort((x,y)=>y.s-x.s||y.n-x.n)[0];
+  const avg=play.n?play.secs/play.n:0;
+  let h=tiles([[fmt(S.todayPlays),"plays today"],[fmt(S.weekPlays),"plays this week"],[mins(S.weekSecs),"played this week"],[play.n?mins(avg):"0 min","a typical play"]]);
+  h+=card("Plays each day",bars("daily",S.daily,{value:d=>d.n,label:(d,i)=>{const n=S.daily.length;const every=n<=7?1:n<=30?5:15;return (n-1-i)%every===0?String(+d.day.slice(8)):"";},
+    now:d=>d.day===S.today,tip:d=>d&&d.day?`${dayName(d.day)}: ${plural(d.n,"play")}, ${mins(d.secs)}`:""}),`A play is one visit where she tapped around. ${cap(RANGE())}: ${plural(play.n,"play")}, ${mins(play.secs)} in all.`);
+  const anyGame=opens.some(o=>o.n);
+  h+=card("Favorite games",anyGame?rank(opens.map(o=>({label:APPS[o.a][0],img:APPS[o.a][1],cover:true,n:o.s||o.n/1000,show:mins(o.s),sub:plural(o.n,"time")}))):`<p class="empty">No games opened in ${RANGE()} yet.</p>`,
+    fav&&fav.n?`Ranked by time spent. ${APPS[fav.a][0]} is the favorite right now.`:"Ranked by time spent in each game.");
+  const hours=Array.from({length:24},(_,i)=>({h:i,n:0}));(S.hours||[]).forEach(x=>{if(hours[x.h])hours[x.h].n=x.n;});
+  const ap=h=>h===0?"12a":h<12?h+"a":h===12?"12p":(h-12)+"p", full=h=>h===0?"midnight":h<12?h+" AM":h===12?"noon":(h-12)+" PM";
+  const dws=Array.from({length:7},(_,i)=>({d:i,n:0}));(S.dows||[]).forEach(x=>{if(dws[x.d])dws[x.d].n=x.n;});
+  h+=`<div class="grid2">`+card("Time of day",bars("hours",hours,{value:d=>d.n,label:d=>d.h%6===0?ap(d.h):"",tip:d=>`${full(d.h)} hour: ${plural(d.n,"play")}`}),"By her device's clock.")
+    +card("Day of the week",bars("dows",dws,{value:d=>d.n,label:d=>WD[d.d],tip:d=>`${WD[d.d]}: ${plural(d.n,"play")}`}))+`</div>`;
+  const LB=["<1","1-5","5-15","15-30","30-60","60+"],LN={"<1":"Under 1 min","1-5":"1 to 5 min","5-15":"5 to 15 min","15-30":"15 to 30 min","30-60":"30 to 60 min","60+":"Over an hour"};
+  const lm=Object.fromEntries((S.lengths||[]).map(x=>[x.b,x.n]));
+  h+=card("How long each play lasts",bars("lengths",LB.map(b=>({b,n:lm[b]||0})),{value:d=>d.n,label:d=>d.b,tip:d=>`${LN[d.b]}: ${plural(d.n,"play")}`}),"Minutes per visit.");
+  $("v-overview").innerHTML=h;
+}
+
+function drawDress(){
+  const o=C("dressup","open")[""]||0, secs=C("dressup","secs")[""]||0;
+  const picks=split(C("dressup","pick")), colors=split(C("dressup","color")), saves=C("dressup","save"), surprise=C("dressup","surprise")[""]||0;
+  let h=minis([[fmt(o),"times opened"],[mins(secs),"spent dressing up"],[fmt(total(saves)),"looks saved"],[fmt(surprise),"Surprise taps"]]);
+  h+=card("Favorite gowns",rank(Object.entries(saves).map(([k,n])=>{const [d,c]=k.split(":");return {label:`${(DRESSC[c]||[cap(c)])[0]} ${(DRESS[d]||cap(d)).toLowerCase()}`,img:`${D}dress-${d}-${c}.webp`,n};}),{empty:"No looks saved yet. Saving a look (the heart) counts here."}),"The gowns in the looks she saves.");
+  const p=picks, ix=(obj,map,img)=>Object.entries(obj||{}).map(([k,n])=>{const m=map[k];return {label:Array.isArray(m)?m[0]:(m||cap(k)),img:Array.isArray(m)&&m[1]?(img?img(k,m):D+m[1]+".webp"):img&&!Array.isArray(m)?img(k):"",n};});
+  h+=`<div class="grid2">`;
+  h+=card("Gown styles",rank(ix(p.dress,DRESS,k=>`${D}dress-${k}-pink.webp`)),"Taps on each style.");
+  h+=card("Gown colors",rank(Object.entries(colors.dress||{}).map(([k,n])=>({label:(DRESSC[k]||[cap(k)])[0],sw:(DRESSC[k]||[,"#ddd"])[1],n}))));
+  h+=card("Hairstyles",rank(ix(p.hair,HAIR,k=>`${D}hair-${k}-gold-skin0.webp`)));
+  h+=card("Hair colors",rank(Object.entries(colors.hair||{}).map(([k,n])=>({label:(HAIRC[k]||[cap(k)])[0],sw:(HAIRC[k]||[,"#ddd"])[1],n}))));
+  h+=card("Crowns",rank(ix(p.crown,CROWN)));
+  h+=card("Magic items",rank(ix(p.magic,MAGIC)));
+  h+=card("Friends",rank(ix(p.friend,FRIEND,(k,m)=>A+m[1]+".webp")));
+  h+=card("Places",rank(ix(p.place,PLACE,(k,m)=>A+m[1]+".webp").map(r=>Object.assign(r,{cover:true}))));
+  h+=card("Sparkles",rank(ix(p.sparkle,SPARK)));
+  h+=card("Skin tones",rank(Object.entries(p.skin||{}).map(([k,n])=>({label:"Tone "+(+k+1),sw:SKIN[+k]||"#ddd",n}))));
+  h+=`</div>`;
+  $("v-dressup").innerHTML=h;
+}
+
+function drawWand(){
+  const o=C("wand","open")[""]||0, secs=C("wand","secs")[""]||0, draw=C("wand","draw"), pick=C("wand","brush"), sky=C("wand","sky");
+  let h=minis([[fmt(o),"times opened"],[mins(secs),"spent drawing"],[fmt(total(draw)),"sparkle strokes"],[fmt(total(sky)),"day and night switches"]]);
+  h+=card("Favorite wands",rank(Object.entries(draw).map(([k,n])=>({label:(WANDS[k]||[cap(k)])[0],sw:(WANDS[k]||[,"#ddd"])[1],n,sub:pick[k]?plural(pick[k],"pick"):""})),{empty:"No drawing yet in this range."}),"Strokes drawn with each wand. A stroke is one finger touch on the sky.");
+  h+=card("Night or day",rank([{label:"Switched to night",sw:"#3B2F6E",n:sky.night||0},{label:"Switched to day",sw:"#FFD966",n:sky.day||0}],{empty:"She hasn't switched the sky yet."}),"The moon and sun button. The wand opens at night.");
+  $("v-wand").innerHTML=h;
+}
+
+function drawCastle(){
+  const o=C("castle","open")[""]||0, secs=C("castle","secs")[""]||0, st=C("castle","sticker"), sv=C("castle","save")[""]||0, cl=C("castle","clear")[""]||0;
+  let h=minis([[fmt(o),"times opened"],[mins(secs),"spent decorating"],[fmt(total(st)),"stickers placed"],[fmt(sv),"scenes saved"]]);
+  h+=card("Favorite stickers",rank(Object.entries(st).map(([k,n])=>({label:(STK[k]||[cap(k)])[0],img:(STK[k]||[])[1]||"",n})),{empty:"No stickers placed yet in this range."}),"How many times each sticker went onto the castle.");
+  if(cl) h+=`<p class="note">She cleared the whole castle ${plural(cl,"time")}.</p>`;
+  $("v-castle").innerHTML=h;
+}
+
+function drawStable(){
+  const o=C("stable","open")[""]||0, secs=C("stable","secs")[""]||0, feed=C("stable","feed"), deco=C("stable","dress"), mane=C("stable","mane");
+  const gl=C("stable","glitter")[""]||0, br=C("stable","brush")[""]||0, pat=C("stable","pat")[""]||0;
+  let h=minis([[fmt(o),"times opened"],[mins(secs),"with the unicorn"],[fmt(total(feed)),"treats fed"],[fmt(pat),"pats"]]);
+  h+=`<div class="grid2">`;
+  h+=card("Favorite treats",rank(Object.entries(feed).map(([k,n])=>({label:TREAT[k]||cap(k),img:ST+"it-"+k+".webp",n})),{empty:"No treats yet in this range."}));
+  h+=card("Bows and crowns",rank(Object.entries(deco).map(([k,n])=>({label:DECO[k]||cap(k),img:ST+"it-"+k+".webp",n})),{empty:"Nothing put on yet in this range."}),"Each time one goes on.");
+  h+=card("Mane colors",rank(Object.entries(mane).map(([k,n])=>({label:(MANE[k]||[cap(k)])[0],sw:(MANE[k]||[,"#ddd"])[1],n})),{empty:"The mane hasn't changed yet."}),"Each tap on the mane button.");
+  h+=card("Care",rank([{label:"Brushing",img:ST+"it-brush.webp",n:br},{label:"Glitter on",img:ST+"it-glitter.webp",n:gl},{label:"Pats",n:pat}],{empty:"No brushing, glitter or pats yet."}));
+  h+=`</div>`;
+  $("v-stable").innerHTML=h;
+}
+
+function drawVisits(){
+  const v=Object.fromEntries((S.visits||[]).map(x=>[x.kind,x])), P=(v.play||{}).n||0, I=(v.idle||{}).n||0, B=(v.bot||{}).n||0, all=P+I+B;
+  const seg=(n,c)=>all&&n?`<span style="width:${n/all*100}%;background:${c}"></span>`:"";
+  let h=card("Who's visiting",`<div class="stack">${seg(P,"var(--pink)")}${seg(I,"var(--butter)")}${seg(B,"#CFC8E6")}</div>
+    <div class="legend"><span><i style="background:var(--pink)"></i>Real plays ${fmt(P)}</span><span><i style="background:var(--butter)"></i>Opened and left ${fmt(I)}</span><span><i style="background:#CFC8E6"></i>Bots ${fmt(B)}</span></div>`,
+    `All visits in ${RANGE()}. A real play has at least 3 real taps. Bots are browsers that say they're run by a program. Only real plays count anywhere else on this page.`);
+  const d=S.devices||{};
+  h+=card("Devices",minis([[fmt(d.recent),"played in "+RANGE()],[fmt(d.real),"have ever played"],[fmt(d.back),"came back another day"]]),"A device is a phone, tablet or computer. Clearing the browser makes it count as a new one.");
+  const DT={phone:"Phone",tablet:"Tablet",computer:"Computer",unknown:"Unknown"}, MD={app:"Home-screen app",browser:"Browser",unknown:"Unknown"};
+  h+=`<div class="grid2">`+card("Played on",rank((S.deviceTypes||[]).map(x=>({label:DT[x.d]||cap(x.d),n:x.n}))))
+    +card("Opened from",rank((S.modes||[]).map(x=>({label:MD[x.m]||cap(x.m),n:x.n}))),"The home-screen app opens full screen.")+`</div>`;
+  const refs={};(S.refs||[]).forEach(x=>{const k=x.ref||"";refs[k]=refs[k]||{n:0,p:0};refs[k].n+=x.n;if(x.kind==="play")refs[k].p+=x.n;});
+  h+=card("How visits arrive",rank(Object.entries(refs).map(([k,o])=>({label:k?k:"Typed in, the app, or a bookmark",n:o.n,sub:o.p===o.n?"":`${fmt(o.p)} real`}))),"Only the name of a site that linked here is kept, never the full address.");
+  const off=get(localStorage,OFF)==="1";
+  h+=card("This device",`<div class="switch"><p>${off?"This device is <b>not counted</b>, so your own testing stays out of the numbers.":"This device <b>is counted</b> when the site is opened on it."}</p><button class="pill" id="offBtn">${off?"Count it again":"Don't count it"}</button></div>`,
+    "Only changes this browser. Use it on your own phone or computer, not on Violet's.");
+  $("v-visits").innerHTML=h;
+  $("offBtn").addEventListener("click",()=>{put(localStorage,OFF,get(localStorage,OFF)==="1"?null:"1");drawVisits();});
+}
+
+function draw(){
+  tipFns={};drawOverview();drawDress();drawWand();drawCastle();drawStable();drawVisits();setView(view);
+}
+
+/* ---------- views, range and refresh ---------- */
+const VIEWS=["overview","dressup","wand","castle","stable","visits"];
+function setView(v){if(!VIEWS.includes(v))v="overview";view=v;put(localStorage,VK,v);
+  document.querySelectorAll("#tabs [role=tab]").forEach(b=>{const on=b.dataset.v===v;b.setAttribute("aria-selected",on);b.tabIndex=on?0:-1;});
+  VIEWS.forEach(k=>{$("v-"+k).hidden=k!==v;});}
+document.querySelectorAll("#tabs [role=tab]").forEach(b=>b.addEventListener("click",()=>{setView(b.dataset.v);b.scrollIntoView&&b.scrollIntoView({block:"nearest",inline:"nearest"});const t=$("tabs").getBoundingClientRect().top;if(t<0)scrollBy(0,t);}));
+document.querySelectorAll("[data-days]").forEach(b=>b.addEventListener("click",()=>{const d=+b.dataset.days;if(d===days)return;days=d;put(localStorage,RK,String(d));setRange();load();}));
+function setRange(){document.querySelectorAll("[data-days]").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.days===days));}
+setRange();
+const tok=()=>get(sessionStorage,TK)||"";
+function show(on){$("loginView").hidden=on;$("dash").hidden=!on;$("topbar").hidden=!on;}
+const live=()=>!$("dash").hidden;
+const clock=t=>new Date(t).toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});
+function setUpdated(){const el=$("updated"),b=$("refresh");b.classList.toggle("spin",busy);
+  if(busy&&!lastLoad){el.textContent="Loading…";return;}
+  if(!lastLoad){el.textContent="";return;}
+  el.textContent=failed?`Couldn't refresh. Showing ${clock(lastLoad)}.`:`Updated ${clock(lastLoad)}`;el.classList.toggle("warn",failed);}
+function loginMsg(t){$("loginErr").hidden=!t;$("loginErr").textContent=t||"";}
+async function api(path,opts={}){
+  const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),10000);
+  try{const r=await fetch(API+path,{...opts,signal:ctl.signal,headers:{"Content-Type":"application/json",Authorization:"Bearer "+tok()}});
+    const j=await r.json().catch(()=>({ok:false,msg:"The stats server sent something odd. Try again."}));j.status=r.status;return j;}
+  finally{clearTimeout(tm);}
+}
+async function load(){
+  if(busy)return;busy=true;lastTry=Date.now();setUpdated();
+  try{
+    let j;
+    if(SAMPLE){await new Promise(r=>setTimeout(r,250));j=sample(days);}
+    else{try{j=await api("/v1/admin/summary?days="+days);}catch(_){j=null;}}
+    if(!j||!j.ok){
+      if(j&&j.status===401){put(sessionStorage,TK,null);show(false);loginMsg(tok()?"Please log in again.":"Your login ran out. Please log in again.");return;}
+      if(live()){failed=true;return;}
+      show(false);loginMsg(j?(j.msg||"Something went wrong."):"Can't reach the stats server. Check your connection and try again.");return;
+    }
+    S=j;failed=false;lastLoad=Date.now();show(true);draw();
+  }finally{busy=false;setUpdated();}
+}
+$("refresh").addEventListener("click",()=>{lastAct=Date.now();load();});
+$("logout").addEventListener("click",()=>{put(sessionStorage,TK,null);S=null;lastLoad=0;show(false);loginMsg("");});
+$("loginForm").addEventListener("submit",async e=>{e.preventDefault();const pw=$("pw").value;if(!pw){loginMsg("Type the password first.");return;}
+  loginMsg("");
+  if(SAMPLE){put(sessionStorage,TK,"sample");$("pw").value="";load();return;}
+  let j;try{j=await api("/v1/admin/login",{method:"POST",body:JSON.stringify({password:pw})});}catch(_){loginMsg("Can't reach the stats server. Check your connection and try again.");return;}
+  if(!j.ok){loginMsg(j.status===500?"The stats server hit an error. If the database step in Cloudflare hasn't been done yet, do it, then try again.":(j.msg||"That password didn't work."));return;}
+  put(sessionStorage,TK,j.token);$("pw").value="";lastAct=Date.now();load();});
+["pointerdown","keydown","scroll","touchstart"].forEach(n=>addEventListener(n,()=>{lastAct=Date.now();},{passive:true}));
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&live()&&Date.now()-lastTry>30000){lastAct=Date.now();load();}});
+setInterval(()=>{if(live()&&document.visibilityState==="visible"&&Date.now()-lastAct<600000&&Date.now()-lastTry>=60000)load();},10000);
+if(SAMPLE){$("sampleTag").hidden=false;$("loginNote").textContent="Sample page: any password opens made-up numbers.";}
+if(tok())load();
+
+/* ---------- made-up numbers for the sample page (?sample) ---------- */
+function sample(n){
+  let seed=7;const r=()=>(seed=seed*16807%2147483647)/2147483647, ri=(a,b)=>a+Math.floor(r()*(b-a+1));
+  const now=Date.now(),dl=[];for(let i=n-1;i>=0;i--)dl.push(new Date(now-i*864e5).toLocaleDateString("en-CA"));
+  const daily=dl.map((d,i)=>{const k=ri(0,3)+(new Date(d+"T12:00").getDay()%6===0?2:0);return {day:d,n:k,secs:k*ri(240,900)};});
+  const P=daily.reduce((a,b)=>a+b.n,0),PS=daily.reduce((a,b)=>a+b.secs,0),f=n/30;
+  const c=[],add=(app,k,item,x)=>c.push({app,k,item,n:Math.max(0,Math.round(x*f))});
+  [["dressup",58,52000],["wand",31,15000],["castle",24,21000],["stable",40,30000]].forEach(([a,o,s])=>{add(a,"open","",o);add(a,"secs","",s);});
+  Object.entries({"dress:ball":40,"dress:tiers":22,"dress:mermaid":51,"dress:starry":30,"hair:long":33,"hair:curly":18,"hair:pigtails":26,"hair:bun":12,"crown:crown":31,"crown:tiara":44,"crown:flowers":20,"crown:horn":27,"crown:star":9,"magic:wand":30,"magic:mirror":12,"magic:flowers":17,"friend:unicorn":38,"friend:kitty":21,"friend:dragon":14,"place:room":15,"place:garden":20,"place:sea":29,"place:night":11,"sparkle:stars":22,"sparkle:hearts":30,"sparkle:bubbles":12,"skin:0":10,"skin:1":6,"skin:2":4,"skin:3":3}).forEach(([k,v])=>add("dressup","pick",k,v));
+  Object.entries({"dress:pink":45,"dress:lav":38,"dress:aqua":20,"dress:sun":9,"dress:rose":14,"dress:mint":11,"dress:rainbow":33,"hair:gold":20,"hair:pink":28,"hair:lav":15,"hair:rainbow":24,"hair:brown":8,"hair:black":5}).forEach(([k,v])=>add("dressup","color",k,v));
+  Object.entries({"mermaid:lav":6,"ball:pink":5,"starry:rainbow":3,"tiers:rose":2,"mermaid:aqua":2}).forEach(([k,v])=>add("dressup","save",k,v));
+  add("dressup","surprise","",19);
+  Object.entries({rainbow:420,gold:180,hearts:260,unicorn:310}).forEach(([k,v])=>add("wand","draw",k,v));
+  Object.entries({rainbow:6,gold:9,hearts:12,unicorn:10}).forEach(([k,v])=>add("wand","brush",k,v));
+  add("wand","sky","night",8);add("wand","sky","day",9);
+  Object.entries({mer1:26,mer2:31,mer3:18,unicorn:22,kitty:12,dragon:7,girl:9,shell:15,star:11,fish:8,octo:6,pearl:10,heart:14,rainbow:12,coral:5,crown:9}).forEach(([k,v])=>add("castle","sticker",k,v));
+  add("castle","save","",5);add("castle","clear","",3);
+  Object.entries({apple:20,carrot:14,cupcake:28,cookie:17}).forEach(([k,v])=>add("stable","feed",k,v));
+  Object.entries({"bow-pink":15,"bow-lav":9,"bow-aqua":6,"bow-gold":5,crown:18,flowers:11}).forEach(([k,v])=>add("stable","dress",k,v));
+  Object.entries({pink:14,lav:11,aqua:8,gold:9,plain:6}).forEach(([k,v])=>add("stable","mane",k,v));
+  add("stable","glitter","",12);add("stable","brush","",21);add("stable","pat","",64);
+  const hrs=[7,8,9,12,15,16,17,18,19];
+  return {ok:true,at:now,days:n,today:dl[dl.length-1],todayPlays:daily[daily.length-1].n,todaySecs:daily[daily.length-1].secs,
+    weekPlays:daily.slice(-7).reduce((a,b)=>a+b.n,0),weekSecs:daily.slice(-7).reduce((a,b)=>a+b.secs,0),
+    visits:[{kind:"play",n:P,secs:PS},{kind:"idle",n:Math.round(P*.2),secs:40},{kind:"bot",n:Math.round(P*.1),secs:5}],daily,
+    lengths:[{b:"<1",n:Math.round(P*.1)},{b:"1-5",n:Math.round(P*.25)},{b:"5-15",n:Math.round(P*.4)},{b:"15-30",n:Math.round(P*.2)},{b:"30-60",n:Math.round(P*.05)}],
+    hours:hrs.map(h=>({h,n:ri(1,Math.max(2,Math.round(P/6)))})),dows:[0,1,2,3,4,5,6].map(d=>({d,n:ri(1,Math.max(2,Math.round(P/5)))})),
+    refs:[{ref:"",kind:"play",n:P},{ref:"",kind:"idle",n:Math.round(P*.15)},{ref:"www.google.com",kind:"bot",n:Math.round(P*.1)}],
+    counts:c,devices:{all:4,real:3,back:3,recent:2},deviceTypes:[{d:"tablet",n:Math.round(P*.7)},{d:"phone",n:Math.round(P*.3)}],modes:[{m:"app",n:Math.round(P*.8)},{m:"browser",n:Math.round(P*.2)}]};
+}
+})();
+</script>
+</body>
+</html>
