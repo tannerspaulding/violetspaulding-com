@@ -404,7 +404,7 @@ function sample(n){
   const daily=dl.map((d,i)=>{const k=ri(0,3)+(new Date(d+"T12:00").getDay()%6===0?2:0);return {day:d,n:k,secs:k*ri(240,900)};});
   const P=daily.reduce((a,b)=>a+b.n,0),PS=daily.reduce((a,b)=>a+b.secs,0),f=n/30;
   const c=[],add=(app,k,item,x)=>c.push({app,k,item,n:Math.max(0,Math.round(x*f))});
-  [["dressup",58,52000],["wand",31,15000],["castle",24,21000],["stable",40,30000]].forEach(([a,o,s])=>{add(a,"open","",o);add(a,"secs","",s);});
+  [["dressup",58,15000],["wand",31,5000],["castle",24,7000],["stable",40,9500]].forEach(([a,o,s])=>{add(a,"open","",o);add(a,"secs","",s);});
   Object.entries({"dress:ball":40,"dress:tiers":22,"dress:mermaid":51,"dress:starry":30,"hair:long":33,"hair:curly":18,"hair:pigtails":26,"hair:bun":12,"crown:crown":31,"crown:tiara":44,"crown:flowers":20,"crown:horn":27,"crown:star":9,"magic:wand":30,"magic:mirror":12,"magic:flowers":17,"friend:unicorn":38,"friend:kitty":21,"friend:dragon":14,"place:room":15,"place:garden":20,"place:sea":29,"place:night":11,"sparkle:stars":22,"sparkle:hearts":30,"sparkle:bubbles":12,"skin:0":10,"skin:1":6,"skin:2":4,"skin:3":3}).forEach(([k,v])=>add("dressup","pick",k,v));
   Object.entries({"dress:pink":45,"dress:lav":38,"dress:aqua":20,"dress:sun":9,"dress:rose":14,"dress:mint":11,"dress:rainbow":33,"hair:gold":20,"hair:pink":28,"hair:lav":15,"hair:rainbow":24,"hair:brown":8,"hair:black":5}).forEach(([k,v])=>add("dressup","color",k,v));
   Object.entries({"mermaid:lav":6,"ball:pink":5,"starry:rainbow":3,"tiers:rose":2,"mermaid:aqua":2}).forEach(([k,v])=>add("dressup","save",k,v));
